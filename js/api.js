@@ -193,31 +193,37 @@ async function request(
 
         }
 
-        const response = await fetch(
+const response = await fetch(
+    endpoint(path),
+    config
+);
 
-            endpoint(path),
+console.log("API:", method, endpoint(path));
 
-            config
+const text = await response.text();
 
-        );
+console.log("Raw response:", text);
 
-        const json = await response.json();
+const json = text ? JSON.parse(text) : {};
 
         Api.pendingRequests--;
 
-        if (!response.ok) {
+if (!response.ok) {
 
-            Api.statistics.failedRequests++;
+    Api.statistics.failedRequests++;
 
-            throw {
+    console.error(
+        "HTTP ERROR:",
+        response.status,
+        json
+    );
 
-                status: response.status,
+    throw {
+        status: response.status,
+        data: json
+    };
 
-                data: json
-
-            };
-
-        }
+}
 
         Api.statistics.successfulRequests++;
 

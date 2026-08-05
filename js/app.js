@@ -3,7 +3,45 @@
    MINI APP ENGINE
 ========================================== */
 
+let tg = null;
+
+/* ==========================================
+   INITIALIZE TELEGRAM WEBAPP
+========================================== */
+
+function initTelegram() {
+
+    if (!window.Telegram || !window.Telegram.WebApp) {
+
+        console.log("Running outside Telegram.");
+
+        return;
+
+    }
+
+    tg = window.Telegram.WebApp;
+
+    tg.ready();
+
+    tg.expand();
+
+    tg.enableClosingConfirmation();
+
+    document.body.classList.add("telegram");
+
+    console.log("Telegram WebApp initialized");
+
+    console.log("User:", tg.initDataUnsafe?.user);
+
+}
+
+/* ==========================================
+   APP STARTUP
+========================================== */
+
 document.addEventListener("DOMContentLoaded", () => {
+
+    initTelegram();
 
     initSplash();
 
@@ -18,7 +56,6 @@ document.addEventListener("DOMContentLoaded", () => {
     cardEffects();
 
 });
-
 
 /* ==========================================
    SPLASH SCREEN

@@ -1324,3 +1324,115 @@ export default Api;
    CROWN PRINCE REWARD HUB
    PRODUCTION BUILD
 ===================================================== */
+
+/* =====================================================
+   PHASE 1B.4
+   TELEGRAM AUTHENTICATION
+===================================================== */
+
+/* =====================================================
+   LOGIN
+===================================================== */
+
+Api.login = async function () {
+
+    if (!window.Telegram || !window.Telegram.WebApp) {
+
+        throw new Error(
+            "Telegram WebApp SDK unavailable."
+        );
+
+    }
+
+    const initData = window.Telegram.WebApp.initData;
+
+    if (!initData) {
+
+        throw new Error(
+            "Telegram initData is missing."
+        );
+
+    }
+
+    const response = await post(
+        ENDPOINTS.LOGIN,
+        {
+            initData: initData
+        }
+    );
+
+    if (!response.success) {
+
+        throw new Error(
+            response.message || "Login failed."
+        );
+
+    }
+
+    Api.setToken(response.session);
+
+    return response.user;
+
+};
+
+
+/* =====================================================
+   VERIFY SESSION
+===================================================== */
+
+Api.verifySession = async function () {
+
+    return get(
+        ENDPOINTS.SESSION
+    );
+
+};
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+Api.logout = async function () {
+
+    const response = await post(
+        ENDPOINTS.LOGOUT,
+        {}
+    );
+
+    Api.clearToken();
+
+    Api.clearSession();
+
+    return response;
+
+};
+
+
+/* =====================================================
+   DASHBOARD
+===================================================== */
+
+Api.dashboard = async function () {
+
+    return get(
+        "/dashboard"
+    );
+
+};
+
+
+/* =====================================================
+   PROFILE
+===================================================== */
+
+Api.profile = async function (userId) {
+
+    return get(
+        ENDPOINTS.PROFILE,
+        {
+            user_id: userId
+        }
+    );
+
+};

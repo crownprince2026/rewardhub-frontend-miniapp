@@ -3,6 +3,8 @@
    MINI APP ENGINE
 ========================================== */
 
+import * as Api from "./api.js";
+
 let tg = null;
 
 /* ==========================================
@@ -39,7 +41,7 @@ function initTelegram() {
    APP STARTUP
 ========================================== */
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
 
     initTelegram();
 
@@ -47,15 +49,67 @@ document.addEventListener("DOMContentLoaded", () => {
 
     initNavigation();
 
-    animateBalance(0.000,0.237);
-
-    startActivityFeed();
-
-    welcomeToast("👑 Welcome to Crown Prince Reward Hub");
-
     cardEffects();
 
+    try {
+
+        const user = await Api.login();
+
+        const dashboard = await Api.dashboard();
+
+        loadDashboard(user, dashboard);
+
+        welcomeToast(
+            "👑 Welcome back!"
+        );
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        animateBalance(
+            0.000,
+            0.237
+        );
+
+        startActivityFeed();
+
+        welcomeToast(
+            "⚠️ Offline demo mode"
+        );
+
+    }
+
 });
+
+function loadDashboard(user, dashboard) {
+
+    if (!dashboard.success) {
+
+        return;
+
+    }
+
+    const data = dashboard.data;
+
+    document.getElementById("balance").innerHTML =
+        "$" + Number(
+            data.balance.balance
+        ).toFixed(4);
+
+    document.getElementById("welcome").innerHTML =
+        "Welcome " +
+        (
+            tg.initDataUnsafe?.user?.first_name ||
+            "User"
+        );
+
+    document.getElementById("referrals").innerHTML =
+        data.profile.referrals;
+
+}
 
 /* ==========================================
    SPLASH SCREEN

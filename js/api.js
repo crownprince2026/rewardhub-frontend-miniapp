@@ -10,7 +10,7 @@
    API CONFIGURATION
 ===================================================== */
 
-import * as Utils from "./utils.js";
+import { Api } from "./api.js";
 
 /* =====================================================
    API CONFIGURATION
@@ -1436,3 +1436,5 @@ Api.profile = async function (userId) {
     );
 
 };
+
+export { Api };

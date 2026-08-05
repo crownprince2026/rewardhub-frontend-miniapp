@@ -35,24 +35,59 @@ function initTelegram() {
 
 function loadDashboard(user, dashboard) {
 
-    if (!dashboard.success) {
+    if (!dashboard || !dashboard.success) {
         throw new Error("Dashboard loading failed.");
     }
 
     const data = dashboard.data;
 
-    document.getElementById("balance").innerHTML =
-        "$" + Number(data.balance.balance).toFixed(4);
+    // =====================================
+    // Welcome message
+    // =====================================
 
-    document.getElementById("welcome").innerHTML =
-        "Welcome " +
-        (
-            tg.initDataUnsafe?.user?.first_name ||
-            "User"
-        );
+    const firstName =
+        tg?.initDataUnsafe?.user?.first_name ||
+        "User";
 
-    document.getElementById("referrals").innerHTML =
-        data.profile.referrals;
+    document.getElementById("welcome").textContent =
+        "Welcome " + firstName;
+
+    // =====================================
+    // Real balance
+    // =====================================
+
+    document.getElementById("balance").textContent =
+        "$" + Number(
+            data.balance.balance || 0
+        ).toFixed(4);
+
+    // =====================================
+    // Referrals
+    // =====================================
+
+    document.getElementById("referrals").textContent =
+        data.profile.referrals || 0;
+
+    // =====================================
+    // Wallet / Level / Streak placeholders
+    // =====================================
+
+    document.getElementById("level").textContent =
+        "Bronze";
+
+    document.getElementById("streak").textContent =
+        "0";
+
+    // =====================================
+    // Notification count
+    // =====================================
+
+    const notification =
+        document.getElementById("notification-count");
+
+    if (notification) {
+        notification.textContent = "0";
+    }
 
 }
 
@@ -78,11 +113,9 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         initSplash();
 
-        welcomeToast("👑 Welcome back!");
+        welcomeToast("👑 Dashboard synchronized");
 
-    }
-
-    catch (error) {
+    } catch (error) {
 
         console.error(error);
 
@@ -91,10 +124,6 @@ document.addEventListener("DOMContentLoaded", async () => {
         cardEffects();
 
         initSplash();
-
-        animateBalance(0, 0.237);
-
-        startActivityFeed();
 
         welcomeToast("⚠️ Backend unavailable");
 

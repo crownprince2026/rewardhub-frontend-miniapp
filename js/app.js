@@ -92,6 +92,68 @@ function loadDashboard(user, dashboard) {
 }
 
 /* ==========================================
+   DAILY BONUS
+========================================== */
+
+function initDailyBonus(user) {
+
+    const btn = document.getElementById("dailyBtn");
+
+    if (!btn) {
+        console.log("dailyBtn not found");
+        return;
+    }
+
+    console.log("Daily Bonus initialized");
+
+    btn.addEventListener("click", async function () {
+
+        console.log("Daily Bonus clicked");
+
+        btn.disabled = true;
+
+        try {
+
+            const result = await Api.post(
+                "/daily",
+                {
+                    user_id: user.user_id,
+                    username:
+                        tg.initDataUnsafe?.user?.username || "",
+                    last_claim: null
+                }
+            );
+
+            console.log(result);
+
+            welcomeToast(
+                result.message || "Daily Bonus processed"
+            );
+
+            if (result.success) {
+
+                const dashboard =
+                    await Api.dashboard(user.user_id);
+
+                loadDashboard(user, dashboard);
+
+            }
+
+        } catch (err) {
+
+            console.error(err);
+
+            welcomeToast("❌ Daily Bonus failed");
+
+        }
+
+        btn.disabled = false;
+
+    });
+
+}
+
+/* ==========================================
    APP STARTUP
 ========================================== */
 
@@ -103,10 +165,30 @@ document.addEventListener("DOMContentLoaded", async () => {
 
         const user = await Api.login();
 
-        const dashboard = await Api.dashboard();
+        const dashboard = await Api.dashboard(user.user_id);
 
         loadDashboard(user, dashboard);
 
+        /* Reward Buttons */
+        initDailyBonus(user);
+
+        // initSpinWheel(user);
+        // initMysteryBox(user);
+        // initWatchAds(user);
+
+        /* Earn Pages */
+        // initTasks(user);
+        // initOfferWall(user);
+        // initCPAOffers(user);
+        // initReferrals(user);
+
+        /* Main Navigation */
+        // initWallet(user);
+        // initProfile(user);
+        // initCommunity(user);
+        // initBottomNavigation(user);
+
+        /* UI */
         initNavigation();
 
         cardEffects();

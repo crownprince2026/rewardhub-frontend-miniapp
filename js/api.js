@@ -1399,14 +1399,16 @@ Api.logout = async function () {
    DASHBOARD
 ===================================================== */
 
-Api.dashboard = async function () {
+Api.dashboard = async function (userId) {
 
     return get(
-        "/dashboard"
+        "/dashboard",
+        {
+            user_id: userId
+        }
     );
 
 };
-
 
 /* =====================================================
    PROFILE

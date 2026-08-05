@@ -3,7 +3,7 @@
    MINI APP ENGINE
 ========================================== */
 
-import * as Api from "./api.js";
+import { Api } from "./api.js";
 
 let tg = null;
 
@@ -15,9 +15,7 @@ function initTelegram() {
 
     if (!window.Telegram || !window.Telegram.WebApp) {
 
-        console.log("Running outside Telegram.");
-
-        return;
+        throw new Error("Telegram WebApp SDK unavailable.");
 
     }
 
@@ -27,77 +25,24 @@ function initTelegram() {
 
     tg.expand();
 
-    tg.enableClosingConfirmation();
-
     document.body.classList.add("telegram");
-
-    console.log("Telegram WebApp initialized");
-
-    console.log("User:", tg.initDataUnsafe?.user);
 
 }
 
 /* ==========================================
-   APP STARTUP
+   LOAD DASHBOARD
 ========================================== */
-
-document.addEventListener("DOMContentLoaded", async () => {
-
-    initTelegram();
-
-    initSplash();
-
-    initNavigation();
-
-    cardEffects();
-
-    try {
-
-        const user = await Api.login();
-
-        const dashboard = await Api.dashboard();
-
-        loadDashboard(user, dashboard);
-
-        welcomeToast(
-            "👑 Welcome back!"
-        );
-
-    }
-
-    catch (error) {
-
-        console.error(error);
-
-        animateBalance(
-            0.000,
-            0.237
-        );
-
-        startActivityFeed();
-
-        welcomeToast(
-            "⚠️ Offline demo mode"
-        );
-
-    }
-
-});
 
 function loadDashboard(user, dashboard) {
 
     if (!dashboard.success) {
-
-        return;
-
+        throw new Error("Dashboard loading failed.");
     }
 
     const data = dashboard.data;
 
     document.getElementById("balance").innerHTML =
-        "$" + Number(
-            data.balance.balance
-        ).toFixed(4);
+        "$" + Number(data.balance.balance).toFixed(4);
 
     document.getElementById("welcome").innerHTML =
         "Welcome " +
@@ -110,6 +55,52 @@ function loadDashboard(user, dashboard) {
         data.profile.referrals;
 
 }
+
+/* ==========================================
+   APP STARTUP
+========================================== */
+
+document.addEventListener("DOMContentLoaded", async () => {
+
+    try {
+
+        initTelegram();
+
+        const user = await Api.login();
+
+        const dashboard = await Api.dashboard();
+
+        loadDashboard(user, dashboard);
+
+        initNavigation();
+
+        cardEffects();
+
+        initSplash();
+
+        welcomeToast("👑 Welcome back!");
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        initNavigation();
+
+        cardEffects();
+
+        initSplash();
+
+        animateBalance(0, 0.237);
+
+        startActivityFeed();
+
+        welcomeToast("⚠️ Backend unavailable");
+
+    }
+
+});
 
 /* ==========================================
    SPLASH SCREEN

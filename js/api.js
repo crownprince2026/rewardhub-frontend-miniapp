@@ -10,6 +10,7 @@
    API CONFIGURATION
 ===================================================== */
 
+import * as Utils from "./utils.js";
 
 /* =====================================================
    API CONFIGURATION
@@ -193,37 +194,31 @@ async function request(
 
         }
 
-const response = await fetch(
-    endpoint(path),
-    config
-);
+        const response = await fetch(
 
-console.log("API:", method, endpoint(path));
+            endpoint(path),
 
-const text = await response.text();
+            config
 
-console.log("Raw response:", text);
+        );
 
-const json = text ? JSON.parse(text) : {};
+        const json = await response.json();
 
         Api.pendingRequests--;
 
-if (!response.ok) {
+        if (!response.ok) {
 
-    Api.statistics.failedRequests++;
+            Api.statistics.failedRequests++;
 
-    console.error(
-        "HTTP ERROR:",
-        response.status,
-        json
-    );
+            throw {
 
-    throw {
-        status: response.status,
-        data: json
-    };
+                status: response.status,
 
-}
+                data: json
+
+            };
+
+        }
 
         Api.statistics.successfulRequests++;
 
@@ -1311,134 +1306,21 @@ Api.reset = function () {
 
 
 /* =====================================================
+   EXPORTS
+===================================================== */
+
+export {
+
+    ENDPOINTS
+
+};
+
+export default Api;
+
+
+/* =====================================================
    END OF FILE
    frontend/js/api.js
    CROWN PRINCE REWARD HUB
    PRODUCTION BUILD
-===================================================== */
-
-/* =====================================================
-   PHASE 1B.4
-   TELEGRAM AUTHENTICATION
-===================================================== */
-
-/* =====================================================
-   LOGIN
-===================================================== */
-
-Api.login = async function () {
-
-    if (!window.Telegram || !window.Telegram.WebApp) {
-
-        throw new Error(
-            "Telegram WebApp SDK unavailable."
-        );
-
-    }
-
-    const initData = window.Telegram.WebApp.initData;
-
-    if (!initData) {
-
-        throw new Error(
-            "Telegram initData is missing."
-        );
-
-    }
-
-    const response = await post(
-        ENDPOINTS.LOGIN,
-        {
-            initData: initData
-        }
-    );
-
-    if (!response.success) {
-
-        throw new Error(
-            response.message || "Login failed."
-        );
-
-    }
-
-    Api.setToken(response.session);
-
-    return response.user;
-
-};
-
-
-/* =====================================================
-   VERIFY SESSION
-===================================================== */
-
-Api.verifySession = async function () {
-
-    return get(
-        ENDPOINTS.SESSION
-    );
-
-};
-
-
-/* =====================================================
-   LOGOUT
-===================================================== */
-
-Api.logout = async function () {
-
-    const response = await post(
-        ENDPOINTS.LOGOUT,
-        {}
-    );
-
-    Api.clearToken();
-
-    Api.clearSession();
-
-    return response;
-
-};
-
-
-/* =====================================================
-   DASHBOARD
-===================================================== */
-
-Api.dashboard = async function (userId) {
-
-    return get(
-        "/dashboard",
-        {
-            user_id: userId
-        }
-    );
-
-};
-
-/* =====================================================
-   PROFILE
-===================================================== */
-
-Api.profile = async function (userId) {
-
-    return get(
-        ENDPOINTS.PROFILE,
-        {
-            user_id: userId
-        }
-    );
-
-};
-
-/* =====================================================
-   EXPORTS
-===================================================== */
-
-export { Api, ENDPOINTS };
-
-export default Api;
-
-/* =====================================================
-   END OF FILE
 ===================================================== */

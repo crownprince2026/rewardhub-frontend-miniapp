@@ -1,437 +1,720 @@
-/* ==========================================
+"use strict";
+
+/* =====================================================
    CROWN PRINCE REWARD HUB
-   MINI APP ENGINE
-========================================== */
+   TELEGRAM MINI APP
+   APP.JS
+   PHASE 1A.1
+   IMPORTS
+   CONSTANTS
+   GLOBAL APPLICATION OBJECT
+===================================================== */
 
-import { Api } from "./api.js";
+import * as API from "./api.js";
+import * as Auth from "./auth.js";
+import * as State from "./state.js";
+import * as Settings from "./settings.js";
+import * as Router from "./router.js";
+import * as UI from "./ui.js";
+import * as Admin from "./admin.js";
+import * as Rewards from "./rewards.js";
+import * as Wallet from "./wallet.js";
+import * as Tasks from "./tasks.js";
+import * as Profile from "./profile.js";
+import * as Notifications from "./notifications.js";
+import * as Ads from "./ads.js";
+import * as Animations from "./animations.js";
+import * as Utils from "./utils.js";
 
-let tg = null;
+/* =====================================================
+   TELEGRAM WEBAPP
+===================================================== */
 
-/* ==========================================
-   INITIALIZE TELEGRAM WEBAPP
-========================================== */
+const TelegramApp = window.Telegram?.WebApp ?? null;
 
-function initTelegram() {
+/* =====================================================
+   APPLICATION CONSTANTS
+===================================================== */
 
-    if (!window.Telegram || !window.Telegram.WebApp) {
+const APP_NAME = "Crown Prince Reward Hub";
 
-        throw new Error("Telegram WebApp SDK unavailable.");
+const APP_VERSION = "1.0.0";
+
+const API_VERSION = "v1";
+
+const APP_MODE = "production";
+
+const START_PAGE = "loading";
+
+const DEFAULT_THEME = "dark";
+
+const SESSION_STORAGE_KEY = "rewardhub_session";
+
+const SETTINGS_CACHE_KEY = "rewardhub_settings";
+
+const USER_CACHE_KEY = "rewardhub_user";
+
+const ADMIN_CACHE_KEY = "rewardhub_admin";
+
+/* =====================================================
+   GLOBAL APPLICATION OBJECT
+===================================================== */
+
+const App = {
+
+    initialized: false,
+
+    authenticated: false,
+
+    online: navigator.onLine,
+
+    loading: true,
+
+    currentPage: START_PAGE,
+
+    previousPage: null,
+
+    currentTheme: DEFAULT_THEME,
+
+    telegram: TelegramApp,
+
+    user: null,
+
+    session: null,
+
+    settings: {},
+
+    notifications: [],
+
+    cache: {},
+
+    admin: {
+
+        enabled: false,
+
+        authenticated: false,
+
+        permissions: []
+
+    },
+
+    modules: {
+
+        api: API,
+
+        auth: Auth,
+
+        state: State,
+
+        settings: Settings,
+
+        router: Router,
+
+        ui: UI,
+
+        admin: Admin,
+
+        rewards: Rewards,
+
+        wallet: Wallet,
+
+        tasks: Tasks,
+
+        profile: Profile,
+
+        notifications: Notifications,
+
+        ads: Ads,
+
+        animations: Animations,
+
+        utils: Utils
 
     }
 
-    tg = window.Telegram.WebApp;
+};
 
-    tg.ready();
+/* =====================================================
+   MAKE APP GLOBALLY AVAILABLE
+===================================================== */
 
-    tg.expand();
+window.RewardHub = App;
 
-    document.body.classList.add("telegram");
+/* =====================================================
+   END OF PHASE 1A.1
+===================================================== */
 
-}
+/* =====================================================
+   PHASE 1A.2
+   INITIALIZATION
+   STARTUP LIFECYCLE
+===================================================== */
 
-/* ==========================================
-   LOAD DASHBOARD
-========================================== */
+/* =====================================================
+   INITIALIZE APPLICATION
+===================================================== */
 
-function loadDashboard(user, dashboard) {
+App.initialize = async function () {
 
-    if (!dashboard || !dashboard.success) {
-        throw new Error("Dashboard loading failed.");
-    }
+    if (this.initialized) {
 
-    const data = dashboard.data;
-
-    // =====================================
-    // Welcome message
-    // =====================================
-
-    const firstName =
-        tg?.initDataUnsafe?.user?.first_name ||
-        "User";
-
-    document.getElementById("welcome").textContent =
-        "Welcome " + firstName;
-
-    // =====================================
-    // Real balance
-    // =====================================
-
-    document.getElementById("balance").textContent =
-        "$" + Number(
-            data.balance.balance || 0
-        ).toFixed(4);
-
-    // =====================================
-    // Referrals
-    // =====================================
-
-    document.getElementById("referrals").textContent =
-        data.profile.referrals || 0;
-
-    // =====================================
-    // Wallet / Level / Streak placeholders
-    // =====================================
-
-    document.getElementById("level").textContent =
-        "Bronze";
-
-    document.getElementById("streak").textContent =
-        "0";
-
-    // =====================================
-    // Notification count
-    // =====================================
-
-    const notification =
-        document.getElementById("notification-count");
-
-    if (notification) {
-        notification.textContent = "0";
-    }
-
-}
-
-/* ==========================================
-   DAILY BONUS
-========================================== */
-
-function initDailyBonus(user) {
-
-    const btn = document.getElementById("dailyBtn");
-
-    if (!btn) {
-        console.log("dailyBtn not found");
         return;
+
     }
-
-    console.log("Daily Bonus initialized");
-
-    btn.addEventListener("click", async function () {
-
-        console.log("Daily Bonus clicked");
-
-        btn.disabled = true;
-
-        try {
-
-            const result = await Api.post(
-                "/daily",
-                {
-                    user_id: user.user_id,
-                    username:
-                        tg.initDataUnsafe?.user?.username || "",
-                    last_claim: null
-                }
-            );
-
-            console.log(result);
-
-            welcomeToast(
-                result.message || "Daily Bonus processed"
-            );
-
-            if (result.success) {
-
-                const dashboard =
-                    await Api.dashboard(user.user_id);
-
-                loadDashboard(user, dashboard);
-
-            }
-
-        } catch (err) {
-
-            console.error(err);
-
-            welcomeToast("❌ Daily Bonus failed");
-
-        }
-
-        btn.disabled = false;
-
-    });
-
-}
-
-/* ==========================================
-   APP STARTUP
-========================================== */
-
-document.addEventListener("DOMContentLoaded", async () => {
 
     try {
 
-        initTelegram();
+        console.log(`${APP_NAME} ${APP_VERSION} starting...`);
 
-        const user = await Api.login();
+        if (this.telegram) {
 
-        const dashboard = await Api.dashboard(user.user_id);
+            this.telegram.ready();
 
-        loadDashboard(user, dashboard);
+            this.telegram.expand();
 
-        /* Reward Buttons */
-        initDailyBonus(user);
+            this.telegram.enableClosingConfirmation();
 
-        // initSpinWheel(user);
-        // initMysteryBox(user);
-        // initWatchAds(user);
+        }
 
-        /* Earn Pages */
-        // initTasks(user);
-        // initOfferWall(user);
-        // initCPAOffers(user);
-        // initReferrals(user);
+        await this.modules.state.initialize(this);
 
-        /* Main Navigation */
-        // initWallet(user);
-        // initProfile(user);
-        // initCommunity(user);
-        // initBottomNavigation(user);
+        await this.modules.settings.initialize(this);
 
-        /* UI */
-        initNavigation();
+        await this.modules.api.initialize(this);
 
-        cardEffects();
+        await this.modules.auth.initialize(this);
 
-        initSplash();
+        await this.modules.router.initialize(this);
 
-        welcomeToast("👑 Dashboard synchronized");
+        await this.modules.ui.initialize(this);
 
-    } catch (error) {
+        await this.modules.animations.initialize(this);
 
-        console.error(error);
+        await this.modules.notifications.initialize(this);
 
-        initNavigation();
+        await this.modules.profile.initialize(this);
 
-        cardEffects();
+        await this.modules.wallet.initialize(this);
 
-        initSplash();
+        await this.modules.tasks.initialize(this);
 
-        welcomeToast("⚠️ Backend unavailable");
+        await this.modules.rewards.initialize(this);
+
+        await this.modules.ads.initialize(this);
+
+        await this.modules.admin.initialize(this);
+
+        this.initialized = true;
+
+        console.log("Application initialized.");
 
     }
 
-});
+    catch (error) {
 
-/* ==========================================
-   SPLASH SCREEN
-========================================== */
+        console.error("Initialization failed.", error);
 
-function initSplash(){
+        this.modules.ui.showFatalError(error);
 
-    const splash=document.getElementById("splash");
+    }
 
-    const app=document.getElementById("app");
-
-    setTimeout(()=>{
-
-        splash.classList.add("hide");
-
-        app.classList.remove("hidden");
-
-    },2500);
-
-}
+};
 
 
-/* ==========================================
-   BALANCE ANIMATION
-========================================== */
+/* =====================================================
+   START APPLICATION
+===================================================== */
 
-function animateBalance(start,end){
+App.start = async function () {
 
-    const balance=document.getElementById("balance");
+    try {
 
-    if(!balance) return;
+        this.modules.ui.showLoading();
 
-    let current=start;
+        await this.initialize();
 
-    const step=(end-start)/100;
+        await this.modules.auth.restoreSession();
 
-    const timer=setInterval(()=>{
+        await this.modules.settings.load();
 
-        current+=step;
+        await this.modules.router.launch();
 
-        balance.innerHTML="$"+current.toFixed(3);
+        this.loading = false;
 
-        if(current>=end){
+        this.modules.ui.hideLoading();
 
-            balance.innerHTML="$"+end.toFixed(3);
+        console.log("Application started successfully.");
 
-            clearInterval(timer);
+    }
+
+    catch (error) {
+
+        console.error("Startup failed.", error);
+
+        this.modules.ui.showFatalError(error);
+
+    }
+
+};
+
+
+/* =====================================================
+   RESTART APPLICATION
+===================================================== */
+
+App.restart = async function () {
+
+    console.log("Restarting application...");
+
+    this.loading = true;
+
+    this.initialized = false;
+
+    await this.start();
+
+};
+
+
+/* =====================================================
+   SHUTDOWN
+===================================================== */
+
+App.shutdown = function () {
+
+    console.log("Application shutting down...");
+
+    this.loading = false;
+
+};
+
+
+/* =====================================================
+   APPLICATION STATUS
+===================================================== */
+
+App.isReady = function () {
+
+    return this.initialized;
+
+};
+
+App.isOnline = function () {
+
+    return this.online;
+
+};
+
+App.isAuthenticated = function () {
+
+    return this.authenticated;
+
+};
+
+
+/* =====================================================
+   END OF PHASE 1A.2
+===================================================== */
+
+/* =====================================================
+   PHASE 1A.3
+   AUTHENTICATION
+   LAUNCH FLOW
+===================================================== */
+
+
+/* =====================================================
+   AUTHENTICATE USER
+===================================================== */
+
+App.authenticate = async function () {
+
+    try {
+
+        this.modules.ui.updateLoading("Authenticating...");
+
+        const authenticated =
+            await this.modules.auth.authenticate();
+
+        if (!authenticated) {
+
+            throw new Error("Authentication failed.");
 
         }
 
-    },20);
+        this.authenticated = true;
 
-}
+        this.user =
+            await this.modules.auth.getCurrentUser();
 
+        this.session =
+            await this.modules.auth.getSession();
 
-/* ==========================================
-   FLOATING TOAST
-========================================== */
+        this.modules.state.setUser(this.user);
 
-function welcomeToast(message){
+        return true;
 
-    const toast=document.createElement("div");
+    }
 
-    toast.className="toast";
+    catch (error) {
 
-    toast.innerHTML=message;
+        console.error(error);
 
-    document.body.appendChild(toast);
+        this.modules.ui.showError(
+            "Authentication failed."
+        );
 
-    setTimeout(()=>{
+        return false;
 
-        toast.classList.add("show");
+    }
 
-    },300);
-
-    setTimeout(()=>{
-
-        toast.classList.remove("show");
-
-    },3500);
-
-}
+};
 
 
-/* ==========================================
-   LIVE ACTIVITY FEED
-========================================== */
+/* =====================================================
+   LOAD SETTINGS
+===================================================== */
 
-const activities=[
+App.loadSettings = async function () {
 
-"🎁 Alice claimed Daily Bonus",
+    this.modules.ui.updateLoading(
+        "Loading settings..."
+    );
 
-"🎡 Grace won $0.05 on Spin Wheel",
+    this.settings =
+        await this.modules.settings.load();
 
-"👥 Michael invited a friend",
+};
 
-"💸 Sarah withdrew $5.00",
 
-"🎯 Denis completed Offer Wall",
+/* =====================================================
+   LOAD USER DATA
+===================================================== */
 
-"💰 Kevin earned $0.21",
+App.loadUserData = async function () {
 
-"🎁 Mystery Box rewarded $0.03",
+    this.modules.ui.updateLoading(
+        "Loading profile..."
+    );
 
-"📸 Task approved",
+    await this.modules.wallet.load();
 
-"🔥 CPA Offer completed"
+    await this.modules.tasks.load();
 
-];
+    await this.modules.rewards.load();
 
-function startActivityFeed(){
+    await this.modules.profile.load();
 
-    const feed=document.getElementById("activity-feed");
+    await this.modules.notifications.load();
 
-    if(!feed) return;
+};
 
-    let i=0;
 
-    setInterval(()=>{
+/* =====================================================
+   LAUNCH FLOW
+===================================================== */
 
-        const card=document.createElement("div");
+App.launch = async function () {
 
-        card.className="activity-card";
+    try {
 
-        card.innerHTML=`
+        this.modules.ui.showLoading();
 
-        <div class="activity-avatar">👑</div>
+        const authenticated =
+            await this.authenticate();
 
-        <div class="activity-info">
+        if (!authenticated) {
 
-        <div class="activity-name">${activities[i]}</div>
-
-        <div class="activity-action">Just now</div>
-
-        </div>
-
-        `;
-
-        feed.prepend(card);
-
-        if(feed.children.length>6){
-
-            feed.removeChild(feed.lastChild);
+            return;
 
         }
 
-        i++;
+        await this.loadSettings();
 
-        if(i>=activities.length){
+        await this.loadUserData();
 
-            i=0;
+        const firstLaunch =
+            this.modules.settings.isFirstLaunch();
+
+        if (firstLaunch) {
+
+            this.modules.router.go(
+                "onboarding"
+            );
 
         }
 
-    },5000);
+        else {
+
+            this.modules.router.go(
+                "dashboard"
+            );
+
+        }
+
+        this.modules.ui.hideLoading();
+
+    }
+
+    catch (error) {
+
+        console.error(error);
+
+        this.modules.ui.showFatalError(error);
+
+    }
+
+};
+
+
+/* =====================================================
+   LOGOUT
+===================================================== */
+
+App.logout = async function () {
+
+    await this.modules.auth.logout();
+
+    this.authenticated = false;
+
+    this.user = null;
+
+    this.session = null;
+
+    this.modules.router.go("login");
+
+};
+
+
+/* =====================================================
+   SWITCH MODE
+===================================================== */
+
+App.switchMode = async function (mode) {
+
+    if (mode === "admin") {
+
+        const allowed =
+            await this.modules.admin.authenticate();
+
+        if (!allowed) {
+
+            return;
+
+        }
+
+        this.admin.enabled = true;
+
+        this.modules.router.go(
+            "admin-dashboard"
+        );
+
+        return;
+
+    }
+
+    this.admin.enabled = false;
+
+    this.modules.router.go(
+        "dashboard"
+
+    );
+
+};
+
+
+/* =====================================================
+   END OF PHASE 1A.3
+===================================================== */
+
+/* =====================================================
+   PHASE 1A.4
+   EVENT LISTENERS
+   ERROR HANDLING
+   SHUTDOWN
+   PRODUCTION EXPORT
+===================================================== */
+
+
+/* =====================================================
+   NETWORK EVENTS
+===================================================== */
+
+window.addEventListener("online", () => {
+
+    App.online = true;
+
+    App.modules.ui.hideOfflineScreen();
+
+    App.modules.notifications.info(
+        "Internet connection restored."
+    );
+
+});
+
+window.addEventListener("offline", () => {
+
+    App.online = false;
+
+    App.modules.ui.showOfflineScreen();
+
+    App.modules.notifications.warning(
+        "You are currently offline."
+    );
+
+});
+
+
+/* =====================================================
+   PAGE VISIBILITY
+===================================================== */
+
+document.addEventListener("visibilitychange", () => {
+
+    if (document.hidden) {
+
+        console.log("Application paused.");
+
+        return;
+
+    }
+
+    console.log("Application resumed.");
+
+});
+
+
+/* =====================================================
+   WINDOW EVENTS
+===================================================== */
+
+window.addEventListener("beforeunload", () => {
+
+    App.shutdown();
+
+});
+
+
+window.addEventListener("resize", () => {
+
+    App.modules.ui.updateLayout();
+
+});
+
+
+/* =====================================================
+   GLOBAL ERROR HANDLER
+===================================================== */
+
+window.addEventListener("error", (event) => {
+
+    console.error("Application Error:", event.error);
+
+    App.modules.ui.showError(
+
+        "An unexpected error occurred."
+
+    );
+
+});
+
+
+/* =====================================================
+   UNHANDLED PROMISES
+===================================================== */
+
+window.addEventListener(
+
+    "unhandledrejection",
+
+    (event) => {
+
+        console.error(
+
+            "Unhandled Promise:",
+
+            event.reason
+
+        );
+
+        App.modules.ui.showError(
+
+            "Background operation failed."
+
+        );
+
+    }
+
+);
+
+
+/* =====================================================
+   TELEGRAM EVENTS
+===================================================== */
+
+if (TelegramApp) {
+
+    TelegramApp.onEvent(
+
+        "themeChanged",
+
+        () => {
+
+            App.currentTheme =
+
+                TelegramApp.colorScheme;
+
+            App.modules.ui.applyTheme(
+
+                App.currentTheme
+
+            );
+
+        }
+
+    );
+
+    TelegramApp.onEvent(
+
+        "viewportChanged",
+
+        () => {
+
+            App.modules.ui.updateLayout();
+
+        }
+
+    );
 
 }
 
 
-/* ==========================================
-   NAVIGATION
-========================================== */
+/* =====================================================
+   APPLICATION BOOTSTRAP
+===================================================== */
 
-function initNavigation(){
+document.addEventListener(
 
-document.querySelectorAll(".nav-item").forEach(item=>{
+    "DOMContentLoaded",
 
-item.addEventListener("click",()=>{
+    async () => {
 
-document.querySelectorAll(".nav-item").forEach(n=>{
+        await App.start();
 
-n.classList.remove("active");
+    }
 
-});
-
-item.classList.add("active");
-
-});
-
-});
-
-}
+);
 
 
-/* ==========================================
-   PREMIUM CARD EFFECT
-========================================== */
+/* =====================================================
+   PRODUCTION EXPORT
+===================================================== */
 
-function cardEffects(){
-
-document.querySelectorAll(".quick-card").forEach(card=>{
-
-card.addEventListener("touchstart",()=>{
-
-card.style.transform="scale(.96)";
-
-});
-
-card.addEventListener("touchend",()=>{
-
-card.style.transform="scale(1)";
-
-});
-
-});
-
-}
+export default App;
 
 
-/* ==========================================
-   FUTURE FEATURES
-========================================== */
-
-// Live database updates
-// Telegram WebApp SDK
-// SQLite API
-// Rewarded Ads
-// Spin Wheel Engine
-// Mystery Box Engine
-// Wallet API
-// CPA Offers
-// Admin Dashboard
-// Analytics
+/* =====================================================
+   END OF FILE
+   frontend/js/app.js
+   CROWN PRINCE REWARD HUB
+   PRODUCTION BUILD
+===================================================== */

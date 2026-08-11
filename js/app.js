@@ -229,8 +229,8 @@ App.start = async function () {
 
     try {
 
-        this.modules.ui.showLoading();
-
+        // Use the application's single loading/splash route.
+        // Do not create a second global loading overlay.
         await this.initialize();
 
         // Mini App authentication bypassed for startup test.
@@ -242,8 +242,6 @@ App.start = async function () {
         await this.modules.router.launch();
 
         this.loading = false;
-
-        this.modules.ui.hideLoading();
 
         console.log("Application started successfully.");
 

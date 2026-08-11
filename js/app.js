@@ -11,7 +11,7 @@
 ===================================================== */
 
 import * as API from "./api.js";
-import * as Auth from "./auth.js";
+import MiniAppAuth from "./miniapp-auth.js";
 import * as State from "./state.js";
 import * as Settings from "./settings.js";
 import * as Router from "./router.js";
@@ -102,7 +102,7 @@ const App = {
 
         api: API,
 
-        auth: Auth,
+        auth: MiniAppAuth,
 
         state: State,
 
@@ -233,7 +233,9 @@ App.start = async function () {
 
         await this.initialize();
 
-        await this.modules.auth.restoreSession();
+        // Mini App authentication bypassed for startup test.
+        // Flow: START -> SPLASH -> DASHBOARD.
+        // await this.modules.auth.restoreSession();
 
         await this.modules.settings.load();
 

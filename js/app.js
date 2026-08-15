@@ -229,16 +229,16 @@ App.start = async function () {
 
     try {
 
-        await this.initialize();
+        console.log(
+            "=== STARTUP TEST: SHOWING DASHBOARD BEFORE INITIALIZATION ==="
+        );
+
+        this.modules.ui.showScreen("dashboard");
 
         this.loading = false;
 
-        await this.modules.router.navigate(
-            "dashboard"
-        );
-
         console.log(
-            "Application started successfully."
+            "=== STARTUP TEST: DASHBOARD COMMAND EXECUTED ==="
         );
 
     }
@@ -246,11 +246,7 @@ App.start = async function () {
     catch (error) {
 
         console.error(
-            "Startup failed.",
-            error
-        );
-
-        this.modules.ui.showFatalError(
+            "Startup test failed.",
             error
         );
 

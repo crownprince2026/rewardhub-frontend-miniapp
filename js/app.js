@@ -230,16 +230,17 @@ App.start = async function () {
     try {
 
         // Use the application's single loading/splash route.
-        // Do not create a second global loading overlay.
+        // Startup flow: START -> SPLASH -> DASHBOARD.
+
         await this.initialize();
 
-        // Mini App authentication bypassed for startup test.
-        // Flow: START -> SPLASH -> DASHBOARD.
-        // await this.modules.auth.restoreSession();
+        this.modules.ui.showScreen("splash");
 
         await this.modules.settings.load();
 
-        await this.modules.router.launch();
+        await this.modules.router.safeNavigate(
+            "dashboard"
+        );
 
         this.loading = false;
 

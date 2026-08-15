@@ -33,47 +33,13 @@
 <div id="app">
 
     <!-- =====================================================
-         AUTHENTICATION SCREEN
-    ====================================================== -->
-
-    <section
-        id="auth-screen"
-        class="screen active">
-
-        <div class="auth-container">
-
-            <div class="logo-container">
-
-                <img
-                    id="app-logo"
-                    src="images/logo.png"
-                    alt="Crown Prince Reward Hub Logo">
-
-            </div>
-
-            <h1>Crown Prince Reward Hub</h1>
-
-            <p>
-
-                Verifying your Telegram account...
-
-            </p>
-
-            <div class="loading-spinner"></div>
-
-            <small>Please wait...</small>
-
-        </div>
-
-    </section>
-
-    <!-- =====================================================
          SPLASH SCREEN
     ====================================================== -->
 
     <section
         id="splash-screen"
-        class="screen">
+        class="screen"
+        data-screen="splash">
 
         <div class="splash-container">
 
@@ -203,7 +169,8 @@
 
     <section
         id="dashboard-screen"
-        class="screen">
+        class="screen"
+        data-screen="dashboard">
 
         <header class="dashboard-header">
 

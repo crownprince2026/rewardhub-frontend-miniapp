@@ -229,35 +229,34 @@ App.start = async function () {
 
     try {
 
-        // Use the application's single loading/splash route.
-        // Startup flow: START -> SPLASH -> DASHBOARD.
-
         await this.initialize();
-
-        this.modules.ui.showScreen("splash");
-
-        await this.modules.settings.load();
-
-        await this.modules.router.safeNavigate(
-            "dashboard"
-        );
 
         this.loading = false;
 
-        console.log("Application started successfully.");
+        await this.modules.router.navigate(
+            "dashboard"
+        );
+
+        console.log(
+            "Application started successfully."
+        );
 
     }
 
     catch (error) {
 
-        console.error("Startup failed.", error);
+        console.error(
+            "Startup failed.",
+            error
+        );
 
-        this.modules.ui.showFatalError(error);
+        this.modules.ui.showFatalError(
+            error
+        );
 
     }
 
 };
-
 
 /* =====================================================
    RESTART APPLICATION

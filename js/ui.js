@@ -423,6 +423,8 @@ UI.hideAllScreens = function () {
 
             screen.hidden = true;
 
+            screen.style.display = "none";
+
         }
 
     );
@@ -461,6 +463,8 @@ UI.showScreen = function (
     this.hideAllScreens();
 
     screen.hidden = false;
+
+    screen.style.display = "";
 
     screen.classList.add(
 

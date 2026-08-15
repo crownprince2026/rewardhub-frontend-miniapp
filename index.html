@@ -1252,41 +1252,7 @@
 </div>
 
 
-<script>
-document.addEventListener("DOMContentLoaded", function () {
 
-    console.log(
-        "=== DIRECT DASHBOARD TEST ==="
-    );
-
-    const splash =
-        document.querySelector('[data-screen="splash"]');
-
-    const dashboard =
-        document.querySelector('[data-screen="dashboard"]');
-
-    console.log(
-        "Splash:",
-        splash
-    );
-
-    console.log(
-        "Dashboard:",
-        dashboard
-    );
-
-    if (splash) {
-        splash.hidden = true;
-        splash.classList.remove("active");
-    }
-
-    if (dashboard) {
-        dashboard.hidden = false;
-        dashboard.classList.add("active");
-    }
-
-});
-</script>
 
 </body>
 </html>

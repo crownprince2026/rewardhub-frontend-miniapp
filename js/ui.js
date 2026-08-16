@@ -1,41 +1,39 @@
 "use strict";
 
 const UI = {
-    showScreen: function(screenId) {
-        console.log("Attempting to show:", screenId);
+    showScreen: function(name) {
+        console.log("Switching to:", name);
         
-        // Hide every element that has the class 'screen'
+        // Hide all screens
         const screens = document.querySelectorAll('.screen');
         screens.forEach(s => {
             s.style.display = 'none';
             s.classList.remove('active');
         });
 
-        // Try to find the screen by ID (exact match)
-        let target = document.getElementById(screenId);
-        
-        // If not found, try adding "-screen" suffix
-        if (!target) target = document.getElementById(screenId + "-screen");
+        // Search for the element by ID
+        // We will try name, name-screen, and data-screen
+        const target = document.getElementById(name) || 
+                       document.getElementById(name + "-screen") || 
+                       document.querySelector(`[data-screen="${name}"]`);
 
         if (target) {
             target.style.display = 'block';
             target.classList.add('active');
-            console.log("Success: Showed", screenId);
+            return true;
         } else {
-            console.error("CRITICAL: Screen not found in HTML:", screenId);
-            // Fallback: Show the first screen available so the user sees SOMETHING
-            if(screens[0]) screens[0].style.display = 'block';
+            console.error("Missing Screen HTML for:", name);
+            return false;
         }
     },
 
-    openAuth: function() { this.showScreen("auth-screen"); },
-    openSplash: function() { this.showScreen("splash-screen"); },
-    openDashboard: function() { this.showScreen("dashboard-screen"); },
-    hideLoading: function() { 
+    openAuth: function() { return this.showScreen("auth"); },
+    openSplash: function() { return this.showScreen("splash"); },
+    openDashboard: function() { return this.showScreen("dashboard"); },
+    hideLoading: function() {
         const loader = document.getElementById('loading-overlay');
         if(loader) loader.style.display = 'none';
-    },
-    initialize: function() { return Promise.resolve(); }
+    }
 };
 
 export default UI;

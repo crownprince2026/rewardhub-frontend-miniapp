@@ -1,49 +1,41 @@
 "use strict";
-import State from "./state.js";
 
 const UI = {
-    initialized: false,
-    activeScreen: "auth",
-
-    // Aggressive Screen Switcher
-    showScreen: function(name) {
-        console.log("UI: Switching to screen ->", name);
+    showScreen: function(screenId) {
+        console.log("Attempting to show:", screenId);
         
-        // 1. Hide EVERY section with class 'screen'
-        const allScreens = document.querySelectorAll('.screen');
-        allScreens.forEach(s => {
+        // Hide every element that has the class 'screen'
+        const screens = document.querySelectorAll('.screen');
+        screens.forEach(s => {
             s.style.display = 'none';
             s.classList.remove('active');
-            s.setAttribute('hidden', 'true');
         });
 
-        // 2. Find target screen (by ID or data-screen)
-        const target = document.getElementById(name + "-screen") || 
-                       document.querySelector(`[data-screen="${name}"]`);
+        // Try to find the screen by ID (exact match)
+        let target = document.getElementById(screenId);
+        
+        // If not found, try adding "-screen" suffix
+        if (!target) target = document.getElementById(screenId + "-screen");
 
         if (target) {
             target.style.display = 'block';
             target.classList.add('active');
-            target.removeAttribute('hidden');
-            this.activeScreen = name;
-            return true;
+            console.log("Success: Showed", screenId);
         } else {
-            console.error("UI Error: Could not find screen:", name);
-            // Emergency fallback to dashboard if splash/auth fail
-            if(name !== 'dashboard') this.showScreen('dashboard');
-            return false;
+            console.error("CRITICAL: Screen not found in HTML:", screenId);
+            // Fallback: Show the first screen available so the user sees SOMETHING
+            if(screens[0]) screens[0].style.display = 'block';
         }
     },
 
-    hideLoading: function() {
+    openAuth: function() { this.showScreen("auth-screen"); },
+    openSplash: function() { this.showScreen("splash-screen"); },
+    openDashboard: function() { this.showScreen("dashboard-screen"); },
+    hideLoading: function() { 
         const loader = document.getElementById('loading-overlay');
-        if (loader) loader.style.display = 'none';
+        if(loader) loader.style.display = 'none';
     },
-
-    initialize: async function() {
-        this.initialized = true;
-        console.log("UI System Initialized");
-    }
+    initialize: function() { return Promise.resolve(); }
 };
 
 export default UI;

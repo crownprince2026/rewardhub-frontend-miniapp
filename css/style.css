@@ -1,3 +1,6 @@
+.screen { display: none; }
+.screen.active { display: block !important; }
+.hidden { display: none !important; }
 /* =====================================================
    CROWN PRINCE REWARD HUB
    MINI APP STYLESHEET

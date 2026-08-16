@@ -176,33 +176,61 @@ App.initialize = async function () {
 
         }
 
+        console.log("[BOOT 01] state.initialize START");
         await this.modules.state.initialize(this);
+        console.log("[BOOT 01] state.initialize DONE");
 
+        console.log("[BOOT 02] settings.initialize START");
         await this.modules.settings.initialize(this);
+        console.log("[BOOT 02] settings.initialize DONE");
 
+        console.log("[BOOT 03] api.initialize START");
         await this.modules.api.initialize(this);
+        console.log("[BOOT 03] api.initialize DONE");
 
+        console.log("[BOOT 04] auth.initialize START");
         await this.modules.auth.initialize(this);
+        console.log("[BOOT 04] auth.initialize DONE");
 
+        console.log("[BOOT 05] router.initialize START");
         await this.modules.router.initialize(this);
+        console.log("[BOOT 05] router.initialize DONE");
 
+        console.log("[BOOT 06] ui.initialize START");
         await this.modules.ui.initialize(this);
+        console.log("[BOOT 06] ui.initialize DONE");
 
+        console.log("[BOOT 07] animations.initialize START");
         await this.modules.animations.initialize(this);
+        console.log("[BOOT 07] animations.initialize DONE");
 
+        console.log("[BOOT 08] notifications.initialize START");
         await this.modules.notifications.initialize(this);
+        console.log("[BOOT 08] notifications.initialize DONE");
 
+        console.log("[BOOT 09] profile.initialize START");
         await this.modules.profile.initialize(this);
+        console.log("[BOOT 09] profile.initialize DONE");
 
+        console.log("[BOOT 10] wallet.initialize START");
         await this.modules.wallet.initialize(this);
+        console.log("[BOOT 10] wallet.initialize DONE");
 
+        console.log("[BOOT 11] tasks.initialize START");
         await this.modules.tasks.initialize(this);
+        console.log("[BOOT 11] tasks.initialize DONE");
 
+        console.log("[BOOT 12] rewards.initialize START");
         await this.modules.rewards.initialize(this);
+        console.log("[BOOT 12] rewards.initialize DONE");
 
+        console.log("[BOOT 13] ads.initialize START");
         await this.modules.ads.initialize(this);
+        console.log("[BOOT 13] ads.initialize DONE");
 
+        console.log("[BOOT 14] admin.initialize START");
         await this.modules.admin.initialize(this);
+        console.log("[BOOT 14] admin.initialize DONE");
 
         this.initialized = true;
 

@@ -5566,3 +5566,83 @@ button{
    CROWN PRINCE REWARD HUB
    PRODUCTION BUILD
 ===================================================== */
+
+/* =====================================================
+   BRANDING & LAYOUT POLISH
+===================================================== */
+.screen {
+    display: none;
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100vh;
+    background-color: #0f172a;
+    z-index: 1000;
+}
+
+/* Perfect Centering */
+.screen.active {
+    display: flex !important;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+}
+
+.centered-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 15px;
+}
+
+/* Image Size Controls */
+.auth-logo {
+    width: 130px;
+    height: auto;
+    border-radius: 20px;
+}
+
+.splash-logo {
+    width: 180px;
+    height: auto;
+}
+
+.header-logo {
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    margin-right: 10px;
+}
+
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    border: 3px solid var(--primary);
+    margin-bottom: 15px;
+}
+
+/* Text Polish */
+h1 { font-size: 1.6rem; color: #ffffff; margin-bottom: 5px; }
+p { font-size: 1rem; color: #94a3b8; }
+
+/* Animated Loading Bar */
+.loading-bar {
+    width: 180px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+.loading-fill {
+    width: 100%;
+    height: 100%;
+    background: #3b82f6;
+    animation: shimmer 2s infinite linear;
+}
+@keyframes shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}

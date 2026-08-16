@@ -31,15 +31,6 @@
 <body>
 
 <div id="app">
-    <!-- AUTH SCREEN -->
-    <section id="auth-screen" class="screen" data-screen="auth">
-        <div class="auth-container" style="text-align:center; padding:50px;">
-            <img src="assets/images/branding/splash-logo.png" style="width:100px;">
-            <h1>Authenticating</h1>
-            <p>Verifying Secure Connection...</p>
-            <div class="loading-spinner"></div>
-        </div>
-    </section>
 
     <!-- =====================================================
          SPLASH SCREEN
@@ -47,13 +38,12 @@
 
     <section
         id="splash-screen"
-        class="screen"
-        data-screen="splash">
+        class="screen">
 
         <div class="splash-container">
 
             <img
-                src="assets/images/branding/splash-logo.png"
+                src="images/logo.png"
                 class="splash-logo"
                 alt="Logo">
 
@@ -65,7 +55,7 @@
 
             <p>
 
-                LIVE ENTRY TEST 12BD5DF
+                Loading your rewards...
 
             </p>
 
@@ -178,13 +168,12 @@
 
     <section
         id="dashboard-screen"
-        class="screen"
-        data-screen="dashboard">
+        class="screen">
 
         <header class="dashboard-header">
 
             <img
-                src="assets/images/branding/splash-logo.png"
+                src="images/logo.png"
                 class="header-logo"
                 alt="Logo">
 
@@ -1259,9 +1248,6 @@
     </div>
 
 </div>
-
-
-
 
 </body>
 </html>

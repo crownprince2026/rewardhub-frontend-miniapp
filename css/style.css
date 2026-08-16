@@ -331,7 +331,7 @@ img{
 
 .screen{
 
-    display:none;
+    display:none !important;
 
     width:100%;
 
@@ -432,7 +432,7 @@ main{
 
 .hidden{
 
-    display:none !important;
+    display:none !important !important;
 
 }
 
@@ -804,7 +804,7 @@ main{
 
 .onboarding-container::-webkit-scrollbar{
 
-    display:none;
+    display:none !important;
 
 }
 
@@ -3342,7 +3342,7 @@ main{
 
 .switch input{
 
-    display:none;
+    display:none !important;
 
 }
 
@@ -4146,7 +4146,7 @@ main{
 
     inset:0;
 
-    display:none;
+    display:none !important;
 
     justify-content:center;
 
@@ -4276,7 +4276,7 @@ main{
 
     inset:0;
 
-    display:none;
+    display:none !important;
 
     justify-content:center;
 
@@ -4537,7 +4537,7 @@ main{
 
     inset:0;
 
-    display:none;
+    display:none !important;
 
     background:rgba(15,23,42,.96);
 
@@ -4794,7 +4794,7 @@ main{
 
     color:var(--primary);
 
-    display:none;
+    display:none !important;
 
     justify-content:center;
 
@@ -4825,7 +4825,7 @@ main{
 
     inset:0;
 
-    display:none;
+    display:none !important;
 
     justify-content:center;
 
@@ -4939,7 +4939,7 @@ main{
 
     inset:0;
 
-    display:none;
+    display:none !important;
 
     justify-content:center;
 
@@ -5016,7 +5016,7 @@ main{
 
     inset:0;
 
-    display:none;
+    display:none !important;
 
     justify-content:center;
 
@@ -5551,7 +5551,7 @@ button{
     .fab,
     .scroll-top{
 
-        display:none !important;
+        display:none !important !important;
 
     }
 

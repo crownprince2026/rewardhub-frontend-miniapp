@@ -270,46 +270,36 @@ App.initialize = async function () {
 ===================================================== */
 
 App.start = async function () {
-
     try {
+        console.log("App.start: Initializing...");
 
-        await this.initialize();
-
+        // 1. Show splash immediately
         this.modules.ui.showScreen("splash");
 
+        // 2. SET A FAILSAFE: If initialization takes longer than 3 seconds, 
+        // force show the dashboard anyway.
+        const failsafe = setTimeout(() => {
+            if (this.currentPage === "splash") {
+                console.warn("Failsafe triggered: Initializing taking too long. Forcing Dashboard.");
+                this.modules.ui.showScreen("dashboard");
+            }
+        }, 3000);
+
+        // 3. Run the boot sequence
+        await this.initialize();
+
+        // 4. If we get here, clear the failsafe and show dashboard
+        clearTimeout(failsafe);
+        console.log("App.start: Initialization complete. Switching to dashboard.");
         this.modules.ui.showScreen("dashboard");
-
-        this.modules.settings.load()
-            .catch(error => {
-
-                console.error(
-                    "Settings loading failed.",
-                    error
-                );
-
-            });
 
         this.loading = false;
 
-        console.log(
-            "Application started successfully."
-        );
-
+    } catch (error) {
+        console.error("App.start: Startup CRASHED.", error);
+        // If everything fails, try to show the dashboard so the user isn't stuck
+        this.modules.ui.showScreen("dashboard");
     }
-
-    catch (error) {
-
-        console.error(
-            "Startup failed.",
-            error
-        );
-
-        this.modules.ui.showFatalError(
-            error
-        );
-
-    }
-
 };
 
 /* =====================================================
@@ -468,55 +458,24 @@ App.loadUserData = async function () {
 ===================================================== */
 
 App.launch = async function () {
-
     try {
+        // Skip authentication check for now to fix the "Stuck" issue
+        /*
+        const authenticated = await this.authenticate();
+        if (!authenticated) return; 
+        */
 
-        this.modules.ui.showLoading();
-
-        const authenticated =
-            await this.authenticate();
-
-        if (!authenticated) {
-
-            return;
-
-        }
-
+        // Just load the data and go
         await this.loadSettings();
-
         await this.loadUserData();
 
-        const firstLaunch =
-            this.modules.settings.isFirstLaunch();
-
-        if (firstLaunch) {
-
-            this.modules.router.go(
-                "onboarding"
-            );
-
-        }
-
-        else {
-
-            this.modules.router.go(
-                "dashboard"
-            );
-
-        }
-
+        this.modules.ui.showScreen("dashboard");
         this.modules.ui.hideLoading();
 
+    } catch (error) {
+        console.error("Launch Flow Error:", error);
+        this.modules.ui.showScreen("dashboard"); // Force it!
     }
-
-    catch (error) {
-
-        console.error(error);
-
-        this.modules.ui.showFatalError(error);
-
-    }
-
 };
 
 

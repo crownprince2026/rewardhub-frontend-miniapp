@@ -11,7 +11,6 @@ const UI = {
             s.classList.remove('active');
         });
 
-        // Handle both "name" and "name-screen" formats
         const target = document.getElementById(name) || 
                        document.getElementById(name + "-screen") ||
                        document.querySelector(`[data-screen="${name}"]`);
@@ -21,43 +20,84 @@ const UI = {
             target.classList.add('active');
             this.activeScreen = name;
             
-            // Auto-scroll to top when switching screens
+            // NEW: Trigger data loading based on screen name
+            this.loadScreenData(name);
+            
             window.scrollTo(0, 0);
             return true;
         }
-        console.error("Screen not found:", name);
         return false;
     },
 
-    // This function connects the buttons to the screens
+    // This function decides what data to show on each screen
+    loadScreenData: function(name) {
+        if (name === "tasks" || name === "tasks-screen") {
+            this.renderTasks();
+        } else if (name === "dashboard") {
+            this.renderDashboard();
+        } else if (name === "wallet") {
+            this.renderWallet();
+        }
+    },
+
+    // RENDER TASKS
+    renderTasks: function() {
+        const container = document.getElementById("tasks-container");
+        if (!container) return;
+
+        const tasks = [
+            { id: 1, title: "Join Telegram Channel", reward: "$0.10", icon: "📢" },
+            { id: 2, title: "Follow on X (Twitter)", reward: "$0.05", icon: "🐦" },
+            { id: 3, title: "Watch 30s Video Ad", reward: "$0.02", icon: "📺" },
+            { id: 4, title: "Invite 1 Friend", reward: "$0.50", icon: "👥" }
+        ];
+
+        container.innerHTML = tasks.map(task => `
+            <div class="task-card" style="background:#1e293b; margin:10px; padding:15px; border-radius:12px; display:flex; justify-content:space-between; align-items:center;">
+                <div style="display:flex; align-items:center; gap:10px;">
+                    <span style="font-size:1.5rem;">${task.icon}</span>
+                    <div>
+                        <h4 style="margin:0; color:white;">${task.title}</h4>
+                        <small style="color:#94a3b8;">Reward: ${task.reward}</small>
+                    </div>
+                </div>
+                <button onclick="alert('Task Started!')" style="background:#3b82f6; color:white; border:none; padding:8px 15px; border-radius:8px;">Start</button>
+            </div>
+        `).join('');
+    },
+
+    // RENDER DASHBOARD (Balance & Stats)
+    renderDashboard: function() {
+        const balanceEl = document.getElementById("balance");
+        if (balanceEl) balanceEl.innerText = "$12.50"; // Mock Balance
+        
+        const earnedEl = document.getElementById("earned");
+        if (earnedEl) earnedEl.innerText = "$45.00";
+    },
+
+    // RENDER WALLET
+    renderWallet: function() {
+        const container = document.getElementById("wallet-summary");
+        if (!container) return;
+        container.innerHTML = `
+            <div style="text-align:center; padding:20px;">
+                <h2 style="color:#94a3b8;">Available Balance</h2>
+                <h1 style="font-size:3rem; color:#10b981;">$12.50</h1>
+                <button style="width:100%; background:#3b82f6; color:white; padding:15px; border-radius:12px; font-weight:bold; margin-top:10px;">Withdraw Funds</button>
+            </div>
+        `;
+    },
+
     initNavigation: function() {
-        // 1. Bottom Nav Buttons
         const navButtons = document.querySelectorAll('[data-nav]');
         navButtons.forEach(btn => {
             btn.addEventListener('click', () => {
                 const targetScreen = btn.getAttribute('data-nav');
                 this.showScreen(targetScreen);
-                
-                // Visual feedback: highlight active button
                 navButtons.forEach(b => b.style.opacity = "0.6");
                 btn.style.opacity = "1";
             });
         });
-
-        // 2. Specialized Dashboard Buttons (Daily Bonus, Spin Wheel, etc.)
-        // We will target any card that should open a screen
-        this.setupCardNavigation("daily-bonus-card", "daily-bonus");
-        this.setupCardNavigation("spin-wheel-card", "spin-wheel");
-        this.setupCardNavigation("mystery-box-card", "mystery-box");
-        this.setupCardNavigation("watch-ads-card", "watch-ads");
-    },
-
-    setupCardNavigation: function(elementId, screenName) {
-        const el = document.getElementById(elementId);
-        if (el) {
-            el.style.cursor = "pointer";
-            el.onclick = () => this.showScreen(screenName);
-        }
     },
 
     openAuth: function() { this.showScreen("auth"); },

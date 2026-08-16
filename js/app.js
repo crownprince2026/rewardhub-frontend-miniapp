@@ -140,6 +140,22 @@ const App = {
 
 window.RewardHub = App;
 
+document.addEventListener("DOMContentLoaded", () => {
+
+    const splashText = document.querySelector(
+        '[data-screen="splash"] p'
+    );
+
+    if (splashText) {
+
+        splashText.textContent =
+            "JS ENTRY TEST 12BD5DF";
+
+    }
+
+});
+
+
 /* =====================================================
    END OF PHASE 1A.1
 ===================================================== */

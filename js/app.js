@@ -229,16 +229,26 @@ App.start = async function () {
 
     try {
 
-        console.log(
-            "=== STARTUP TEST: SHOWING DASHBOARD BEFORE INITIALIZATION ==="
-        );
+        await this.initialize();
+
+        this.modules.ui.showScreen("splash");
 
         this.modules.ui.showScreen("dashboard");
+
+        this.modules.settings.load()
+            .catch(error => {
+
+                console.error(
+                    "Settings loading failed.",
+                    error
+                );
+
+            });
 
         this.loading = false;
 
         console.log(
-            "=== STARTUP TEST: DASHBOARD COMMAND EXECUTED ==="
+            "Application started successfully."
         );
 
     }
@@ -246,7 +256,11 @@ App.start = async function () {
     catch (error) {
 
         console.error(
-            "Startup test failed.",
+            "Startup failed.",
+            error
+        );
+
+        this.modules.ui.showFatalError(
             error
         );
 

@@ -2,8 +2,8 @@
 import UI from "./ui.js";
 import Profile from "./profile.js";
 import Wallet from "./wallet.js";
-import Tasks from "./tasks.js";
 import Api from "./api.js";
+// import Tasks from "./tasks.js"; // Temporarily disabled to prevent crash
 
 const App = {
     start: async function() {
@@ -13,7 +13,7 @@ const App = {
             await Api.initialize();
             await Profile.load();
             await Wallet.sync();
-            await Tasks.load();
+            // await Tasks.load(); // Disabled
         } catch (e) { console.warn("Background load skipped", e); }
 
         setTimeout(() => {
@@ -22,15 +22,12 @@ const App = {
                 UI.openDashboard();
                 UI.hideLoading();
                 
-                // Pass real data to UI
                 UI.renderDashboard({
                     balance: Wallet.getAvailableBalance(),
                     earned: Profile.getStatistics().totalEarned
                 });
 
-                // Initialize Nav and pass a callback to update data when screens change
                 UI.initNavigation((screen) => {
-                    if(screen === 'tasks') UI.renderTasks(Tasks.getTasks());
                     if(screen === 'dashboard') UI.renderDashboard({
                         balance: Wallet.getAvailableBalance(),
                         earned: Profile.getStatistics().totalEarned

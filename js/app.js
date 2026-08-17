@@ -10,6 +10,7 @@ const App = {
         console.log("Stage 1: App Start");
         UI.openAuth();
 
+        // Background load
         this.loadAppData();
 
         setTimeout(() => {
@@ -22,7 +23,10 @@ const App = {
                 UI.hideLoading();
 
                 UI.initNavigation((screen) => {
-                    if (screen === 'tasks') UI.renderTasks(Tasks.getTasks());
+                    if (screen === 'tasks') {
+                        const allTasks = (Tasks.getTasks) ? Tasks.getTasks() : [];
+                        UI.renderTasks(allTasks);
+                    }
                     if (screen === 'dashboard') this.refreshUI();
                 });
 
@@ -41,7 +45,7 @@ const App = {
             if (Wallet.sync) await Wallet.sync().catch(() => {});
             if (Tasks.loadTasks) await Tasks.loadTasks().catch(() => {});
         } catch (e) {
-            console.log("Background sync pending...");
+            console.log("Data sync pending...");
         }
     },
 

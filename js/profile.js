@@ -1324,25 +1324,21 @@ window.addEventListener(
    PRODUCTION LOCK
 ===================================================== */
 
-Object.freeze(
 
     PROFILE_STATUS
 
 );
 
-Object.freeze(
 
     GENDER
 
 );
 
-Object.freeze(
 
     AVATAR_TYPES
 
 );
 
-Object.seal(
 
     Profile
 

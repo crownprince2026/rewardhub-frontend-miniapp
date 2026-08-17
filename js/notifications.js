@@ -1446,25 +1446,21 @@ window.addEventListener(
    PRODUCTION LOCK
 ===================================================== */
 
-Object.freeze(
 
     NOTIFICATION_TYPES
 
 );
 
-Object.freeze(
 
     NOTIFICATION_CHANNELS
 
 );
 
-Object.freeze(
 
     NOTIFICATION_STATUS
 
 );
 
-Object.seal(
 
     Notifications
 

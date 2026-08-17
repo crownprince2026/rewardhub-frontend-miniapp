@@ -5706,31 +5706,26 @@ Wallet.shutdown = function () {
    PRODUCTION LOCK
 ===================================================== */
 
-Object.freeze(
 
     WITHDRAWAL_METHODS
 
 );
 
-Object.freeze(
 
     WITHDRAWAL_STATUS
 
 );
 
-Object.freeze(
 
     TRANSACTION_TYPES
 
 );
 
-Object.freeze(
 
     TRANSACTION_STATUS
 
 );
 
-Object.seal(
 
     Wallet
 

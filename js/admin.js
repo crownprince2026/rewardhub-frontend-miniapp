@@ -1592,25 +1592,21 @@ window.addEventListener(
    PRODUCTION LOCK
 ===================================================== */
 
-Object.freeze(
 
     ADMIN_ROLES
 
 );
 
-Object.freeze(
 
     ADMIN_PERMISSIONS
 
 );
 
-Object.freeze(
 
     ADMIN_STATUS
 
 );
 
-Object.seal(
 
     Admin
 
@@ -3231,19 +3227,16 @@ Admin.exportDashboard = function () {
    PRODUCTION LOCK
 ===================================================== */
 
-Object.freeze(
 
     Admin.dashboardCards
 
 );
 
-Object.freeze(
 
     Admin.quickActions
 
 );
 
-Object.freeze(
 
     Admin.widgets
 
@@ -5173,25 +5166,21 @@ Admin.userManagementStatus = function () {
    PRODUCTION LOCK
 ===================================================== */
 
-Object.freeze(
 
     USER_STATUS
 
 );
 
-Object.freeze(
 
     Admin.userSorting
 
 );
 
-Object.seal(
 
     Admin.userPagination
 
 );
 
-Object.seal(
 
     Admin.userFilters
 
@@ -7160,25 +7149,21 @@ Admin.taskManagementStatus = function () {
    PRODUCTION LOCK
 ===================================================== */
 
-Object.freeze(
 
     Admin.offerWalls
 
 );
 
-Object.seal(
 
     Admin.taskPagination
 
 );
 
-Object.seal(
 
     Admin.taskSorting
 
 );
 
-Object.seal(
 
     Admin.taskFilters
 
@@ -8889,25 +8874,21 @@ Admin.withdrawalManagementStatus = function () {
    PRODUCTION LOCK
 ===================================================== */
 
-Object.freeze(
 
     WITHDRAWAL_STATUS
 
 );
 
-Object.seal(
 
     Admin.withdrawalPagination
 
 );
 
-Object.seal(
 
     Admin.withdrawalFilters
 
 );
 
-Object.seal(
 
     Admin.withdrawalSorting
 
@@ -10518,25 +10499,21 @@ Admin.broadcastSystemStatus = function () {
    PRODUCTION LOCK
 ===================================================== */
 
-Object.freeze(
 
     Admin.broadcastComposer
 
 );
 
-Object.seal(
 
     Admin.broadcastPagination
 
 );
 
-Object.seal(
 
     Admin.broadcastFilters
 
 );
 
-Object.seal(
 
     Admin.broadcastTargets
 
@@ -12013,43 +11990,36 @@ Admin.systemSettingsStatus = function () {
    PRODUCTION LOCK
 ===================================================== */
 
-Object.freeze(
 
     Admin.rewardSettings
 
 );
 
-Object.freeze(
 
     Admin.featureFlags
 
 );
 
-Object.freeze(
 
     Admin.securitySettings
 
 );
 
-Object.seal(
 
     Admin.systemSettings
 
 );
 
-Object.seal(
 
     Admin.applicationConfig
 
 );
 
-Object.seal(
 
     Admin.branding
 
 );
 
-Object.seal(
 
     Admin.localization
 
@@ -14713,19 +14683,16 @@ Admin.exportReportsModule = function () {
    PRODUCTION LOCK
 ===================================================== */
 
-Object.freeze(
 
     Admin.reportSyncState
 
 );
 
-Object.freeze(
 
     Admin.reportFilters
 
 );
 
-Object.freeze(
 
     Admin.REPORT_TYPES
 
@@ -15472,37 +15439,31 @@ Admin.exportMonitoringModule = function () {
    PRODUCTION LOCK
 ===================================================== */
 
-Object.freeze(
 
     Admin.monitoring
 
 );
 
-Object.freeze(
 
     Admin.monitoringSync
 
 );
 
-Object.freeze(
 
     Admin.systemStatus
 
 );
 
-Object.freeze(
 
     Admin.apiStatus
 
 );
 
-Object.freeze(
 
     Admin.databaseStatus
 
 );
 
-Object.freeze(
 
     Admin.liveMetrics
 
@@ -15890,7 +15851,6 @@ Admin.completedPhase6 = true;
    FREEZE CORE ADMIN OBJECTS
 ===================================================== */
 
-Object.freeze(
 
     Admin.buildInfo
 
@@ -17826,31 +17786,26 @@ Admin.exportRealtimeModule = function () {
    FREEZE REALTIME OBJECTS
 ===================================================== */
 
-Object.freeze(
 
     Admin.realtime
 
 );
 
-Object.freeze(
 
     Admin.connectionStatus
 
 );
 
-Object.freeze(
 
     Admin.liveSync
 
 );
 
-Object.freeze(
 
     Admin.liveUpdates
 
 );
 
-Object.freeze(
 
     Admin.notifications
 

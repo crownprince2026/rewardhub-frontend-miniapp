@@ -10,7 +10,7 @@
    WALLET STATE
 ===================================================== */
 
-import API from "./api.js";
+import Api from "./api.js";
 import State from "./state.js";
 import Settings from "./settings.js";
 import Utils from "./utils.js";
@@ -285,7 +285,7 @@ Wallet.loadBalance = async function () {
 
         this.setLoading(true);
 
-        const response = await API.getWalletBalance();
+        const response = await Api.getWalletBalance();
 
         if (!response.success) {
 
@@ -565,7 +565,7 @@ Wallet.loadTransactions = async function (
 
         }
 
-        const response = await API.getTransactions({
+        const response = await Api.getTransactions({
 
             page: this.page,
 
@@ -1157,7 +1157,7 @@ Wallet.checkConnection = async function () {
 
     try {
 
-        return await API.ping();
+        return await Api.ping();
 
     }
 
@@ -1503,7 +1503,7 @@ Wallet.loadWithdrawalMethods = async function () {
 
         const response =
 
-            await API.getWithdrawalMethods();
+            await Api.getWithdrawalMethods();
 
         if (
 
@@ -1703,7 +1703,7 @@ Wallet.createWithdrawal = async function ({
 
         const response =
 
-            await API.createWithdrawal({
+            await Api.createWithdrawal({
 
                 amount,
 
@@ -1862,7 +1862,7 @@ Wallet.cancelWithdrawal = async function (
 
         const response =
 
-            await API.cancelWithdrawal({
+            await Api.cancelWithdrawal({
 
                 withdrawalId
 
@@ -1951,7 +1951,7 @@ Wallet.calculateWithdrawal = async function (
 
     try {
 
-        return await API.calculateWithdrawal({
+        return await Api.calculateWithdrawal({
 
             amount,
 
@@ -2221,7 +2221,7 @@ Wallet.checkWithdrawalCooldown = async function () {
 
     try {
 
-        return await API.checkWithdrawalCooldown();
+        return await Api.checkWithdrawalCooldown();
 
     }
 
@@ -2301,7 +2301,7 @@ Wallet.loadWithdrawals = async function (
 
         this.setLoading(true);
 
-        const response = await API.getWithdrawals();
+        const response = await Api.getWithdrawals();
 
         if (!response.success) {
 
@@ -2432,7 +2432,7 @@ Wallet.refreshWithdrawalStatus = async function (
 
         const response =
 
-            await API.getWithdrawalStatus({
+            await Api.getWithdrawalStatus({
 
                 withdrawalId
 
@@ -2582,7 +2582,7 @@ Wallet.approveWithdrawal = async function (
 
     try {
 
-        const response = await API.approveWithdrawal({
+        const response = await Api.approveWithdrawal({
 
             withdrawalId,
 
@@ -2651,7 +2651,7 @@ Wallet.rejectWithdrawal = async function (
 
     try {
 
-        const response = await API.rejectWithdrawal({
+        const response = await Api.rejectWithdrawal({
 
             withdrawalId,
 
@@ -2730,7 +2730,7 @@ Wallet.markWithdrawalPaid = async function (
 
     try {
 
-        const response = await API.markWithdrawalPaid({
+        const response = await Api.markWithdrawalPaid({
 
             withdrawalId,
 
@@ -2944,7 +2944,7 @@ Wallet.loadDailyBonus = async function () {
 
     try {
 
-        const response = await API.getDailyBonusStatus();
+        const response = await Api.getDailyBonusStatus();
 
         if (!response.success) {
 
@@ -3011,7 +3011,7 @@ Wallet.claimDailyBonus = async function () {
 
         }
 
-        const response = await API.claimDailyBonus();
+        const response = await Api.claimDailyBonus();
 
         if (!response.success) {
 
@@ -3188,7 +3188,7 @@ Wallet.loadTaskRewards = async function () {
 
     try {
 
-        const response = await API.getTaskRewards();
+        const response = await Api.getTaskRewards();
 
         if (!response.success) {
 
@@ -3456,7 +3456,7 @@ Wallet.loadReferralData = async function () {
 
     try {
 
-        const response = await API.getReferralData();
+        const response = await Api.getReferralData();
 
         if (!response.success) {
 
@@ -4075,7 +4075,7 @@ Wallet.loadCampaigns = async function () {
 
     try {
 
-        const response = await API.getBonusCampaigns();
+        const response = await Api.getBonusCampaigns();
 
         if (!response.success) {
 
@@ -4157,7 +4157,7 @@ Wallet.redeemPromoCode = async function (
 
     try {
 
-        const response = await API.redeemPromoCode({
+        const response = await Api.redeemPromoCode({
 
             code
 
@@ -4431,7 +4431,7 @@ Wallet.loadAnalytics = async function () {
 
     try {
 
-        const response = await API.getWalletAnalytics();
+        const response = await Api.getWalletAnalytics();
 
         if (!response.success) {
 
@@ -4838,7 +4838,7 @@ Wallet.exportTransactionsPDF = async function (
 
     try {
 
-        const response = await API.exportTransactionsPDF({
+        const response = await Api.exportTransactionsPDF({
 
             transactions:
 
@@ -4993,7 +4993,7 @@ Wallet.adminCredit = async function (
 
     try {
 
-        const response = await API.adminCreditWallet({
+        const response = await Api.adminCreditWallet({
 
             userId,
 
@@ -5054,7 +5054,7 @@ Wallet.adminDebit = async function (
 
     try {
 
-        const response = await API.adminDebitWallet({
+        const response = await Api.adminDebitWallet({
 
             userId,
 
@@ -5113,7 +5113,7 @@ Wallet.freeze = async function (
 
     try {
 
-        const response = await API.freezeWallet({
+        const response = await Api.freezeWallet({
 
             userId,
 
@@ -5174,7 +5174,7 @@ Wallet.unfreeze = async function (
 
     try {
 
-        const response = await API.unfreezeWallet({
+        const response = await Api.unfreezeWallet({
 
             userId
 
@@ -5354,7 +5354,7 @@ Wallet.syncWithBackend = async function () {
 
         const response =
 
-            await API.syncWallet();
+            await Api.syncWallet();
 
         if (!response.success) {
 

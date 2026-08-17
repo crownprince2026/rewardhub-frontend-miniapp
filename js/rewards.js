@@ -10,10 +10,9 @@
    REWARD STATE
 ===================================================== */
 
-import API from "./api.js";
+import Api from "./api.js";
 import State from "./state.js";
 import Settings from "./settings.js";
-import UI from "./ui.js";
 import Utils from "./utils.js";
 
 /* =====================================================
@@ -258,7 +257,7 @@ Rewards.loadDailyBonus = async function () {
 
         this.setLoading(true);
 
-        const response = await API.getDailyBonus();
+        const response = await Api.getDailyBonus();
 
         if (!response.success) {
 
@@ -360,7 +359,7 @@ Rewards.claimDailyBonus = async function () {
 
         this.setClaiming(true);
 
-        const response = await API.claimDailyBonus();
+        const response = await Api.claimDailyBonus();
 
         if (!response.success) {
 
@@ -504,7 +503,7 @@ Rewards.loadSpinWheel = async function () {
 
     try {
 
-        const response = await API.getSpinWheel();
+        const response = await Api.getSpinWheel();
 
         if (response.success) {
 
@@ -563,7 +562,7 @@ Rewards.spin = async function () {
 
         this.setClaiming(true);
 
-        const response = await API.spinWheel();
+        const response = await Api.spinWheel();
 
         if (!response.success) {
 
@@ -650,7 +649,7 @@ Rewards.loadMysteryBox = async function () {
 
     try {
 
-        const response = await API.getMysteryBox();
+        const response = await Api.getMysteryBox();
 
         if (response.success) {
 
@@ -709,7 +708,7 @@ Rewards.openMysteryBox = async function () {
 
         this.setClaiming(true);
 
-        const response = await API.openMysteryBox();
+        const response = await Api.openMysteryBox();
 
         if (!response.success) {
 
@@ -798,7 +797,7 @@ Rewards.enterLuckyDraw = async function () {
 
     try {
 
-        return await API.enterLuckyDraw();
+        return await Api.enterLuckyDraw();
 
     }
 
@@ -823,7 +822,7 @@ Rewards.getLuckyDrawStatus = async function () {
 
     try {
 
-        return await API.getLuckyDrawStatus();
+        return await Api.getLuckyDrawStatus();
 
     }
 
@@ -870,7 +869,7 @@ Rewards.claimAchievementReward = async function (
 
         this.setClaiming(true);
 
-        const response = await API.claimAchievementReward({
+        const response = await Api.claimAchievementReward({
 
             achievementId
 
@@ -953,7 +952,7 @@ Rewards.claimLevelReward = async function (
 
         this.setClaiming(true);
 
-        const response = await API.claimLevelReward({
+        const response = await Api.claimLevelReward({
 
             level
 
@@ -1032,7 +1031,7 @@ Rewards.claimReferralBonus = async function () {
 
         this.setClaiming(true);
 
-        const response = await API.claimReferralBonus();
+        const response = await Api.claimReferralBonus();
 
         if (!response.success) {
 
@@ -1107,7 +1106,7 @@ Rewards.claimBonusReward = async function (
 
     try {
 
-        const response = await API.claimBonusReward({
+        const response = await Api.claimBonusReward({
 
             bonusId
 
@@ -1180,7 +1179,7 @@ Rewards.claimPromotionReward = async function (
 
 ) {
 
-    return await API.claimPromotionReward({
+    return await Api.claimPromotionReward({
 
         promotionId
 
@@ -1211,7 +1210,7 @@ Rewards.sync = async function () {
 
         this.setSyncing(true);
 
-        const response = await API.getRewards();
+        const response = await Api.getRewards();
 
         if (!response.success) {
 

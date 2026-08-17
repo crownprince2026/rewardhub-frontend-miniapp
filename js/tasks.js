@@ -10,7 +10,7 @@
    TASK STATE
 ===================================================== */
 
-import API from "./api.js";
+import Api from "./api.js";
 import State from "./state.js";
 import Settings from "./settings.js";
 import Utils from "./utils.js";
@@ -277,7 +277,7 @@ Tasks.loadTasks = async function (
 
         }
 
-        const response = await API.getTasks({
+        const response = await Api.getTasks({
 
             page: this.page,
 
@@ -385,7 +385,7 @@ Tasks.loadCategories = async function () {
 
         const response =
 
-            await API.getTaskCategories();
+            await Api.getTaskCategories();
 
         if (
 
@@ -718,7 +718,7 @@ Tasks.verifyTelegramTask = async function (
 
     try {
 
-        const response = await API.verifyTelegramTask({
+        const response = await Api.verifyTelegramTask({
 
             taskId
 
@@ -765,7 +765,7 @@ Tasks.verifyTwitterTask = async function (
 
     try {
 
-        const response = await API.verifyTwitterTask({
+        const response = await Api.verifyTwitterTask({
 
             taskId
 
@@ -814,7 +814,7 @@ Tasks.verifyOfferwallTask = async function (
 
     try {
 
-        const response = await API.verifyOfferwallTask({
+        const response = await Api.verifyOfferwallTask({
 
             taskId,
 
@@ -883,7 +883,7 @@ Tasks.uploadScreenshot = async function (
 
         );
 
-        const response = await API.uploadTaskProof(
+        const response = await Api.uploadTaskProof(
 
             formData
 
@@ -1113,7 +1113,7 @@ Tasks.completeTask = async function (
 
         }
 
-        const response = await API.completeTask({
+        const response = await Api.completeTask({
 
             taskId
 
@@ -1200,7 +1200,7 @@ Tasks.claimReward = async function (
 
         const response =
 
-            await API.claimTaskReward({
+            await Api.claimTaskReward({
 
                 taskId
 
@@ -1309,7 +1309,7 @@ Tasks.checkFraud = async function (
 
         const response =
 
-            await API.checkTaskFraud({
+            await Api.checkTaskFraud({
 
                 taskId: task.id
 
@@ -1350,7 +1350,7 @@ Tasks.reportTask = async function (
 
 ) {
 
-    return await API.reportTask({
+    return await Api.reportTask({
 
         taskId,
 
@@ -1720,3 +1720,5 @@ export default Tasks;
 ===================================================== */
 
 export default Tasks;
+
+Tasks.load = Tasks.loadTasks;

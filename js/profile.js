@@ -10,10 +10,9 @@
    PROFILE STATE
 ===================================================== */
 
-import API from "./api.js";
+import Api from "./api.js";
 import State from "./state.js";
 import Settings from "./settings.js";
-import UI from "./ui.js";
 import Utils from "./utils.js";
 
 /* =====================================================
@@ -223,7 +222,7 @@ Profile.load = async function () {
 
         const response =
 
-            await API.getProfile();
+            await Api.getProfile();
 
         if (
 
@@ -306,7 +305,7 @@ Profile.save = async function () {
 
         const response =
 
-            await API.updateProfile({
+            await Api.updateProfile({
 
                 profile:
 
@@ -533,7 +532,7 @@ Profile.setAvatar = async function (
 
         this.setSaving(true);
 
-        const response = await API.uploadAvatar({
+        const response = await Api.uploadAvatar({
 
             file
 
@@ -596,7 +595,7 @@ Profile.removeAvatar = async function () {
 
         const response =
 
-            await API.removeAvatar();
+            await Api.removeAvatar();
 
         if (
 
@@ -666,7 +665,7 @@ Profile.changeUsername = async function (
 
         const response =
 
-            await API.changeUsername({
+            await Api.changeUsername({
 
                 username
 
@@ -981,7 +980,7 @@ Profile.sync = async function () {
 
         const response =
 
-            await API.syncProfile();
+            await Api.syncProfile();
 
         if (!response.success) {
 

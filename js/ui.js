@@ -3,12 +3,15 @@
 const UI = {
     showScreen: function(name) {
         const screens = document.querySelectorAll('.screen');
-        screens.forEach(s => { s.style.display = 'none'; s.classList.remove('active'); });
+        screens.forEach(s => {
+            s.style.display = 'none';
+            s.classList.remove('active');
+        });
         
         const target = document.getElementById(name) || document.getElementById(name + "-screen");
 
         if (target) {
-            target.style.display = 'flex'; // Use flex for centering
+            target.style.display = 'flex'; 
             target.classList.add('active');
             return true;
         }

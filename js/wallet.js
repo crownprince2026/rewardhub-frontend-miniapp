@@ -1424,7 +1424,6 @@ window.addEventListener(
    PRODUCTION EXPORT
 ===================================================== */
 
-export default Wallet;
 
 
 /* =====================================================
@@ -5798,3 +5797,5 @@ Wallet.production = {
    END OF PHASE 4D.5
    WALLET MODULE COMPLETE
 ===================================================== */
+
+export default Wallet;

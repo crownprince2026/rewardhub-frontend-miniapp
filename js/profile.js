@@ -1353,7 +1353,6 @@ Object.seal(
    PRODUCTION EXPORT
 ===================================================== */
 
-export default Profile;
 
 
 /* =====================================================
@@ -1362,3 +1361,5 @@ export default Profile;
    CROWN PRINCE REWARD HUB
    PRODUCTION BUILD
 ===================================================== */
+
+export default Profile;

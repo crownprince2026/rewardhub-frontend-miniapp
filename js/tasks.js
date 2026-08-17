@@ -1709,7 +1709,6 @@ window.addEventListener(
    PRODUCTION EXPORT
 ===================================================== */
 
-export default Tasks;
 
 
 /* =====================================================
@@ -1719,6 +1718,7 @@ export default Tasks;
    PRODUCTION BUILD
 ===================================================== */
 
-export default Tasks;
 
 Tasks.load = Tasks.loadTasks;
+
+export default Tasks;

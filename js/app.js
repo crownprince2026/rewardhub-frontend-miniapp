@@ -3,13 +3,14 @@ import UI from "./ui.js";
 import Api from "./api.js";
 import Profile from "./profile.js";
 import Wallet from "./wallet.js";
+import Tasks from "./tasks.js";
 
 const App = {
     start: async function() {
         console.log("Stage 1: App Start");
         UI.openAuth();
 
-        // Start loading data in the background
+        // Load data in background
         this.loadAppData();
 
         setTimeout(() => {
@@ -20,10 +21,22 @@ const App = {
                 console.log("Stage 3: Dashboard");
                 UI.openDashboard();
                 UI.hideLoading();
-                UI.initNavigation();
                 
-                // Refresh the dashboard with whatever data we loaded
+                // Initialize Navigation with a Task Render callback
+                UI.initNavigation((screen) => {
+                    if (screen === 'tasks') {
+                        // Use the real Tasks module
+                        UI.renderTasks(Tasks.getTasks());
+                    }
+                    if (screen === 'dashboard') {
+                        this.refreshUI();
+                    }
+                });
+                
                 this.refreshUI();
+
+                const debug = document.getElementById('debug-check');
+                if(debug) debug.style.display = 'none';
             }, 3000);
         }, 3000);
     },
@@ -31,20 +44,18 @@ const App = {
     loadAppData: async function() {
         try {
             await Api.initialize();
-            // Try to load profile and wallet, but don't stop the app if they fail
-            if (Profile.load) await Profile.load().catch(e => console.log("Profile wait"));
-            if (Wallet.sync) await Wallet.sync().catch(e => console.log("Wallet wait"));
-            console.log("Data background sync complete");
+            if (Profile.load) await Profile.load();
+            if (Wallet.sync) await Wallet.sync();
+            // Call the real loadTasks function we found in your file
+            if (Tasks.loadTasks) await Tasks.loadTasks();
         } catch (e) {
-            console.log("Network background error");
+            console.log("Data sync background wait...");
         }
     },
 
     refreshUI: function() {
-        // Pass real data to the UI renderer
         const stats = (Profile.getStatistics) ? Profile.getStatistics() : { totalEarned: 0 };
         const balance = (Wallet.getAvailableBalance) ? Wallet.getAvailableBalance() : 0;
-        
         UI.renderDashboard({
             balance: balance,
             earned: stats.totalEarned

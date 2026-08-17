@@ -1327,3 +1327,15 @@ export default Api;
    CROWN PRINCE REWARD HUB
    PRODUCTION BUILD
 ===================================================== */
+
+/* =====================================================
+   API ALIASES FOR WALLET MODULE
+===================================================== */
+Api.getDailyBonusStatus = () => Api.get(ENDPOINTS.REWARDS + "/daily");
+Api.claimDailyBonus = () => Api.post(ENDPOINTS.REWARDS + "/daily");
+Api.getTaskRewards = () => Api.get(ENDPOINTS.TASKS + "/rewards");
+Api.getReferralData = () => Api.get(ENDPOINTS.REFERRALS);
+Api.getBonusCampaigns = () => Api.get(ENDPOINTS.REWARDS + "/campaigns");
+Api.getWalletAnalytics = () => Api.get(ENDPOINTS.WALLET + "/analytics");
+Api.syncWallet = () => Api.get(ENDPOINTS.WALLET + "/sync");
+Api.checkWithdrawalCooldown = () => Api.get(ENDPOINTS.WITHDRAWALS + "/cooldown");

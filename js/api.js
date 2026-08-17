@@ -701,6 +701,7 @@ Api.delete = (
    USERS
 ===================================================== */
 
+Api.getProfile = () => Api.get(ENDPOINTS.PROFILE);
 Api.profile = (userId) =>
     Api.get(
         ENDPOINTS.PROFILE,

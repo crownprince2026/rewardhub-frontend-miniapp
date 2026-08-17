@@ -1,5 +1,5 @@
 "use strict";
-import State from "./state.js";
+import Profile from "./profile.js";
 
 const UI = {
     activeScreen: "auth",
@@ -24,30 +24,43 @@ const UI = {
     },
 
     loadScreenData: function(name) {
-        // We only render if the screen is active
         if (name === "dashboard") this.renderDashboard();
         if (name === "tasks") this.renderTasks();
         if (name === "wallet") this.renderWallet();
+        if (name === "profile") this.renderProfile();
     },
 
-    // REAL DATA RENDER: DASHBOARD
+    // REAL DATA: DASHBOARD (Connecting to Profile.js)
     renderDashboard: function() {
-        const user = State.getUser();
+        const stats = Profile.getStatistics();
         const balanceEl = document.getElementById("balance");
         const earnedEl = document.getElementById("earned");
         const referralEl = document.getElementById("referrals");
 
-        if (user) {
-            // These field names depend on what your API returns (e.g., user.balance)
-            if (balanceEl) balanceEl.innerText = `$${user.balance || "0.00"}`;
-            if (earnedEl) earnedEl.innerText = `$${user.total_earned || "0.00"}`;
-            if (referralEl) referralEl.innerText = user.referral_count || "0";
+        // Profile.js stores 'totalEarned' in statistics
+        if (earnedEl) earnedEl.innerText = `$${stats.totalEarned.toFixed(2)}`;
+        if (referralEl) referralEl.innerText = stats.referrals;
+        
+        // Balance usually comes from the Wallet module (next step)
+        // For now, we use earned minus withdrawn if available
+        if (balanceEl) {
+            const currentBalance = stats.totalEarned - stats.totalWithdrawn;
+            balanceEl.innerText = `$${currentBalance.toFixed(2)}`;
         }
     },
 
-    // Keep these as placeholders until we inspect their modules
-    renderTasks: function() { console.log("Tasks module connection pending..."); },
-    renderWallet: function() { console.log("Wallet module connection pending..."); },
+    renderProfile: function() {
+        const profile = Profile.getProfile();
+        const stats = Profile.getStatistics();
+        const nameEl = document.querySelector(".profile-name");
+        const idEl = document.querySelector(".profile-id");
+
+        if (nameEl) nameEl.innerText = Profile.getDisplayName();
+        if (idEl) idEl.innerText = `ID: ${profile.telegramId || 'N/A'}`;
+    },
+
+    renderTasks: function() { console.log("Tasks module pending..."); },
+    renderWallet: function() { console.log("Wallet module pending..."); },
 
     initNavigation: function() {
         document.querySelectorAll('[data-nav]').forEach(btn => {

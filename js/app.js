@@ -7,23 +7,29 @@ import Tasks from "./tasks.js";
 
 const App = {
     start: async function() {
-        UI.openAuth();
-
+        console.log("App starting...");
+        
+        // 1. Show Auth immediately (No matter what)
         try {
-            await Api.initialize();
-            
-            // Sync everything: Profile, Wallet, and now Tasks
-            await Promise.all([
-                Profile.load(),
-                Wallet.sync(),
-                Tasks.load() // We will ensure this exists in Phase 2
-            ]);
-            
-            console.log("All App Data Synced.");
-        } catch (error) {
-            console.warn("Sync failed:", error);
+            UI.openAuth();
+        } catch(e) {
+            console.error("UI OpenAuth failed", e);
         }
 
+        // 2. Load Data Safely
+        try {
+            if (Api.initialize) await Api.initialize();
+            
+            // Use optional chaining so if .load doesn't exist yet, it doesn't crash
+            if (Profile.load) await Profile.load().catch(e => console.log("Profile load skipped"));
+            if (Wallet.sync) await Wallet.sync().catch(e => console.log("Wallet sync skipped"));
+            if (Tasks.load) await Tasks.load().catch(e => console.log("Tasks load skipped"));
+            
+        } catch (error) {
+            console.warn("Background data load encountered issues:", error);
+        }
+
+        // 3. Forced Sequence
         setTimeout(() => {
             UI.openSplash();
             setTimeout(() => {
@@ -36,7 +42,7 @@ const App = {
 };
 
 document.addEventListener("DOMContentLoaded", () => {
-    App.start();
+    App.start().catch(err => console.error("CRITICAL BOOT ERROR:", err));
 });
 
 export default App;

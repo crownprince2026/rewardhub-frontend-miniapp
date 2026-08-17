@@ -1719,3 +1719,5 @@ export default Tasks;
    CROWN PRINCE REWARD HUB
    PRODUCTION BUILD
 ===================================================== */
+
+export default Tasks;

@@ -1,3 +1,4 @@
+document.body.style.backgroundColor = "red";
 "use strict";
 import UI from "./ui.js";
 import Api from "./api.js";

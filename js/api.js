@@ -1319,7 +1319,6 @@ export {
 
 };
 
-export default Api;
 
 
 /* =====================================================
@@ -1340,3 +1339,5 @@ Api.getBonusCampaigns = () => Api.get(ENDPOINTS.REWARDS + "/campaigns");
 Api.getWalletAnalytics = () => Api.get(ENDPOINTS.WALLET + "/analytics");
 Api.syncWallet = () => Api.get(ENDPOINTS.WALLET + "/sync");
 Api.checkWithdrawalCooldown = () => Api.get(ENDPOINTS.WITHDRAWALS + "/cooldown");
+
+export default Api;

@@ -5798,4 +5798,5 @@ Wallet.production = {
    WALLET MODULE COMPLETE
 ===================================================== */
 
+
 export default Wallet;

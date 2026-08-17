@@ -1721,4 +1721,7 @@ window.addEventListener(
 
 Tasks.load = Tasks.loadTasks;
 
+
 export default Tasks;
+
+Tasks.load = Tasks.loadTasks;

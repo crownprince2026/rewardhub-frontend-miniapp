@@ -1371,7 +1371,6 @@ Utils.initialize();
    PRODUCTION EXPORT
 ===================================================== */
 
-export default Utils;
 
 
 /* =====================================================
@@ -1380,5 +1379,6 @@ export default Utils;
    CROWN PRINCE REWARD HUB
    PRODUCTION BUILD
 ===================================================== */
+
 
 export default Utils;

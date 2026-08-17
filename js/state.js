@@ -1042,7 +1042,6 @@ window.addEventListener(
    PRODUCTION EXPORT
 ===================================================== */
 
-export default State;
 
 
 /* =====================================================
@@ -1051,3 +1050,5 @@ export default State;
    CROWN PRINCE REWARD HUB
    PRODUCTION BUILD
 ===================================================== */
+
+export default State;

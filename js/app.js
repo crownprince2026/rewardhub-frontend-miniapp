@@ -10,7 +10,6 @@ const App = {
         console.log("Stage 1: App Start");
         UI.openAuth();
 
-        // Load data in background
         this.loadAppData();
 
         setTimeout(() => {
@@ -21,18 +20,12 @@ const App = {
                 console.log("Stage 3: Dashboard");
                 UI.openDashboard();
                 UI.hideLoading();
-                
-                // Initialize Navigation with a Task Render callback
+
                 UI.initNavigation((screen) => {
-                    if (screen === 'tasks') {
-                        // Use the real Tasks module
-                        UI.renderTasks(Tasks.getTasks());
-                    }
-                    if (screen === 'dashboard') {
-                        this.refreshUI();
-                    }
+                    if (screen === 'tasks') UI.renderTasks(Tasks.getTasks());
+                    if (screen === 'dashboard') this.refreshUI();
                 });
-                
+
                 this.refreshUI();
 
                 const debug = document.getElementById('debug-check');
@@ -44,12 +37,11 @@ const App = {
     loadAppData: async function() {
         try {
             await Api.initialize();
-            if (Profile.load) await Profile.load();
-            if (Wallet.sync) await Wallet.sync();
-            // Call the real loadTasks function we found in your file
-            if (Tasks.loadTasks) await Tasks.loadTasks();
+            if (Profile.load) await Profile.load().catch(() => {});
+            if (Wallet.sync) await Wallet.sync().catch(() => {});
+            if (Tasks.loadTasks) await Tasks.loadTasks().catch(() => {});
         } catch (e) {
-            console.log("Data sync background wait...");
+            console.log("Background sync pending...");
         }
     },
 

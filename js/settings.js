@@ -1206,7 +1206,6 @@ window.addEventListener(
    PRODUCTION EXPORT
 ===================================================== */
 
-export default Settings;
 
 
 /* =====================================================
@@ -1215,5 +1214,6 @@ export default Settings;
    CROWN PRINCE REWARD HUB
    PRODUCTION BUILD
 ===================================================== */
+
 
 export default Settings;

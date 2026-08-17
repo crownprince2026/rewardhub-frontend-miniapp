@@ -17,7 +17,6 @@ const UI = {
         return false;
     },
 
-    // app.js will call this and pass the Wallet data
     renderDashboard: function(data) {
         const balanceEl = document.getElementById("balance");
         const earnedEl = document.getElementById("earned");
@@ -27,11 +26,18 @@ const UI = {
 
     renderTasks: function(tasksArray) {
         const container = document.getElementById("tasks-container");
-        if (!container || !tasksArray) return;
+        if (!container) return;
+        if (!tasksArray || tasksArray.length === 0) {
+            container.innerHTML = '<p style="text-align:center; color:#94a3b8; padding:20px;">No tasks available right now.</p>';
+            return;
+        }
         container.innerHTML = tasksArray.map(task => `
-            <div class="task-card" style="background:#1e293b; margin:10px; padding:15px; border-radius:12px; border:1px solid #334155; display:flex; justify-content:space-between;">
-                <h4 style="margin:0; color:white;">${task.title}</h4>
-                <button style="background:#3b82f6; color:white; border:none; padding:5px 10px; border-radius:5px;">View</button>
+            <div class="task-card" style="background:#1e293b; margin:10px; padding:15px; border-radius:12px; border:1px solid #334155; display:flex; justify-content:space-between; align-items:center;">
+                <div>
+                    <h4 style="margin:0; color:white;">${task.title}</h4>
+                    <small style="color:#10b981;">+$${(task.reward || 0).toFixed(2)}</small>
+                </div>
+                <button style="background:#3b82f6; color:white; border:none; padding:8px 15px; border-radius:8px;">Start</button>
             </div>
         `).join('');
     },
@@ -40,8 +46,8 @@ const UI = {
         document.querySelectorAll('[data-nav]').forEach(btn => {
             btn.onclick = () => {
                 const target = btn.getAttribute('data-nav');
-                this.showScreen(target);
-                if(navCallback) navCallback(target);
+                const success = this.showScreen(target);
+                if(success && navCallback) navCallback(target);
             };
         });
     },

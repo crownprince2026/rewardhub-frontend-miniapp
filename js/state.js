@@ -1000,7 +1000,6 @@ window.addEventListener(
 
     }
 
-);
 
 window.addEventListener(
 
@@ -1018,7 +1017,6 @@ window.addEventListener(
 
     }
 
-);
 
 
 /* =====================================================
@@ -1035,7 +1033,6 @@ window.addEventListener(
 
     }
 
-);
 
 
 /* =====================================================

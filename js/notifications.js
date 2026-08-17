@@ -1427,7 +1427,6 @@ window.addEventListener(
 
     }
 
-);
 
 window.addEventListener(
 
@@ -1439,7 +1438,6 @@ window.addEventListener(
 
     }
 
-);
 
 
 /* =====================================================
@@ -1449,22 +1447,18 @@ window.addEventListener(
 
     NOTIFICATION_TYPES
 
-);
 
 
     NOTIFICATION_CHANNELS
 
-);
 
 
     NOTIFICATION_STATUS
 
-);
 
 
     Notifications
 
-);
 
 
 /* =====================================================

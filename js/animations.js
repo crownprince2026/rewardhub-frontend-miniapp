@@ -168,73 +168,61 @@ Animations.register(
 
     "fade"
 
-);
 
 Animations.register(
 
     "slide"
 
-);
 
 Animations.register(
 
     "scale"
 
-);
 
 Animations.register(
 
     "bounce"
 
-);
 
 Animations.register(
 
     "shake"
 
-);
 
 Animations.register(
 
     "confetti"
 
-);
 
 Animations.register(
 
     "spin"
 
-);
 
 Animations.register(
 
     "toast"
 
-);
 
 Animations.register(
 
     "modal"
 
-);
 
 Animations.register(
 
     "bottom-sheet"
 
-);
 
 Animations.register(
 
     "page"
 
-);
 
 Animations.register(
 
     "reward"
 
-);
 
 /* =====================================================
    END OF PHASE 2C.1
@@ -1815,7 +1803,6 @@ window.addEventListener(
 
     }
 
-);
 
 
 /* =====================================================

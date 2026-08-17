@@ -587,7 +587,6 @@ window.addEventListener(
 
     }
 
-);
 
 
 window.addEventListener(
@@ -600,7 +599,6 @@ window.addEventListener(
 
     }
 
-);
 
 
 /* =====================================================
@@ -650,7 +648,6 @@ Api.post = (
 
     body
 
-);
 
 
 Api.put = (
@@ -667,7 +664,6 @@ Api.put = (
 
     body
 
-);
 
 
 Api.delete = (
@@ -684,7 +680,6 @@ Api.delete = (
 
     body
 
-);
 
 
 /* =====================================================

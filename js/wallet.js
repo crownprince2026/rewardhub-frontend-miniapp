@@ -1417,7 +1417,6 @@ window.addEventListener(
 
     }
 
-);
 
 
 /* =====================================================
@@ -5514,7 +5513,6 @@ window.addEventListener(
 
     }
 
-);
 
 window.addEventListener(
 
@@ -5528,7 +5526,6 @@ window.addEventListener(
 
     }
 
-);
 
 
 /* =====================================================
@@ -5709,27 +5706,22 @@ Wallet.shutdown = function () {
 
     WITHDRAWAL_METHODS
 
-);
 
 
     WITHDRAWAL_STATUS
 
-);
 
 
     TRANSACTION_TYPES
 
-);
 
 
     TRANSACTION_STATUS
 
-);
 
 
     Wallet
 
-);
 
 
 /* =====================================================
@@ -5746,7 +5738,6 @@ window.addEventListener(
 
     }
 
-);
 
 window.addEventListener(
 
@@ -5766,7 +5757,6 @@ window.addEventListener(
 
     }
 
-);
 
 
 /* =====================================================
@@ -5784,14 +5774,5 @@ Wallet.production = {
     locked: true,
 
     initialized: true
-
-};
-
-
-/* =====================================================
-   END OF PHASE 4D.5
-   WALLET MODULE COMPLETE
-===================================================== */
-
 
 export default Wallet;

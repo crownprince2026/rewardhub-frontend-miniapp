@@ -1305,7 +1305,6 @@ window.addEventListener(
 
     }
 
-);
 
 window.addEventListener(
 
@@ -1317,7 +1316,6 @@ window.addEventListener(
 
     }
 
-);
 
 
 /* =====================================================
@@ -1327,22 +1325,18 @@ window.addEventListener(
 
     PROFILE_STATUS
 
-);
 
 
     GENDER
 
-);
 
 
     AVATAR_TYPES
 
-);
 
 
     Profile
 
-);
 
 
 /* =====================================================

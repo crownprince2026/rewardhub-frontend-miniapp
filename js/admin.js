@@ -909,7 +909,6 @@ window.addEventListener(
 
     }
 
-);
 
 window.addEventListener(
 
@@ -931,7 +930,6 @@ window.addEventListener(
 
     }
 
-);
 
 
 /* =====================================================
@@ -1573,7 +1571,6 @@ window.addEventListener(
 
     }
 
-);
 
 window.addEventListener(
 
@@ -1585,7 +1582,6 @@ window.addEventListener(
 
     }
 
-);
 
 
 /* =====================================================
@@ -1595,22 +1591,18 @@ window.addEventListener(
 
     ADMIN_ROLES
 
-);
 
 
     ADMIN_PERMISSIONS
 
-);
 
 
     ADMIN_STATUS
 
-);
 
 
     Admin
 
-);
 
 
 /* =====================================================
@@ -3230,17 +3222,14 @@ Admin.exportDashboard = function () {
 
     Admin.dashboardCards
 
-);
 
 
     Admin.quickActions
 
-);
 
 
     Admin.widgets
 
-);
 
 
 /* =====================================================
@@ -5169,22 +5158,18 @@ Admin.userManagementStatus = function () {
 
     USER_STATUS
 
-);
 
 
     Admin.userSorting
 
-);
 
 
     Admin.userPagination
 
-);
 
 
     Admin.userFilters
 
-);
 
 
 /* =====================================================
@@ -7152,22 +7137,18 @@ Admin.taskManagementStatus = function () {
 
     Admin.offerWalls
 
-);
 
 
     Admin.taskPagination
 
-);
 
 
     Admin.taskSorting
 
-);
 
 
     Admin.taskFilters
 
-);
 
 
 /* =====================================================
@@ -8877,22 +8858,18 @@ Admin.withdrawalManagementStatus = function () {
 
     WITHDRAWAL_STATUS
 
-);
 
 
     Admin.withdrawalPagination
 
-);
 
 
     Admin.withdrawalFilters
 
-);
 
 
     Admin.withdrawalSorting
 
-);
 
 
 /* =====================================================
@@ -10502,22 +10479,18 @@ Admin.broadcastSystemStatus = function () {
 
     Admin.broadcastComposer
 
-);
 
 
     Admin.broadcastPagination
 
-);
 
 
     Admin.broadcastFilters
 
-);
 
 
     Admin.broadcastTargets
 
-);
 
 
 /* =====================================================
@@ -11993,37 +11966,30 @@ Admin.systemSettingsStatus = function () {
 
     Admin.rewardSettings
 
-);
 
 
     Admin.featureFlags
 
-);
 
 
     Admin.securitySettings
 
-);
 
 
     Admin.systemSettings
 
-);
 
 
     Admin.applicationConfig
 
-);
 
 
     Admin.branding
 
-);
 
 
     Admin.localization
 
-);
 
 
 /* =====================================================
@@ -14686,17 +14652,14 @@ Admin.exportReportsModule = function () {
 
     Admin.reportSyncState
 
-);
 
 
     Admin.reportFilters
 
-);
 
 
     Admin.REPORT_TYPES
 
-);
 
 
 /* =====================================================
@@ -15442,32 +15405,26 @@ Admin.exportMonitoringModule = function () {
 
     Admin.monitoring
 
-);
 
 
     Admin.monitoringSync
 
-);
 
 
     Admin.systemStatus
 
-);
 
 
     Admin.apiStatus
 
-);
 
 
     Admin.databaseStatus
 
-);
 
 
     Admin.liveMetrics
 
-);
 
 
 /* =====================================================
@@ -15854,7 +15811,6 @@ Admin.completedPhase6 = true;
 
     Admin.buildInfo
 
-);
 
 
 /* =====================================================
@@ -17789,27 +17745,22 @@ Admin.exportRealtimeModule = function () {
 
     Admin.realtime
 
-);
 
 
     Admin.connectionStatus
 
-);
 
 
     Admin.liveSync
 
-);
 
 
     Admin.liveUpdates
 
-);
 
 
     Admin.notifications
 
-);
 
 
 /* =====================================================

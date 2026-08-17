@@ -129,7 +129,6 @@ Router.register(
 
     }
 
-);
 
 Router.register(
 
@@ -143,7 +142,6 @@ Router.register(
 
     }
 
-);
 
 Router.register(
 
@@ -157,7 +155,6 @@ Router.register(
 
     }
 
-);
 
 Router.register(
 
@@ -171,7 +168,6 @@ Router.register(
 
     }
 
-);
 
 Router.register(
 
@@ -185,7 +181,6 @@ Router.register(
 
     }
 
-);
 
 Router.register(
 
@@ -199,7 +194,6 @@ Router.register(
 
     }
 
-);
 
 Router.register(
 
@@ -213,7 +207,6 @@ Router.register(
 
     }
 
-);
 
 Router.register(
 
@@ -227,7 +220,6 @@ Router.register(
 
     }
 
-);
 
 Router.register(
 
@@ -241,7 +233,6 @@ Router.register(
 
     }
 
-);
 
 Router.register(
 
@@ -255,7 +246,6 @@ Router.register(
 
     }
 
-);
 
 Router.register(
 
@@ -269,7 +259,6 @@ Router.register(
 
     }
 
-);
 
 Router.register(
 
@@ -283,7 +272,6 @@ Router.register(
 
     }
 
-);
 
 Router.register(
 
@@ -297,7 +285,6 @@ Router.register(
 
     }
 
-);
 
 Router.register(
 
@@ -311,7 +298,6 @@ Router.register(
 
     }
 
-);
 
 Router.register(
 
@@ -325,7 +311,6 @@ Router.register(
 
     }
 
-);
 
 Router.register(
 
@@ -339,7 +324,6 @@ Router.register(
 
     }
 
-);
 
 Router.register(
 
@@ -353,7 +337,6 @@ Router.register(
 
     }
 
-);
 
 Router.register(
 
@@ -367,7 +350,6 @@ Router.register(
 
     }
 
-);
 
 Router.register(
 
@@ -383,7 +365,6 @@ Router.register(
 
     }
 
-);
 
 /* =====================================================
    END OF PHASE 2A.1
@@ -837,7 +818,6 @@ window.addEventListener(
 
     }
 
-);
 
 
 /* =====================================================
@@ -852,7 +832,6 @@ Router.addGuard(
 
         MiniAppAuth.isAdminAuthenticated()
 
-);
 
 
 /* =====================================================
@@ -1129,7 +1108,6 @@ const __routerGo = Router.go.bind(
 
     Router
 
-);
 
 
 Router.go = async function (
@@ -1239,7 +1217,6 @@ document.addEventListener(
 
     }
 
-);
 
 
 /* =====================================================
@@ -1456,7 +1433,6 @@ window.addEventListener(
 
     }
 
-);
 
 
 /* =====================================================

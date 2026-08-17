@@ -771,6 +771,7 @@ Api.user = {
    WALLET
 ===================================================== */
 
+Api.getWalletBalance = () => Api.get(ENDPOINTS.WALLET);
 Api.wallet = {
 
     balance() {

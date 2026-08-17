@@ -1,5 +1,6 @@
 "use strict";
 import Profile from "./profile.js";
+import Wallet from "./wallet.js";
 
 const UI = {
     activeScreen: "auth",
@@ -30,37 +31,33 @@ const UI = {
         if (name === "profile") this.renderProfile();
     },
 
-    // REAL DATA: DASHBOARD (Connecting to Profile.js)
     renderDashboard: function() {
         const stats = Profile.getStatistics();
+        const balance = Wallet.summary.available; // Using the real Wallet available balance
+
         const balanceEl = document.getElementById("balance");
         const earnedEl = document.getElementById("earned");
         const referralEl = document.getElementById("referrals");
 
-        // Profile.js stores 'totalEarned' in statistics
+        if (balanceEl) balanceEl.innerText = `$${balance.toFixed(2)}`;
         if (earnedEl) earnedEl.innerText = `$${stats.totalEarned.toFixed(2)}`;
         if (referralEl) referralEl.innerText = stats.referrals;
-        
-        // Balance usually comes from the Wallet module (next step)
-        // For now, we use earned minus withdrawn if available
-        if (balanceEl) {
-            const currentBalance = stats.totalEarned - stats.totalWithdrawn;
-            balanceEl.innerText = `$${currentBalance.toFixed(2)}`;
-        }
+    },
+
+    renderWallet: function() {
+        const balanceEl = document.querySelector("#wallet-summary h1");
+        if (balanceEl) balanceEl.innerText = `$${Wallet.summary.available.toFixed(2)}`;
     },
 
     renderProfile: function() {
         const profile = Profile.getProfile();
-        const stats = Profile.getStatistics();
         const nameEl = document.querySelector(".profile-name");
         const idEl = document.querySelector(".profile-id");
-
         if (nameEl) nameEl.innerText = Profile.getDisplayName();
         if (idEl) idEl.innerText = `ID: ${profile.telegramId || 'N/A'}`;
     },
 
     renderTasks: function() { console.log("Tasks module pending..."); },
-    renderWallet: function() { console.log("Wallet module pending..."); },
 
     initNavigation: function() {
         document.querySelectorAll('[data-nav]').forEach(btn => {

@@ -2,26 +2,29 @@
 import UI from "./ui.js";
 import Api from "./api.js";
 import State from "./state.js";
+import Profile from "./profile.js";
+import Wallet from "./wallet.js";
 
 const App = {
     start: async function() {
-        // 1. Show Auth Screen (Visual)
         UI.openAuth();
 
-        // 2. BACKGROUND DATA LOAD: Initialize API and Fetch Profile
+        // BACKGROUND DATA LOAD
         try {
-            await Api.initialize(); // Uses current session if exists
+            await Api.initialize();
             
-            // If you have a user ID from Telegram, pass it here. 
-            // For now, we try to fetch the "current" profile
-            const profile = await Api.profile(); 
-            State.setUser(profile);
-            console.log("Real Data Loaded:", profile);
+            // Load both Profile and Wallet in parallel
+            await Promise.all([
+                Profile.load(),
+                Wallet.loadBalance()
+            ]);
+            
+            console.log("Real Financial Data Loaded.");
         } catch (error) {
-            console.warn("Could not load real data, using defaults:", error);
+            console.warn("Data load failed, showing zeros:", error);
         }
 
-        // 3. Timing Sequence
+        // Timing Sequence
         setTimeout(() => {
             UI.openSplash();
 

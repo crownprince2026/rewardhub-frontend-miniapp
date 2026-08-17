@@ -1215,3 +1215,5 @@ export default Settings;
    CROWN PRINCE REWARD HUB
    PRODUCTION BUILD
 ===================================================== */
+
+export default Settings;

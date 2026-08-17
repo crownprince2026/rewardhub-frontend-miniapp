@@ -1380,3 +1380,5 @@ export default Utils;
    CROWN PRINCE REWARD HUB
    PRODUCTION BUILD
 ===================================================== */
+
+export default Utils;

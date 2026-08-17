@@ -289,9 +289,9 @@ Wallet.loadBalance = async function () {
 
         if (!response.success) {
 
-            throw new Error(
+            throw new Error("Operation failed");
 
-                response.message ||
+                response.message || "Operation failed");
 
                 "Unable to load wallet."
 
@@ -583,9 +583,9 @@ Wallet.loadTransactions = async function (
 
         if (!response.success) {
 
-            throw new Error(
+            throw new Error("Operation failed");
 
-                response.message ||
+                response.message || "Operation failed");
 
                 "Unable to load transactions."
 
@@ -2303,9 +2303,9 @@ Wallet.loadWithdrawals = async function (
 
         if (!response.success) {
 
-            throw new Error(
+            throw new Error("Operation failed");
 
-                response.message ||
+                response.message || "Operation failed");
 
                 "Unable to load withdrawals."
 
@@ -5356,9 +5356,9 @@ Wallet.syncWithBackend = async function () {
 
         if (!response.success) {
 
-            throw new Error(
+            throw new Error("Operation failed");
 
-                response.message ||
+                response.message || "Operation failed");
 
                 "Synchronization failed."
 
@@ -5764,15 +5764,11 @@ window.addEventListener(
 ===================================================== */
 
 Wallet.production = {
-
     version: "1.0.0",
-
     build: "production",
-
     module: "wallet",
-
     locked: true,
-
     initialized: true
+};
 
 export default Wallet;

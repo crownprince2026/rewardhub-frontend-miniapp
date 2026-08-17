@@ -33,20 +33,37 @@ const UI = {
 
     renderDashboard: function() {
         const stats = Profile.getStatistics();
-        const balance = Wallet.summary.available; // Using the real Wallet available balance
+        const available = Wallet.getAvailableBalance();
+        const pending = Wallet.getPendingBalance();
 
         const balanceEl = document.getElementById("balance");
         const earnedEl = document.getElementById("earned");
         const referralEl = document.getElementById("referrals");
 
-        if (balanceEl) balanceEl.innerText = `$${balance.toFixed(2)}`;
+        // Update main balance
+        if (balanceEl) balanceEl.innerText = `$${available.toFixed(2)}`;
+        
+        // Show pending money if there is any
+        if (pending > 0) {
+            if (balanceEl) balanceEl.innerHTML += `<br><small style="font-size:0.8rem; color:#facc15;">Pending: $${pending.toFixed(2)}</small>`;
+        }
+
         if (earnedEl) earnedEl.innerText = `$${stats.totalEarned.toFixed(2)}`;
         if (referralEl) referralEl.innerText = stats.referrals;
     },
 
     renderWallet: function() {
-        const balanceEl = document.querySelector("#wallet-summary h1");
-        if (balanceEl) balanceEl.innerText = `$${Wallet.summary.available.toFixed(2)}`;
+        const container = document.getElementById("wallet-summary");
+        if (container) {
+            container.innerHTML = `
+                <div class="wallet-card" style="background:linear-gradient(135deg, #1e293b, #0f172a); padding:25px; border-radius:20px; text-align:center; border: 1px solid #334155;">
+                    <h3 style="color:#94a3b8; margin:0;">Available Balance</h3>
+                    <h1 style="font-size:3rem; color:#10b981; margin:10px 0;">$${Wallet.getAvailableBalance().toFixed(2)}</h1>
+                    <p style="color:#64748b;">Pending: $${Wallet.getPendingBalance().toFixed(2)}</p>
+                    <button id="withdraw-now-btn" style="width:100%; background:#3b82f6; color:white; padding:15px; border-radius:12px; font-weight:bold; border:none; margin-top:10px;">Withdraw Funds</button>
+                </div>
+            `;
+        }
     },
 
     renderProfile: function() {

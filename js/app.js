@@ -3,6 +3,7 @@ import UI from "./ui.js";
 import Api from "./api.js";
 import Profile from "./profile.js";
 import Wallet from "./wallet.js";
+import Tasks from "./tasks.js";
 
 const App = {
     start: async function() {
@@ -11,16 +12,16 @@ const App = {
         try {
             await Api.initialize();
             
-            // Sync all financial and profile data
+            // Sync everything: Profile, Wallet, and now Tasks
             await Promise.all([
                 Profile.load(),
-                Wallet.sync() 
+                Wallet.sync(),
+                Tasks.load() // We will ensure this exists in Phase 2
             ]);
             
-            console.log("App Data Fully Synced.");
+            console.log("All App Data Synced.");
         } catch (error) {
-            console.warn("Sync failed, using cache:", error);
-            Wallet.loadCache();
+            console.warn("Sync failed:", error);
         }
 
         setTimeout(() => {

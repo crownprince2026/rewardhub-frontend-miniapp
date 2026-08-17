@@ -824,6 +824,7 @@ Api.wallet = {
    TASKS
 ===================================================== */
 
+Api.getTasks = (params) => Api.get(ENDPOINTS.TASKS, params);
 Api.tasks = {
 
     list() {

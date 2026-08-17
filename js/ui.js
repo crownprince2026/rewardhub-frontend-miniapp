@@ -1,6 +1,7 @@
 "use strict";
 import Profile from "./profile.js";
 import Wallet from "./wallet.js";
+import Tasks from "./tasks.js";
 
 const UI = {
     activeScreen: "auth",
@@ -22,6 +23,7 @@ const UI = {
 
     loadScreenData: function(name) {
         if (name === "dashboard") this.renderDashboard();
+        if (name === "tasks") this.renderTasks();
         if (name === "wallet") this.renderWallet();
         if (name === "rewards") this.renderRewards();
     },
@@ -34,18 +36,37 @@ const UI = {
         if (earnedEl) earnedEl.innerText = `$${stats.totalEarned.toFixed(2)}`;
     },
 
+    renderTasks: function() {
+        const container = document.getElementById("tasks-container");
+        if (!container) return;
+
+        const allTasks = Tasks.getTasks();
+        
+        if (allTasks.length === 0) {
+            container.innerHTML = '<p style="text-align:center; color:#64748b; padding:20px;">No tasks available right now.</p>';
+            return;
+        }
+
+        container.innerHTML = allTasks.map(task => `
+            <div class="task-card" style="background:#1e293b; margin:10px; padding:15px; border-radius:12px; border:1px solid #334155;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <h4 style="margin:0; color:white;">${task.title}</h4>
+                        <small style="color:#10b981; font-weight:bold;">+ $${task.reward.toFixed(2)}</small>
+                    </div>
+                    <button class="task-btn" style="background:#3b82f6; color:white; border:none; padding:8px 15px; border-radius:8px;">View</button>
+                </div>
+            </div>
+        `).join('');
+    },
+
     renderRewards: function() {
-        // Find the Daily Bonus Card
         const dailyBtn = document.getElementById("daily-bonus-card");
         if (dailyBtn) {
             dailyBtn.onclick = async () => {
                 const res = await Wallet.claimDailyBonus();
-                if (res.success) {
-                    alert(`Success! You earned $${res.reward}`);
-                    this.renderDashboard(); // Refresh balance
-                } else {
-                    alert(res.message);
-                }
+                if (res.success) { alert(`Success! Earned $${res.reward}`); this.renderDashboard(); }
+                else { alert(res.message); }
             };
         }
     },
@@ -53,12 +74,9 @@ const UI = {
     renderWallet: function() {
         const container = document.getElementById("wallet-summary");
         if (container) {
-            container.innerHTML = `
-                <div style="background:linear-gradient(135deg, #1e293b, #0f172a); padding:20px; border-radius:15px; text-align:center;">
-                    <h3 style="color:#94a3b8; font-size:0.9rem;">Available Balance</h3>
-                    <h1 style="color:#10b981; font-size:2.5rem; margin:10px 0;">$${Wallet.getAvailableBalance().toFixed(2)}</h1>
-                </div>
-            `;
+            container.innerHTML = `<div style="background:#1e293b; padding:20px; border-radius:15px; text-align:center;">
+                <h1 style="color:#10b981; font-size:2.5rem; margin:0;">$${Wallet.getAvailableBalance().toFixed(2)}</h1>
+            </div>`;
         }
     },
 

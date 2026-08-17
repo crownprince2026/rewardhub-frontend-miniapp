@@ -1,7 +1,6 @@
 "use strict";
 import UI from "./ui.js";
 import Api from "./api.js";
-import State from "./state.js";
 import Profile from "./profile.js";
 import Wallet from "./wallet.js";
 
@@ -9,31 +8,28 @@ const App = {
     start: async function() {
         UI.openAuth();
 
-        // BACKGROUND DATA LOAD
         try {
             await Api.initialize();
             
-            // Load both Profile and Wallet in parallel
+            // Sync all financial and profile data
             await Promise.all([
                 Profile.load(),
-                Wallet.loadBalance()
+                Wallet.sync() 
             ]);
             
-            console.log("Real Financial Data Loaded.");
+            console.log("App Data Fully Synced.");
         } catch (error) {
-            console.warn("Data load failed, showing zeros:", error);
+            console.warn("Sync failed, using cache:", error);
+            Wallet.loadCache();
         }
 
-        // Timing Sequence
         setTimeout(() => {
             UI.openSplash();
-
             setTimeout(() => {
                 UI.openDashboard();
                 UI.hideLoading();
                 UI.initNavigation();
             }, 3000);
-
         }, 3000);
     }
 };

@@ -13,7 +13,6 @@
 import API from "./api.js";
 import State from "./state.js";
 import Settings from "./settings.js";
-import UI from "./ui.js";
 import Utils from "./utils.js";
 
 /* =====================================================

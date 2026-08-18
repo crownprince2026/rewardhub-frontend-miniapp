@@ -34,7 +34,7 @@ UI.text = (el, value) => { if (el) el.textContent = value; };
 UI.showScreen = function(name) {
     console.log("Switching Screen:", name);
     const screens = this.$$('.screen');
-    
+
     // Hide all
     screens.forEach(s => {
         s.style.display = 'none';
@@ -46,7 +46,7 @@ UI.showScreen = function(name) {
     const target = this.byId(name) || this.byId(name + "-screen");
 
     if (target) {
-        target.style.display = 'block';
+        target.style.display = 'flex';
         target.classList.add('active');
         target.removeAttribute('hidden');
         this.activeScreen = name;

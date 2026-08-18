@@ -1,3 +1,4 @@
+
 "use strict";
 
 /* =====================================================
@@ -27,8 +28,9 @@ const App = {
 
                 // Connect buttons to their drawing logic
                 UI.initNavigation((screen) => {
-                    if (screen === 'wallet') UI.renderWallet();
-                    if (screen === 'dashboard') this.refreshDashboard();
+                    const name = screen.replace('-screen', '');
+                    if (name === 'wallet') UI.renderWallet();
+                    if (name === 'dashboard') this.refreshDashboard();
                 });
 
                 // Draw initial balance on dashboard
@@ -56,3 +58,4 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 export default App;
+EOF

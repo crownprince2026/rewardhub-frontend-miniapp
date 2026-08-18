@@ -5,8 +5,8 @@
    CLEAN RECONSTRUCTION - BLOCK 1
 ===================================================== */
 
-import Wallet from "./wallet.js";
-import State from "./state.js";
+import UI from "./ui_v2.js";
+import Wallet from "./wallet_v2.js";
 
 const UI = {
     initialized: false,

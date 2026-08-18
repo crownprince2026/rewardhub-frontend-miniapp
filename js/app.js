@@ -6,8 +6,8 @@ const App = {
     start: async function() {
         UI.openAuth();
         
-        // Initialize Wallet (Loads balance/history from server)
-        Wallet.initialize().catch(() => console.log("Initializing data..."));
+        // Initialize Wallet Data
+        Wallet.initialize().catch(() => console.log("Wallet Syncing..."));
 
         setTimeout(() => {
             UI.openSplash();
@@ -15,7 +15,7 @@ const App = {
                 UI.openDashboard();
                 UI.hideLoading();
 
-                // Connect Navigation with specific screen renderers
+                // Navigation Logic
                 UI.initNavigation((screen) => {
                     if (screen === 'wallet') UI.renderWallet();
                     if (screen === 'dashboard') this.refreshDashboard();

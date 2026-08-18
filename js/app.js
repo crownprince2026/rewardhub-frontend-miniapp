@@ -6,8 +6,8 @@ const App = {
     start: async function() {
         UI.openAuth();
         
-        // Initialize wallet in background
-        Wallet.initialize().catch(e => console.log("Offline mode"));
+        // Initialize Wallet (Loads balance/history from server)
+        Wallet.initialize().catch(() => console.log("Initializing data..."));
 
         setTimeout(() => {
             UI.openSplash();
@@ -15,6 +15,7 @@ const App = {
                 UI.openDashboard();
                 UI.hideLoading();
 
+                // Connect Navigation with specific screen renderers
                 UI.initNavigation((screen) => {
                     if (screen === 'wallet') UI.renderWallet();
                     if (screen === 'dashboard') this.refreshDashboard();

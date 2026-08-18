@@ -6,8 +6,8 @@ const App = {
     start: async function() {
         UI.openAuth();
         
-        // Load Wallet Data in background
-        Wallet.initialize().catch(e => console.log("Waiting for network..."));
+        // Initialize wallet in background
+        Wallet.initialize().catch(e => console.log("Offline mode"));
 
         setTimeout(() => {
             UI.openSplash();
@@ -15,7 +15,6 @@ const App = {
                 UI.openDashboard();
                 UI.hideLoading();
 
-                // Connect Navigation
                 UI.initNavigation((screen) => {
                     if (screen === 'wallet') UI.renderWallet();
                     if (screen === 'dashboard') this.refreshDashboard();

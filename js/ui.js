@@ -10,7 +10,7 @@ const UI = {
         const target = document.getElementById(name) || document.getElementById(name + "-screen");
 
         if (target) {
-            target.style.display = 'block'; // Block is better for layouts
+            target.style.display = 'block';
             target.classList.add('active');
             this.activeScreen = name;
             return true;
@@ -29,7 +29,6 @@ const UI = {
         const summary = document.getElementById("wallet-summary");
         if (!summary) return;
 
-        // 1. Render Professional Balance Card
         summary.innerHTML = `
             <div style="background: linear-gradient(135deg, #3b82f6, #1d4ed8); padding: 25px; border-radius: 20px; color: white; text-align: center; margin-bottom: 20px; box-shadow: 0 4px 15px rgba(0,0,0,0.3);">
                 <p style="margin:0; opacity: 0.8; font-size: 0.9rem;">Available Balance</p>
@@ -41,31 +40,22 @@ const UI = {
             </div>
         `;
 
-        // 2. Render Withdrawal Form
-        const formContainer = document.getElementById("withdraw-button"); // Using your existing ID
+        const formContainer = document.getElementById("withdraw-button");
         if (formContainer) {
             formContainer.innerHTML = `
                 <div style="background: #1e293b; padding: 20px; border-radius: 15px; border: 1px solid #334155;">
                     <h3 style="color: white; margin-bottom: 15px;">Withdraw Funds</h3>
-                    
                     <label style="color: #94a3b8; font-size: 0.8rem;">Select Method</label>
                     <select id="wd-method" style="width: 100%; background: #0f172a; color: white; border: 1px solid #334155; padding: 12px; border-radius: 8px; margin-bottom: 15px;">
                         <option value="USDT_BEP20">USDT (BEP20)</option>
                         <option value="BINANCE_PAY">Binance Pay</option>
                         <option value="MOBILE_MONEY">Mobile Money</option>
                     </select>
-
-                    <label style="color: #94a3b8; font-size: 0.8rem;">Wallet Address / Account</label>
-                    <input type="text" id="wd-address" placeholder="Enter details..." style="width: 100%; background: #0f172a; color: white; border: 1px solid #334155; padding: 12px; border-radius: 8px; margin-bottom: 15px;">
-
-                    <label style="color: #94a3b8; font-size: 0.8rem;">Amount (Min $${Wallet.getMinimumWithdrawal()})</label>
-                    <input type="number" id="wd-amount" placeholder="0.00" style="width: 100%; background: #0f172a; color: white; border: 1px solid #334155; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
-
-                    <button id="submit-wd" style="width: 100%; background: #10b981; color: white; padding: 15px; border-radius: 12px; font-weight: bold; border: none; font-size: 1rem;">Confirm Withdrawal</button>
+                    <input type="text" id="wd-address" placeholder="Wallet Address..." style="width: 100%; background: #0f172a; color: white; border: 1px solid #334155; padding: 12px; border-radius: 8px; margin-bottom: 15px;">
+                    <input type="number" id="wd-amount" placeholder="Amount..." style="width: 100%; background: #0f172a; color: white; border: 1px solid #334155; padding: 12px; border-radius: 8px; margin-bottom: 20px;">
+                    <button id="submit-wd" style="width: 100%; background: #10b981; color: white; padding: 15px; border-radius: 12px; font-weight: bold; border: none;">Confirm Withdrawal</button>
                 </div>
             `;
-
-            // Attach Click Event
             document.getElementById("submit-wd").onclick = () => this.handleWithdrawal();
         }
     },
@@ -74,13 +64,11 @@ const UI = {
         const amount = document.getElementById("wd-amount").value;
         const method = document.getElementById("wd-method").value;
         const address = document.getElementById("wd-address").value;
-
         if(!amount || !address) return alert("Please fill all fields");
-
         const res = await Wallet.requestWithdrawal({ amount, method, walletAddress: address });
         if(res.success) {
-            alert("Withdrawal Requested Successfully!");
-            this.renderWallet(); // Refresh
+            alert("Withdrawal Requested!");
+            this.renderWallet();
         } else {
             alert(res.message);
         }

@@ -1,45 +1,30 @@
-
 "use strict";
-
-/* =====================================================
-   CROWN PRINCE REWARD HUB - APP MODULE
-   CLEAN RECONSTRUCTION - BLOCK 1 (BRAIN)
-===================================================== */
-
-import UI from "./ui.js";
-import Wallet from "./wallet.js";
+import UI from "./ui_v2.js";
+import Wallet from "./wallet_v2.js";
 
 const App = {
     start: async function() {
-        console.log("Stage 1: Auth");
+        // Stage 1: Auth
         UI.openAuth();
 
-        // Start loading real wallet data in the background
-        Wallet.initialize().catch(() => console.log("Wallet syncing..."));
+        // Load data in background
+        Wallet.initialize().catch(() => {});
 
         setTimeout(() => {
-            console.log("Stage 2: Splash");
+            // Stage 2: Splash
             UI.openSplash();
 
             setTimeout(() => {
-                console.log("Stage 3: Dashboard");
+                // Stage 3: Dashboard
                 UI.openDashboard();
                 UI.hideLoading();
 
-                // Connect buttons to their drawing logic
-                UI.initNavigation((screen) => {
-                    const name = screen.replace('-screen', '');
+                UI.initNavigation((name) => {
                     if (name === 'wallet') UI.renderWallet();
                     if (name === 'dashboard') this.refreshDashboard();
                 });
 
-                // Draw initial balance on dashboard
                 this.refreshDashboard();
-
-                // Hide the blue debug bar if it exists
-                const debug = document.getElementById('debug-check');
-                if (debug) debug.style.display = 'none';
-
             }, 3000);
         }, 3000);
     },
@@ -52,10 +37,5 @@ const App = {
     }
 };
 
-// Application Entry Point
-document.addEventListener("DOMContentLoaded", () => {
-    App.start();
-});
-
+document.addEventListener("DOMContentLoaded", () => App.start());
 export default App;
-EOF

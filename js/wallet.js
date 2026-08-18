@@ -105,7 +105,7 @@ Wallet.loadBalance = async function () {
         this.setLoading(true);
         const response = await Api.getWalletBalance();
         if (!response.success) {
-            throw new Error(response.message || "Unable to load wallet.");
+            throw new Error(response.message || "Error"); "Error"); "Unable to load wallet.");
         }
         this.wallets = { ...this.wallets, ...(response.wallets || {}) };
         this.updateSummary();
@@ -186,7 +186,7 @@ Wallet.loadTransactions = async function (refresh = false) {
             to: this.filters.to
         });
         if (!response.success) {
-            throw new Error(response.message || "Unable to load transactions.");
+            throw new Error(response.message || "Error"); "Error"); "Unable to load transactions.");
         }
         const transactions = response.transactions || [];
         if (refresh) { this.transactions = transactions; } 
@@ -329,7 +329,7 @@ Wallet.requestWithdrawal = async function ({ amount, method, walletAddress, acco
         });
 
         if (!response.success) {
-            throw new Error(response.message || "Withdrawal request failed.");
+            throw new Error(response.message || "Error"); "Error"); "Withdrawal request failed.");
         }
 
         const withdrawal = {
@@ -420,7 +420,7 @@ Wallet.loadWithdrawals = async function (refresh = true) {
     try {
         this.setLoading(true);
         const response = await Api.get("/withdrawals");
-        if (!response.success) throw new Error(response.message || "Load failed.");
+        if (!response.success) throw new Error(response.message || "Error"); "Error"); "Load failed.");
         this.withdrawals = response.withdrawals || [];
         return { success: true, withdrawals: this.withdrawals };
     } catch (error) {

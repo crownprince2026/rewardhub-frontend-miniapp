@@ -1,17 +1,36 @@
 "use strict";
 import UI from "./ui.js";
+import Wallet from "./wallet.js";
 
 const App = {
-    start: function() {
+    start: async function() {
         UI.openAuth();
+        
+        // Load Wallet Data in background
+        Wallet.initialize().catch(e => console.log("Waiting for network..."));
+
         setTimeout(() => {
             UI.openSplash();
             setTimeout(() => {
                 UI.openDashboard();
                 UI.hideLoading();
-                UI.initNavigation();
+
+                // Connect Navigation
+                UI.initNavigation((screen) => {
+                    if (screen === 'wallet') UI.renderWallet();
+                    if (screen === 'dashboard') this.refreshDashboard();
+                });
+
+                this.refreshDashboard();
             }, 3000);
         }, 3000);
+    },
+
+    refreshDashboard: function() {
+        UI.renderDashboard({
+            balance: Wallet.getAvailableBalance(),
+            earned: Wallet.getEarnedBalance()
+        });
     }
 };
 

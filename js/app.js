@@ -1,24 +1,30 @@
 "use strict";
 import UI from "./ui.js";
+import Wallet from "./wallet.js";
 
 const App = {
-    start: function() {
-        console.log("App Started in Safe Mode");
-        
-        // 1. Show Auth
+    start: async function() {
         UI.openAuth();
+        
+        // Load data in the background
+        Wallet.initialize().catch(e => console.log("Offline mode"));
 
         setTimeout(() => {
-            // 2. Show Splash
             UI.openSplash();
 
             setTimeout(() => {
-                // 3. Show Dashboard
                 UI.openDashboard();
                 UI.hideLoading();
-                UI.initNavigation();
+
+                // Connect buttons and tell UI what to draw on each screen
+                UI.initNavigation((screen) => {
+                    const name = screen.replace('-screen', '');
+                    if (name === 'wallet') UI.renderWallet();
+                    if (name === 'dashboard') UI.renderDashboard();
+                });
+
+                UI.renderDashboard();
                 
-                // Remove debug bar
                 const debug = document.getElementById('debug-check');
                 if(debug) debug.style.display = 'none';
             }, 3000);
@@ -26,8 +32,5 @@ const App = {
     }
 };
 
-document.addEventListener("DOMContentLoaded", () => {
-    App.start();
-});
-
+document.addEventListener("DOMContentLoaded", () => App.start());
 export default App;

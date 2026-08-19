@@ -89,4 +89,4 @@ const UI = {
 };
 
 export default UI;
-EOF
+

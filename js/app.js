@@ -35,4 +35,4 @@ const App = {
 
 document.addEventListener("DOMContentLoaded", () => App.start());
 export default App;
-EOF
+

@@ -1,3 +1,4 @@
+
 "use strict";
 import Wallet from "./wallet.js";
 
@@ -88,3 +89,4 @@ const UI = {
 };
 
 export default UI;
+EOF

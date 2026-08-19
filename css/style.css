@@ -5656,3 +5656,40 @@ p { font-size: 1rem; color: #94a3b8; }
 #app {
     background: #0f172a !important;
 }
+
+/* =====================================================
+   FIX: BOTTOM NAVIGATION VISIBILITY
+===================================================== */
+.bottom-nav {
+    position: fixed !important;
+    bottom: 0 !important;
+    left: 0 !important;
+    width: 100% !important;
+    height: 70px !important;
+    background: #0f172a !important; /* Same as theme color */
+    display: flex !important;
+    justify-content: space-around !important;
+    align-items: center !important;
+    border-top: 1px solid #1e293b !important;
+    z-index: 10000 !important; /* Higher than screens */
+}
+
+.bottom-nav button {
+    background: none !important;
+    border: none !important;
+    color: #94a3b8 !important;
+    font-size: 0.8rem !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+}
+
+.bottom-nav button.active {
+    color: #3b82f6 !important;
+}
+
+/* Ensure sections don't hide the nav */
+.screen {
+    padding-bottom: 80px !important; 
+    box-sizing: border-box !important;
+}

@@ -250,7 +250,7 @@ Wallet.saveCache = function () {
             recentTransactions: this.recentTransactions,
             totalTransactions: this.totalTransactions,
             timestamp: Date.now()
-        }));
+        });
     } catch (error) { console.error(error); }
 };
 

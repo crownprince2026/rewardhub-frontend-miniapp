@@ -1,108 +1,80 @@
-/* =====================================================
-   PROFESSIONAL LAYOUT & SIZE FIX
-===================================================== */
 :root {
     --bg: #0f172a;
     --surface: #1e293b;
     --primary: #3b82f6;
-    --success: #10b981;
+    --accent: #10b981;
+    --text-dim: #94a3b8;
 }
 
 body {
     margin: 0;
     background-color: var(--bg);
     color: white;
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-    overflow-x: hidden;
+    font-family: -apple-system, system-ui, sans-serif;
+    overflow: hidden;
 }
 
+/* Perfect Centering for Logos */
 .screen {
     display: none;
-    position: fixed; /* Fixes overlap */
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100vh;
-    background-color: var(--bg); /* Solid background prevents double screen */
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
     padding: 20px;
-    padding-bottom: 90px;
+    flex-direction: column;
+    justify-content: center; /* Vertical Center */
+    align-items: center;     /* Horizontal Center */
+    text-align: center;
     box-sizing: border-box;
+}
+
+.screen.active { display: flex !important; }
+
+/* Dashboard & Content Screens (Scrollable) */
+#dashboard-screen, #tasks-screen, #rewards-screen, #wallet-screen, #profile-screen {
+    justify-content: flex-start; /* Align content to top */
+    padding-top: 40px;
     overflow-y: auto;
 }
 
-.screen.active {
-    display: flex !important;
-    flex-direction: column;
-}
-
-/* Header & Logo Size Fixes */
-.dashboard-header {
-    display: flex;
-    align-items: center;
-    gap: 15px;
+.auth-logo, .splash-logo {
+    width: 160px !important;
+    height: auto;
     margin-bottom: 30px;
 }
 
-.header-logo {
-    width: 50px !important; /* Forces the huge image to be small */
-    height: 50px !important;
-    border-radius: 10px;
-}
-
-.auth-logo, .splash-logo {
-    width: 140px !important;
-    height: auto;
-    margin-bottom: 20px;
-}
-
-.profile-avatar {
-    width: 120px !important;
-    height: 120px !important;
-    border-radius: 50%;
-    border: 4px solid var(--primary);
-}
-
-/* Professional Cards (Momo Style) */
-.balance-card {
-    background: linear-gradient(135deg, #3b82f6, #1d4ed8);
-    padding: 30px;
-    border-radius: 20px;
-    text-align: center;
-    width: 100%;
-    box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-}
-
-.stat-card {
-    background: var(--surface);
-    padding: 15px;
-    border-radius: 15px;
-    flex: 1;
-    text-align: center;
-}
-
-.stats {
-    display: flex;
-    gap: 15px;
-    width: 100%;
-    margin-top: 20px;
-}
-
-/* Bottom Nav Fix */
+/* Navigation Bar (Hidden by default) */
 .bottom-nav {
     position: fixed;
-    bottom: 0;
-    left: 0;
-    width: 100%;
+    bottom: -100px; /* Start off-screen */
+    left: 0; width: 100%;
     height: 75px;
     background: #111827;
     display: flex;
     justify-content: space-around;
     align-items: center;
-    border-top: 1px solid #374151;
+    border-top: 1px solid #1f2937;
+    transition: bottom 0.5s ease;
     z-index: 10000;
 }
+
+.bottom-nav.visible { bottom: 0; }
 
 .bottom-nav button {
     background: none; border: none; color: #9ca3af; font-size: 0.7rem;
     display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+
+/* Professional Cards */
+.balance-card {
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+    padding: 30px; border-radius: 24px; width: 90%;
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+}
+
+.reward-card {
+    background: var(--surface);
+    padding: 20px; border-radius: 16px; margin-bottom: 15px;
+    width: 100%; border: 1px solid #334155;
+    font-weight: bold;
 }

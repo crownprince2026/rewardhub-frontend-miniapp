@@ -1336,3 +1336,8 @@ Api.syncWallet = () => Api.get(ENDPOINTS.WALLET + "/sync");
 Api.checkWithdrawalCooldown = () => Api.get(ENDPOINTS.WITHDRAWALS + "/cooldown");
 
 export default Api;
+
+/* --- TASK VERIFICATION ALIASES --- */
+Api.verifyTelegramTask = (data) => Api.post("/tasks/verify/telegram", data);
+Api.verifyTwitterTask = (data) => Api.post("/tasks/verify/twitter", data);
+Api.getTaskCategories = () => Api.get("/tasks/categories");

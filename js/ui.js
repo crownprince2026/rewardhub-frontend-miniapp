@@ -1,4 +1,6 @@
 "use strict";
+import Wallet from "./wallet.js";
+import Tasks from "./tasks.js";
 
 const UI = {
     activeScreen: "auth-screen",
@@ -12,46 +14,50 @@ const UI = {
             target.style.display = 'flex'; 
             target.classList.add('active');
             this.activeScreen = name;
+
+            // SMART NAV: Hide on Auth/Splash, Show on others
+            const nav = document.querySelector('.bottom-nav');
+            if (name.includes('auth') || name.includes('splash')) {
+                nav.classList.remove('visible');
+            } else {
+                nav.classList.add('visible');
+            }
             return true;
         }
         return false;
     },
 
     renderDashboard: function() {
-        // IDs are already in HTML, CSS handles the look
+        const bal = document.getElementById("balance");
+        if (bal) bal.innerText = "$" + Wallet.getAvailableBalance().toFixed(2);
     },
 
     renderTasks: function() {
         const container = document.getElementById("tasks-container");
         if (!container) return;
-        container.innerHTML = `
-            <div style="background:#1e293b; padding:15px; border-radius:12px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
-                <div><h4 style="margin:0;">Join Telegram</h4><small style="color:#10b981;">+$0.10</small></div>
-                <button style="background:#3b82f6; color:white; border:none; padding:8px 15px; border-radius:8px;">Start</button>
-            </div>
-            <div style="background:#1e293b; padding:15px; border-radius:12px; margin-bottom:10px; display:flex; justify-content:space-between; align-items:center;">
-                <div><h4 style="margin:0;">Follow on X</h4><small style="color:#10b981;">+$0.05</small></div>
-                <button style="background:#3b82f6; color:white; border:none; padding:8px 15px; border-radius:8px;">Start</button>
-            </div>
-        `;
-    },
-
-    renderRewards: function() {
-        // The buttons are already in HTML, we just ensure they look good
+        
+        const allTasks = Tasks.getTasks();
+        if (!allTasks || allTasks.length === 0) {
+            container.innerHTML = `
+                <div style="margin-top:50px; text-align:center;">
+                    <div style="font-size: 50px;">📋</div>
+                    <h3 style="color:white;">No Tasks Available</h3>
+                    <p style="color:#94a3b8;">Check back later for new rewards.</p>
+                    <button onclick="location.reload()" style="background:#3b82f6; color:white; border:none; padding:12px 25px; border-radius:10px; margin-top:15px;">Refresh</button>
+                </div>`;
+            return;
+        }
+        // ... (Task loop if tasks exist)
     },
 
     renderWallet: function() {
         const summary = document.getElementById("wallet-summary");
-        const withdraw = document.getElementById("withdraw-button");
         if (summary) {
-            summary.innerHTML = `<div class="balance-card" style="margin-bottom:20px;"><p style="margin:0; opacity:0.8;">Wallet Balance</p><h1>$0.00</h1></div>`;
-        }
-        if (withdraw) {
-            withdraw.innerHTML = `<div style="background:#1e293b; padding:20px; border-radius:15px; border:1px solid #334155;">
-                <h3 style="margin-top:0;">Withdraw</h3>
-                <input type="text" placeholder="Wallet Address" style="width:100%; background:#0f172a; color:white; border:1px solid #334155; padding:12px; border-radius:8px; margin-bottom:15px;">
-                <button style="width:100%; background:#10b981; color:white; padding:15px; border-radius:12px; font-weight:bold; border:none;">Submit Withdrawal</button>
-            </div>`;
+            summary.innerHTML = `
+                <div class="balance-card">
+                    <p style="margin:0; opacity:0.8;">Wallet Balance</p>
+                    <h1 style="font-size:2.8rem;">$${Wallet.getAvailableBalance().toFixed(2)}</h1>
+                </div>`;
         }
     },
 

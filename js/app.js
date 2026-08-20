@@ -1,10 +1,16 @@
 "use strict";
 import UI from "./ui.js";
+import Wallet from "./wallet.js";
+import Tasks from "./tasks.js";
 
 const App = {
-    start: function() {
+    start: async function() {
         UI.hideLoading();
         UI.showScreen("auth-screen");
+
+        // Sync real data
+        Wallet.initialize().catch(() => {});
+        Tasks.loadTasks().catch(() => {});
 
         setTimeout(() => {
             UI.showScreen("splash-screen");
@@ -12,11 +18,10 @@ const App = {
             setTimeout(() => {
                 UI.showScreen("dashboard-screen");
                 UI.initNavigation((screen) => {
-                    const name = screen.replace("-screen", "");
-                    if (name === "tasks") UI.renderTasks();
-                    if (name === "wallet") UI.renderWallet();
-                    if (name === "rewards") UI.renderRewards();
-                    if (name === "dashboard") UI.renderDashboard();
+                    const name = screen.replace('-screen', '');
+                    if (name === 'wallet') UI.renderWallet();
+                    if (name === 'tasks') UI.renderTasks();
+                    if (name === 'dashboard') UI.renderDashboard();
                 });
                 UI.renderDashboard();
             }, 3000);

@@ -3,7 +3,6 @@ import UI from "./ui.js";
 
 const App = {
     start: function() {
-        // Hide loader and show Auth immediately
         UI.hideLoading();
         UI.showScreen("auth-screen");
 
@@ -12,7 +11,13 @@ const App = {
 
             setTimeout(() => {
                 UI.showScreen("dashboard-screen");
-                UI.initNavigation();
+                UI.initNavigation((screen) => {
+                    const name = screen.replace("-screen", "");
+                    if (name === "tasks") UI.renderTasks();
+                    if (name === "wallet") UI.renderWallet();
+                    if (name === "rewards") UI.renderRewards();
+                    if (name === "dashboard") UI.renderDashboard();
+                });
                 UI.renderDashboard();
             }, 3000);
         }, 3000);

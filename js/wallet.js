@@ -217,11 +217,9 @@ Wallet.getFilteredTransactions = function () {
         if (this.filters.type !== "all" && tx.type !== this.filters.type) return false;
         if (this.filters.status !== "all" && tx.status !== this.filters.status) return false;
         if (this.filters.from && new Date(tx.createdAt) < new Date(this.filters.from)) return false;
-        if (this.filters.to && new Date(tx.createdAt) new Date(this.filters.to)) return false;
-        return true;
+        if (this.filters.to && new Date(tx.createdAt) > new Date(this.filters.to)) return false; return true;
     });
 };
-
 Wallet.findTransaction = function (id) { return this.transactions.find(tx => tx.id === id); };
 Wallet.selectTransaction = function (id) {
     const tx = this.findTransaction(id);

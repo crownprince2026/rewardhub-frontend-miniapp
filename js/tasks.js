@@ -513,7 +513,7 @@ Tasks.filteredTasks = function () {
 
                 this.filters.rewardMax &&
 
-                task.reward >
+                task.reward
 
                 this.filters.rewardMax
 
@@ -1285,7 +1285,7 @@ Tasks.checkFraud = async function (
 
             task.expiresAt &&
 
-            Date.now() >
+            Date.now()
 
             new Date(
 

@@ -556,7 +556,7 @@ Admin.sessionExpired = function () {
 
     return (
 
-        Date.now() >
+        Date.now()
 
         new Date(
 
@@ -1501,7 +1501,7 @@ Admin.status = function () {
 
         dashboardLoaded:
 
-            this.dashboard.users > 0,
+            this.dashboard.users 0,
 
         lastCache:
 
@@ -3040,7 +3040,7 @@ Admin.optimizeDashboard = function () {
 
                 ) &&
 
-                this.charts[key].length >
+                this.charts[key].length
 
                 MAX_POINTS
 
@@ -3437,7 +3437,7 @@ Admin.previousUserPage = async function () {
 
     if (
 
-        this.userPagination.page > 1
+        this.userPagination.page 1
 
     ) {
 
@@ -5435,7 +5435,7 @@ Admin.previousTaskPage = async function () {
 
     if (
 
-        this.taskPagination.page > 1
+        this.taskPagination.page 1
 
     ) {
 
@@ -7375,7 +7375,7 @@ Admin.previousWithdrawalPage = async function () {
 
     if (
 
-        this.withdrawalPagination.page > 1
+        this.withdrawalPagination.page 1
 
     ) {
 
@@ -13471,7 +13471,6 @@ Admin.resetReportStatistics = function () {
 
 
 /* =====================================================
-   REPORT LOOKUP
 ===================================================== */
 
 Admin.findReportById = function (
@@ -14149,7 +14148,7 @@ Admin.filterReports = function (
 
                     meta.generatedAt
 
-                ) >
+                )
 
                 new Date(
 
@@ -15284,7 +15283,7 @@ Admin.optimizeMonitoring = function () {
 
     if (
 
-        this.systemReports.length > 500
+        this.systemReports.length 500
 
     ) {
 
@@ -15302,7 +15301,7 @@ Admin.optimizeMonitoring = function () {
 
     if (
 
-        this.reportHistory.length > 1000
+        this.reportHistory.length 1000
 
     ) {
 
@@ -16182,7 +16181,7 @@ Admin.scheduleReconnect = function () {
 
     if (
 
-        this.realtime.reconnectAttempts >=
+        this.realtime.reconnectAttempts=
 
         this.realtime.maxReconnectAttempts
 
@@ -16783,7 +16782,7 @@ Admin.pushNotification = function (
 
     if (
 
-        this.notifications.history.length >
+        this.notifications.history.length
 
         this.notifications.maxHistory
 
@@ -17583,7 +17582,7 @@ Admin.optimizeRealtimeEngine = function () {
 
         if (
 
-            this.notifications.history.length >
+            this.notifications.history.length
 
             this.notifications.maxHistory
 
@@ -17603,7 +17602,7 @@ Admin.optimizeRealtimeEngine = function () {
 
         if (
 
-            this.liveSync.queue.length > 100
+            this.liveSync.queue.length 100
 
         ) {
 
@@ -17621,7 +17620,7 @@ Admin.optimizeRealtimeEngine = function () {
 
         if (
 
-            this.systemReports.length > 500
+            this.systemReports.length 500
 
         ) {
 

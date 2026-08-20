@@ -231,7 +231,7 @@ Rewards.isAvailable = function (
 
 ) {
 
-    return Date.now() >=
+    return Date.now()=
 
         this.getCooldown(type);
 

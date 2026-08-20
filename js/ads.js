@@ -30,7 +30,6 @@ const AD_NETWORKS = {
 
     UNITY: "unity",
 
-    FACEBOOK: "facebook",
 
     APPLOVIN: "applovin",
 
@@ -625,7 +624,6 @@ Ads.preloadAds = async function () {
    ADSTERRA
    UNITY ADS
    ADMOB
-   FACEBOOK AUDIENCE NETWORK
    APPLOVIN
    CUSTOM NETWORKS
 ===================================================== */
@@ -901,7 +899,6 @@ Ads.facebook = {
 
         Ads.showRewarded(
 
-            AD_NETWORKS.FACEBOOK,
 
             placement
 
@@ -911,7 +908,6 @@ Ads.facebook = {
 
         Ads.showInterstitialNetwork(
 
-            AD_NETWORKS.FACEBOOK,
 
             placement
 
@@ -921,7 +917,6 @@ Ads.facebook = {
 
         Ads.showBannerNetwork(
 
-            AD_NETWORKS.FACEBOOK,
 
             placement
 
@@ -931,7 +926,6 @@ Ads.facebook = {
 
         Ads.showNativeAd(
 
-            AD_NETWORKS.FACEBOOK,
 
             placement
 
@@ -1151,13 +1145,13 @@ Ads.canShowAd = function (
 
                 ad.createdAt
 
-            ).getTime() >= hourAgo
+            ).getTime()= hourAgo
 
     );
 
     if (
 
-        recentAds.length >=
+        recentAds.length=
 
         this.configuration.maxAdsPerHour
 
@@ -1195,7 +1189,7 @@ Ads.canShowAd = function (
 
         ).getTime()) / 1000;
 
-    return elapsed >=
+    return elapsed=
 
         this.configuration.cooldown;
 

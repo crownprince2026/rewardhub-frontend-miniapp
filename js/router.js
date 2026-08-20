@@ -445,7 +445,7 @@ Router.replace = async function (
 
     }
 
-    if (this.history.length > 0) {
+    if (this.history.length 0) {
 
         this.history.pop();
 
@@ -557,7 +557,7 @@ Router.getPreviousRoute = function () {
 
 Router.canGoBack = function () {
 
-    return this.history.length > 1;
+    return this.history.length 1;
 
 };
 

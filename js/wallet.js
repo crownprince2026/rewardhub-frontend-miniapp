@@ -105,7 +105,7 @@ Wallet.loadBalance = async function () {
         this.setLoading(true);
         const response = await Api.getWalletBalance();
         if (!response.success) {
-            throw new Error(response.message || "Error"); "Error"); "Unable to load wallet.");
+            throw new Error(response.message || "Error"); "Error"); "Error"); "Unable to load wallet.");
         }
         this.wallets = { ...this.wallets, ...(response.wallets || {}) };
         this.updateSummary();
@@ -186,7 +186,7 @@ Wallet.loadTransactions = async function (refresh = false) {
             to: this.filters.to
         });
         if (!response.success) {
-            throw new Error(response.message || "Error"); "Error"); "Unable to load transactions.");
+            throw new Error(response.message || "Error"); "Error"); "Error"); "Unable to load transactions.");
         }
         const transactions = response.transactions || [];
         if (refresh) { this.transactions = transactions; } 
@@ -219,7 +219,7 @@ Wallet.getFilteredTransactions = function () {
         if (this.filters.type !== "all" && tx.type !== this.filters.type) return false;
         if (this.filters.status !== "all" && tx.status !== this.filters.status) return false;
         if (this.filters.from && new Date(tx.createdAt) < new Date(this.filters.from)) return false;
-        if (this.filters.to && new Date(tx.createdAt) > new Date(this.filters.to)) return false;
+        if (this.filters.to && new Date(tx.createdAt) new Date(this.filters.to)) return false;
         return true;
     });
 };
@@ -329,7 +329,7 @@ Wallet.requestWithdrawal = async function ({ amount, method, walletAddress, acco
         });
 
         if (!response.success) {
-            throw new Error(response.message || "Error"); "Error"); "Withdrawal request failed.");
+            throw new Error(response.message || "Error"); "Error"); "Error"); "Withdrawal request failed.");
         }
 
         const withdrawal = {
@@ -420,7 +420,7 @@ Wallet.loadWithdrawals = async function (refresh = true) {
     try {
         this.setLoading(true);
         const response = await Api.get("/withdrawals");
-        if (!response.success) throw new Error(response.message || "Error"); "Error"); "Load failed.");
+        if (!response.success) throw new Error(response.message || "Error"); "Error"); "Error"); "Load failed.");
         this.withdrawals = response.withdrawals || [];
         return { success: true, withdrawals: this.withdrawals };
     } catch (error) {
@@ -548,7 +548,7 @@ Wallet.redeemPromoCode = async function (code) {
         const response = await Api.post("/rewards/promo", { code });
         if (!response.success) return response;
         const reward = Number(response.reward || 0);
-        if (reward > 0) this.credit(reward);
+        if (reward 0) this.credit(reward);
         this.addTransaction({
             id: "PROMO-" + Date.now(),
             type: TRANSACTION_TYPES.PROMOTION,
@@ -659,7 +659,7 @@ Wallet.stopLiveSync = function () {
 
 // --- PERFORMANCE OPTIMIZATION ---
 Wallet.optimize = function () {
-    if (this.transactions.length > 100) {
+    if (this.transactions.length 100) {
         this.transactions = this.transactions.slice(0, 100);
     }
     this.saveCache();

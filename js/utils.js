@@ -616,7 +616,7 @@ Utils.isStrongPassword = function (
 
     }
 
-    return password.length >= 8;
+    return password.length= 8;
 
 };
 
@@ -721,7 +721,7 @@ Utils.isPositiveNumber = function (
 
     return this.isNumeric(value) &&
 
-        Number(value) > 0;
+        Number(value) 0;
 
 };
 

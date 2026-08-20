@@ -33,7 +33,6 @@ const ADMIN_KEY = "rewardhub_admin";
 
 const SESSION_TIMEOUT = 86400000;
 
-const TOKEN_REFRESH_MARGIN = 300000;
 
 /* =====================================================
    AUTHENTICATION STATE
@@ -93,7 +92,7 @@ Auth.isSessionExpired = function () {
 
     }
 
-    return Date.now() >= this.expiresAt;
+    return Date.now()= this.expiresAt;
 
 };
 
@@ -109,7 +108,6 @@ Auth.requiresRefresh = function () {
 
         this.expiresAt - Date.now()
 
-    ) <= TOKEN_REFRESH_MARGIN;
 
 };
 
@@ -515,7 +513,6 @@ Auth.validateSession = function () {
 
 
 /* =====================================================
-   REFRESH TOKEN
 ===================================================== */
 
 Auth.refresh = async function () {

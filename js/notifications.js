@@ -1281,7 +1281,7 @@ Notifications.optimize = function () {
 
     if (
 
-        this.notifications.length >
+        this.notifications.length
 
         maxNotifications
 

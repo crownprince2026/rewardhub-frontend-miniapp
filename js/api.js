@@ -540,7 +540,7 @@ Api.processQueue = async function () {
 
     while (
 
-        Api.requestQueue.length > 0
+        Api.requestQueue.length 0
 
     ) {
 
@@ -1079,7 +1079,7 @@ Api.handleError = function (error) {
 
     }
 
-    else if (error?.status >= 500) {
+    else if (error?.status= 500) {
 
         console.warn("Server error.");
 

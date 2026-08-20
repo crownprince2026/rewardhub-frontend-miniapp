@@ -105,7 +105,7 @@ Wallet.loadBalance = async function () {
         this.setLoading(true);
         const response = await Api.getWalletBalance();
         if (!response.success) {
-            throw new Error(response.message || "Error"); "Error"); "Error"); "Unable to load wallet.");
+            throw new Error(response.message || "Unable to load wallet.");
         }
         this.wallets = { ...this.wallets, ...(response.wallets || {}) };
         this.updateSummary();
@@ -181,15 +181,13 @@ Wallet.loadTransactions = async function (refresh = false) {
             page: this.page,
             pageSize: this.pageSize,
             type: this.filters.type,
-            status: this.filters.status,
-            from: this.filters.from,
-            to: this.filters.to
+            status: this.filters.status
         });
         if (!response.success) {
-            throw new Error(response.message || "Error"); "Error"); "Error"); "Unable to load transactions.");
+            throw new Error(response.message || "Unable to load transactions.");
         }
         const transactions = response.transactions || [];
-        if (refresh) { this.transactions = transactions; } 
+        if (refresh) { this.transactions = transactions; }
         else { this.transactions.push(...transactions); }
         this.totalTransactions = response.total || this.transactions.length;
         this.hasMore = this.transactions.length < this.totalTransactions;

@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -11,6 +10,7 @@
 </head>
 <body>
 
+<div id="app">
     <!-- 1. AUTH SCREEN -->
     <section id="auth-screen" class="screen">
         <div class="centered-container">
@@ -75,10 +75,10 @@
         <header class="screen-header"><h2>🎁 Rewards</h2></header>
         <main>
             <div class="reward-grid">
-                <div id="daily-bonus-card" class="reward-card" data-nav="daily-bonus-screen"><h3>Daily Bonus</h3></div>
-                <div id="spin-wheel-card" class="reward-card" data-nav="spin-wheel-screen"><h3>Spin Wheel</h3></div>
-                <div id="mystery-box-card" class="reward-card" data-nav="mystery-box-screen"><h3>Mystery Box</h3></div>
-                <div id="watch-ads-card" class="reward-card" data-nav="watch-ads-screen"><h3>Watch Ads</h3></div>
+                <div id="daily-bonus-card" class="reward-card" data-nav="daily-bonus"><h3>Daily Bonus</h3></div>
+                <div id="spin-wheel-card" class="reward-card" data-nav="spin-wheel"><h3>Spin Wheel</h3></div>
+                <div id="mystery-box-card" class="reward-card" data-nav="mystery-box"><h3>Mystery Box</h3></div>
+                <div id="watch-ads-card" class="reward-card" data-nav="watch-ads"><h3>Watch Ads</h3></div>
             </div>
         </main>
     </section>
@@ -128,6 +128,7 @@
         <header class="screen-header"><h2>👤 Profile</h2></header>
         <main>
             <div id="profile-avatar"><img src="assets/images/branding/telegram-profile.png" class="profile-avatar" alt="User"></div>
+            <div id="profile-information"></div>
             <div id="profile-statistics"></div>
             <div id="profile-achievements"></div>
         </main>
@@ -157,17 +158,22 @@
         <main><div id="contact-support"></div><div id="faq-section"></div></main>
     </section>
 
-   <div id="loading-overlay" class="overlay hidden">
-    <div class="loading-content">
-        <div class="loading-spinner"></div>
-        <p class="loading-text"></p> 
+    <!-- GLOBAL UI COMPONENTS -->
+    <div id="loading-overlay" class="overlay hidden">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p class="loading-text"></p>
+        </div>
     </div>
-</div>
-    
+
     <div id="toast-container"></div>
 
     <div id="alert-modal" class="modal hidden">
-        <div class="modal-content"><h3 id="alert-title"></h3><p id="alert-message"></p><button id="alert-close"></button></div>
+        <div class="modal-content">
+            <h3 id="alert-title"></h3>
+            <p id="alert-message"></p>
+            <button id="alert-close">OK</button>
+        </div>
     </div>
 
     <!-- GLOBAL BOTTOM NAVIGATION -->
@@ -181,8 +187,7 @@
 </div>
 
 <!-- MODULE ENTRY POINT -->
-<script type="module" src="js/app.js?v=1787258099"></script>
+<script type="module" src="js/app.js?v=1787337361"></script>
 
 </body>
 </html>
-

@@ -77,7 +77,7 @@ const App = {
         }
     },
 
-    // --- NAVIGATION LOGIC ---
+// --- NAVIGATION LOGIC ---
     setupNavigation: function() {
         UI.initNavigation((screenId) => {
             const name = screenId.replace("-screen", "");
@@ -88,7 +88,8 @@ const App = {
             if (name === "wallet") UI.renderWallet();
             if (name === "tasks") UI.renderTasks();
             if (name === "profile") UI.renderProfile();
-            
+            if (name === "daily-bonus") UI.renderDailyBonus(); // Added correctly here
+
             // Admin Panel Switch
             if (name === "admin-dashboard") {
                 if (Auth.isAdmin()) {
@@ -100,14 +101,6 @@ const App = {
             }
         });
     },
-
-UI.initNavigation((screen) => {
-                    const name = screen.replace('-screen', '');
-                    if (name === 'wallet') UI.renderWallet();
-                    if (name === 'tasks') UI.renderTasks();
-                    if (name === 'dashboard') this.refreshDashboard();
-                    if (name === 'daily-bonus') UI.renderDailyBonus(); // ADD THIS LINE
-                });
 
     // --- GLOBAL UI REFRESH ---
     refreshUI: function() {

@@ -1,5 +1,10 @@
 "use strict";
 
+/* =====================================================
+   CROWN PRINCE REWARD HUB - TASKS MODULE
+   CLEAN RECONSTRUCTION - PHASE 4 (FEATURE MODULES)
+===================================================== */
+
 import Api from "./api.js";
 import State from "./state.js";
 import Settings from "./settings.js";
@@ -66,22 +71,26 @@ Tasks.loadTasks = async function (refresh = false) {
     try {
         this.setLoading(true);
         if (refresh) { this.page = 1; this.tasks = []; }
-        const response = await Api.getTasks({
-            page: this.page,
-            pageSize: this.pageSize,
-            category: this.filters.category,
-            status: this.filters.status,
-            search: this.searchQuery
-        });
+        
+        // Pass userId if available in State
+        const user = State.getUser();
+        const response = await Api.getTasks(user?.user_id);
+
         if (!response.success) throw new Error(response.message || "Failed to load tasks.");
-        const items = response.tasks || [];
+        
+        const items = response.data || []; // Matches reconstructed Backend 'data' field
         if (refresh) { this.tasks = items; } else { this.tasks.push(...items); }
-        this.totalTasks = response.total || this.tasks.length;
+        
+        this.totalTasks = response.count || this.tasks.length;
         this.hasMore = this.tasks.length < this.totalTasks;
         this.updateStatistics();
         return true;
-    } catch (error) { console.error(error); return false; }
-    finally { this.setLoading(false); }
+    } catch (error) { 
+        console.error("Tasks Load Error:", error); 
+        return false; 
+    } finally { 
+        this.setLoading(false); 
+    }
 };
 
 Tasks.load = Tasks.loadTasks; // Alias for App.js
@@ -92,9 +101,9 @@ Tasks.filteredTasks = function () {
         if (this.filters.category !== "all" && task.category !== this.filters.category) return false;
         if (this.filters.status && task.status !== this.filters.status) return false;
         if (this.filters.rewardMin && task.reward < this.filters.rewardMin) return false;
-        if (this.filters.rewardMax && task.reward > this.filters.rewardMax) return false; // Fixed missing operator
+        if (this.filters.rewardMax && task.reward > this.filters.rewardMax) return false; 
         if (this.searchQuery) {
-            const text = (task.title + " " + task.description).toLowerCase();
+            const text = (task.title + " " + (task.description || "")).toLowerCase();
             if (!text.includes(this.searchQuery.toLowerCase())) return false;
         }
         return true;
@@ -106,14 +115,14 @@ Tasks.updateStatistics = function () {
     this.statistics.available = this.tasks.filter(t => t.status === TASK_STATUS.AVAILABLE).length;
     this.statistics.completed = this.tasks.filter(t => t.status === TASK_STATUS.COMPLETED).length;
     this.statistics.pending = this.tasks.filter(t => t.status === TASK_STATUS.PENDING).length;
-    this.statistics.earned = this.tasks.filter(t => t.status === TASK_STATUS.COMPLETED).reduce((sum, t) => sum + t.reward, 0);
+    this.statistics.earned = this.tasks.filter(t => t.status === TASK_STATUS.COMPLETED).reduce((sum, t) => sum + (t.reward || 0), 0);
 };
 
 /* --- VERIFICATION --- */
 Tasks.verifyTelegramTask = async function (taskId) {
     try {
         this.setVerifying(true);
-        return await Api.post("/tasks/verify/telegram", { taskId });
+        return await Api.verifyTelegramTask(taskId);
     } catch (e) { return { success: false, message: "Verification failed" }; }
     finally { this.setVerifying(false); }
 };
@@ -121,7 +130,7 @@ Tasks.verifyTelegramTask = async function (taskId) {
 Tasks.verifyTwitterTask = async function (taskId) {
     try {
         this.setVerifying(true);
-        return await Api.post("/tasks/verify/twitter", { taskId });
+        return await Api.verifyTwitterTask(taskId);
     } catch (e) { return { success: false, message: "Verification failed" }; }
     finally { this.setVerifying(false); }
 };

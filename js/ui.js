@@ -1,5 +1,10 @@
 "use strict";
 import Wallet from "./wallet.js";
+import Tasks from "./tasks.js";
+import Rewards from "./rewards.js"; // ADD THIS LINE
+import Profile from "./profile.js";
+import State from "./state.js";
+import Utils from "./utils.js";
 
 const UI = {
     activeScreen: "auth-screen",
@@ -132,6 +137,44 @@ renderTasks: function() {
                 <p style="color:#94a3b8; margin:10px 0 25px 0;">We are preparing new rewards for you. Please check back in a few hours!</p>
                 <button onclick="location.reload()" style="background:#3b82f6; color:white; border:none; padding:15px 40px; border-radius:12px; font-weight:bold;">Refresh List</button>
             </div>`;
+    },
+
+renderDailyBonus: function() {
+        const container = document.getElementById("daily-bonus-container");
+        if (!container) return;
+
+        const streak = Rewards.getDailyStreak();
+        const nextTime = Rewards.getNextDailyBonusTime();
+        
+        container.innerHTML = `
+            <div style="text-align:center; padding:20px;">
+                <div style="font-size: 80px; margin-bottom:20px; filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.3));">🎁</div>
+                <h2 style="color:white; margin:0; font-size:1.8rem;">Daily Bonus</h2>
+                <p style="color:#94a3b8; margin:10px 0 25px 0;">Claim your loyalty reward of <b style="color:#10b981;">$0.0001</b></p>
+                
+                <div style="background:#1e293b; padding:20px; border-radius:20px; margin-bottom:30px; border:1px solid #334155;">
+                    <p style="margin:0; color:#94a3b8; font-size:0.8rem; text-transform:uppercase; letter-spacing:1px;">Current Streak</p>
+                    <h2 style="margin:5px 0 0 0; color:var(--primary); font-size:2rem;">${streak} Days</h2>
+                </div>
+
+                <button id="claim-daily-btn" style="background:#3b82f6; color:white; border:none; padding:18px 0; border-radius:15px; font-weight:bold; font-size:1.1rem; width:100%; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);">
+                    Claim Bonus
+                </button>
+            </div>
+        `;
+
+        document.getElementById("claim-daily-btn").onclick = async () => {
+            this.showLoading("Verifying...");
+            const res = await Rewards.claimDailyBonus();
+            this.hideLoading();
+
+            if (res.success) {
+                this.toast(`$${res.reward} added to balance!`, "success");
+                this.renderDailyBonus(); // Refresh screen
+            } else {
+                alert(res.message || "Come back later!");
+            }
+        };
     },
 
     initNavigation: function(callback) {

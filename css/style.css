@@ -209,3 +209,29 @@ body {
     display: flex; flex-direction: column; align-items: center; gap: 4px;
 }
 
+/* --- LOADING BAR RESTORATION --- */
+.loading-bar {
+    width: 180px;
+    height: 4px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 10px;
+    overflow: hidden;
+    margin-top: 20px;
+}
+
+.loading-fill {
+    width: 100%;
+    height: 100%;
+    background: #3b82f6; /* Professional blue */
+    animation: loading-shimmer 2s infinite linear;
+}
+
+@keyframes loading-shimmer {
+    0% { transform: translateX(-100%); }
+    100% { transform: translateX(100%); }
+}
+
+/* --- NAV VISIBILITY --- */
+.nav-hidden {
+    display: none !important;
+}

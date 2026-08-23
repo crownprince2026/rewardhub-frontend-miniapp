@@ -13,18 +13,24 @@ const UI = {
     showScreen: function(name) {
         const screens = document.querySelectorAll('.screen');
         screens.forEach(s => { s.style.display = 'none'; s.classList.remove('active'); });
+        
         const targetId = name.endsWith('-screen') ? name : `${name}-screen`;
         const target = document.getElementById(targetId);
+        
         if (target) {
             target.style.display = 'flex';
             target.classList.add('active');
             this.activeScreen = targetId;
+
+            // --- AUTO-HIDE NAVIGATION LOGIC ---
             const nav = document.querySelector('.bottom-nav');
-            if (targetId.includes('auth') || targetId.includes('splash')) {
-                nav?.classList.remove('visible');
+            if (targetId === "auth-screen" || targetId === "splash-screen") {
+                if (nav) nav.classList.add('nav-hidden');
             } else {
-                nav?.classList.add('visible');
+                if (nav) nav.classList.remove('nav-hidden');
             }
+            // ----------------------------------
+
             return true;
         }
         return false;

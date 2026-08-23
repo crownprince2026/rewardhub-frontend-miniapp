@@ -289,8 +289,11 @@ renderDailyBonus: function() {
         ];
 
         // Generate the HTML for the labels inside the wheel
+        // Generate the HTML for the labels inside the wheel
         const labelsHTML = rewardsList.map((text, i) => {
-            const rotation = i * 36; // 360 / 10 items
+            // (i * 36) is the start of the segment
+            // + 18 moves the text to the dead center of the 36-degree segment
+            const rotation = (i * 36) + 18; 
             return `<div class="wheel-label" style="transform: rotate(${rotation}deg);">${text}</div>`;
         }).join('');
 

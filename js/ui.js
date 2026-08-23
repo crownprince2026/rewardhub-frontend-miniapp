@@ -284,15 +284,14 @@ renderDailyBonus: function() {
 
         // The 10 rewards you requested
         const rewardsList = [
-            "$0.0001", "5 XP", "$0.0002", "Try Again", "$0.005", 
+            "$0.0001", "5 XP", "$0.0002", "Try Again", "$0.005",
             "50 XP", "$0.01", "$1.00", "$0.05", "$0.10"
         ];
 
         // Generate the HTML for the labels inside the wheel
-        // Generate the HTML for the labels inside the wheel
         const labelsHTML = rewardsList.map((text, i) => {
-            // (i * 36) is the start of the segment
-            // + 18 moves the text to the dead center of the 36-degree segment
+            // i * 36 is the start of the segment. 
+            // We add 18 to land exactly in the middle of the color.
             const rotation = (i * 36) + 18; 
             return `<div class="wheel-label" style="transform: rotate(${rotation}deg);">${text}</div>`;
         }).join('');
@@ -301,7 +300,7 @@ renderDailyBonus: function() {
             <div style="text-align:center; padding:20px;">
                 <h2 style="color:white; margin:0;">Lucky Wheel</h2>
                 <p style="color:#94a3b8; font-size:0.85rem; margin:10px 0;">Spin to win Cash or XP rewards!</p>
-                
+
                 <div class="wheel-container">
                     <div class="wheel-pointer"></div>
                     <div class="wheel-center"></div>
@@ -310,7 +309,7 @@ renderDailyBonus: function() {
                     </div>
                 </div>
 
-                <button id="spin-btn" 
+                <button id="spin-btn"
                     ${!canSpin ? 'disabled style="background:#334155; opacity:0.6;"' : 'style="background:#3b82f6;"'}
                     class="reward-submit-btn" style="margin-top:30px; width:100%; padding:18px; border-radius:15px; border:none; color:white; font-weight:bold; font-size:1.1rem;">
                     ${canSpin ? 'Spin Now' : 'Next Spin in: <span id="spin-timer">--:--</span>'}

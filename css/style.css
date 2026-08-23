@@ -265,21 +265,22 @@ body {
     position: absolute;
     top: 0;
     left: 50%;
-    width: 80px; /* Widened from 60px to prevent text wrapping */
+    /* We make this wide so text has room to breathe */
+    width: 120px; 
     height: 50%;
-    margin-left: -40px; /* (width / 2) to stay centered */
+    margin-left: -60px; /* Always exactly half of width */
     transform-origin: bottom center;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding-top: 28px; /* Increased from 15px to move text away from the edge */
-    font-size: 0.6rem; /* Slightly smaller for better fit */
+    /* This moves text significantly inward to the center of the color slice */
+    padding-top: 45px; 
+    font-size: 0.65rem;
     font-weight: 900;
     color: white;
-    text-shadow: 0 1px 4px rgba(0,0,0,1); /* Stronger shadow for readability */
-    pointer-events: none;
-    z-index: 2;
-    white-space: nowrap; /* Forces text to stay on one line */
+    text-shadow: 0 2px 4px rgba(0,0,0,1);
+    white-space: nowrap;
+    z-index: 5;
 }
 
 .wheel-pointer {

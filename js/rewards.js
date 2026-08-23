@@ -23,7 +23,12 @@ const REWARD_TYPES = {
     PROMOTION: "promotion"
 };
 
-const DEFAULT_COOLDOWN = 86400;
+// --- COOLDOWN SETTINGS (Surgical Fix) ---
+const COOLDOWNS = {
+    DAILY: 86400,    // 24 Hours
+    SPIN: 3600,     // 1 Hour
+    MYSTERY: 3600   // 1 Hour
+};
 
 const Rewards = {
     initialized: false,
@@ -108,7 +113,7 @@ Rewards.claimDailyBonus = async function () {
 /* --- SPIN WHEEL --- */
 Rewards.spin = async function () {
     try {
-        if (!this.isAvailable(REWARD_TYPES.SPIN)) {
+        if (!this.isAvailable("spin")) {
             return { success: false, message: "Spin cooldown active." };
         }
         this.claiming = true;
@@ -120,9 +125,14 @@ Rewards.spin = async function () {
         if (response.success) {
             const reward = Number(response.reward || 0);
             if (State.user) State.user.balance += reward;
+            
+            // Keep your professional statistics
             this.statistics.totalEarned += reward;
             this.statistics.spinsToday++;
-            this.setCooldown(REWARD_TYPES.SPIN, response.cooldown || 3600);
+            
+            // Update to use the 1-hour (3600s) cooldown
+            this.setCooldown("spin", 3600);
+            this.saveCache();
         }
         return response;
     } catch (error) {
@@ -133,23 +143,40 @@ Rewards.spin = async function () {
 };
 
 /* --- MYSTERY BOX --- */
+/* --- MYSTERY BOX (Professional Rebuild) --- */
 Rewards.openMysteryBox = async function () {
     try {
-        if (!this.isAvailable(REWARD_TYPES.MYSTERY_BOX)) {
+        // 1. Check if 1 hour has passed
+        if (!this.isAvailable("mystery_box")) {
             return { success: false, message: "Mystery Box cooldown active." };
         }
+
         this.claiming = true;
+        const user = State.getUser();
+
+        // 2. Call the Backend API
         const response = await Api.claimMysteryBox({
-            user_id: State.getUser()?.user_id,
-            username: State.getUser()?.username
+            user_id: user?.user_id,
+            username: user?.username
         });
 
         if (response.success) {
             const reward = Number(response.reward || 0);
-            if (State.user) State.user.balance += reward;
+
+            // 3. Update Global User Balance
+            if (State.user) {
+                State.user.balance += reward;
+            }
+
+            // 4. Update Module Statistics
             this.statistics.totalEarned += reward;
             this.statistics.mysteryBoxesOpened++;
-            this.setCooldown(REWARD_TYPES.MYSTERY_BOX, response.cooldown || 86400);
+
+            // 5. Set 1 Hour Cooldown (3600 Seconds)
+            this.setCooldown("mystery_box", 3600);
+
+            // 6. Save state to LocalStorage so the timer survives app restart
+            this.saveCache();
         }
         return response;
     } catch (error) {

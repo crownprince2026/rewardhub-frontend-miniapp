@@ -228,33 +228,99 @@ renderDailyBonus: function() {
 
     // --- NEW: AD-REWARD BRIDGE ---
     handleRewardWithAd: async function(type) {
-        // 1. Show Ad Loading
+        // 1. Show Ad Loading (Kept from your original logic)
         this.showLoading("Loading Advertisement...");
-        
-        // 2. Simulate Ad Play (We will connect real ads in Phase 3)
+
+        // 2. Simulate Ad Play
         setTimeout(async () => {
             this.showLoading("Verifying Ad Watch...");
             
-            // 3. Process Reward after Ad
             let res;
-            if (type === "daily") res = await Rewards.claimDailyBonus();
             
+            // 3. Process the specific Reward Type
+            if (type === "daily") {
+                res = await Rewards.claimDailyBonus();
+            } 
+            else if (type === "mystery_box") {
+                res = await Rewards.openMysteryBox();
+            } 
+            else if (type === "spin") {
+                // For the Spin Wheel, we show the animation BEFORE the result
+                const wheel = document.getElementById("main-wheel");
+                const randomDeg = Math.floor(5000 + Math.random() * 5000); 
+                if(wheel) wheel.style.transform = `rotate(${randomDeg}deg)`;
+                
+                // Wait 4 seconds for the wheel to finish spinning
+                await new Promise(resolve => setTimeout(resolve, 4000));
+                res = await Rewards.spin();
+            }
+
             this.hideLoading();
 
-            if (res.success) {
-                this.toast(`$${res.reward} and +5 XP Earned!`, "success");
-                this.renderDailyBonus();
+            // 4. Show Feedback (Kept and improved from your original)
+            if (res && res.success) {
+                const prizeName = res.prize ? `(${res.prize})` : "";
+                this.toast(`$${res.reward} ${prizeName} and XP Earned!`, "success");
+                
+                // Refresh the specific screen you are on
+                if (type === "daily") this.renderDailyBonus();
+                if (type === "mystery_box") this.renderMysteryBox();
+                if (type === "spin") this.renderSpinWheel();
+                
                 // Refresh dashboard balance in background
-                if(this.activeScreen === "dashboard-screen") this.renderDashboard();
+                this.renderDashboard(); 
             } else {
-                alert(res.message);
+                alert(res ? res.message : "Reward processing failed.");
             }
-        }, 3000); // Simulated 3 second ad
+        }, 3000); // 3-second simulated ad
     },
 
     renderSpinWheel: function() {
         const container = document.getElementById("spin-wheel-container");
-        if (container) container.innerHTML = `<div style="text-align:center; padding:50px;"><div style="font-size:60px;">🎡</div><h3 style="color:white;">Spin Wheel Coming Soon</h3><p style="color:#94a3b8;">Finalizing the lucky odds...</p></div>`;
+        if (!container) return;
+
+        const nextSpinTime = Rewards.getCooldown("spin");
+        const canSpin = Date.now() >= nextSpinTime;
+
+        container.innerHTML = `
+            <div style="text-align:center; padding:20px;">
+                <h2 style="color:white; margin:0;">Lucky Wheel</h2>
+                <p style="color:#94a3b8; font-size:0.85rem; margin:10px 0;">Spin to win Cash or XP rewards!</p>
+                
+                <div class="wheel-container">
+                    <div class="wheel-pointer"></div>
+                    <div class="wheel-center"></div>
+                    <div id="main-wheel" class="wheel-main"></div>
+                </div>
+
+                <button id="spin-btn" 
+                    ${!canSpin ? 'disabled style="background:#334155; opacity:0.6;"' : 'style="background:#3b82f6;"'}
+                    class="reward-submit-btn" style="margin-top:30px; width:100%; padding:18px; border-radius:15px; border:none; color:white; font-weight:bold; font-size:1.1rem;">
+                    ${canSpin ? 'Spin Now' : 'Next Spin in: <span id="spin-timer">--:--</span>'}
+                </button>
+                <p style="margin-top:15px; font-size:0.75rem; color:#64748b;">* Watches 1 ad before spinning</p>
+            </div>
+        `;
+
+        if (!canSpin) {
+            this.startSpinCountdown(nextSpinTime);
+        } else {
+            document.getElementById("spin-btn").onclick = () => this.handleRewardWithAd("spin");
+        }
+    },
+
+    startSpinCountdown: function(endTime) {
+        const timerEl = document.getElementById("spin-timer");
+        if (!timerEl) return;
+        const update = () => {
+            const diff = endTime - Date.now();
+            if (diff <= 0) { this.renderSpinWheel(); return; }
+            const m = Math.floor(diff / 60000).toString().padStart(2, '0');
+            const s = Math.floor((diff % 60000) / 1000).toString().padStart(2, '0');
+            timerEl.innerText = `${m}:${s}`;
+        };
+        update();
+        setInterval(update, 1000);
     },
 
     renderMysteryBox: function() {

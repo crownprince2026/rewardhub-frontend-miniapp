@@ -235,3 +235,25 @@ body {
 .nav-hidden {
     display: none !important;
 }
+
+/* --- PROFESSIONAL FORM INPUTS --- */
+.form-input {
+    width: 100% !important;
+    background: #0f172a !important;
+    border: 1px solid #334155 !important;
+    color: white !important;
+    padding: 15px !important;
+    border-radius: 14px !important;
+    margin-top: 8px !important;
+    font-size: 1rem !important;
+    box-sizing: border-box !important;
+    outline: none;
+}
+
+.form-input:focus {
+    border-color: var(--primary) !important;
+}
+
+#tasks-container {
+    width: 100%;
+}

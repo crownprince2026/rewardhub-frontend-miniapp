@@ -74,14 +74,73 @@ const UI = {
 
     renderWallet: function() {
         const summary = document.getElementById("wallet-summary");
+        const withdraw = document.getElementById("withdraw-button");
+        
         if (summary) {
-            summary.innerHTML = `<div class="balance-card"><p style="margin:0; opacity:0.8;">Balance</p><h1>$${Wallet.getAvailableBalance().toFixed(2)}</h1></div>`;
+            summary.innerHTML = `
+                <div class="balance-card" style="width:100%; box-sizing:border-box; margin-bottom:20px;">
+                    <p style="margin:0; opacity:0.8; font-size:0.9rem;">Available Balance</p>
+                    <h1 style="font-size:2.8rem; margin:10px 0;">$${Wallet.getAvailableBalance().toFixed(2)}</h1>
+                    <div style="display:flex; justify-content:space-around; margin-top:15px; border-top:1px solid rgba(255,255,255,0.1); padding-top:15px;">
+                        <div style="text-align:center;">
+                            <small style="color:#94a3b8; display:block; margin-bottom:4px;">Pending</small>
+                            <b style="color:#f59e0b; font-size:1.1rem;">$${Wallet.getPendingBalance().toFixed(2)}</b>
+                        </div>
+                        <div style="text-align:center;">
+                            <small style="color:#94a3b8; display:block; margin-bottom:4px;">Total Earned</small>
+                            <b style="color:#10b981; font-size:1.1rem;">$${Wallet.getEarnedBalance().toFixed(2)}</b>
+                        </div>
+                    </div>
+                </div>`;
+        }
+
+        if (withdraw) {
+            withdraw.innerHTML = `
+                <div style="background:var(--surface); padding:25px; border-radius:24px; border:1px solid #334155; width:100%; box-sizing:border-box;">
+                    <h3 style="margin:0 0 20px 0; color:white; text-align:center;">Withdraw Funds</h3>
+                    
+                    <label style="color:#94a3b8; font-size:0.8rem; margin-left:5px;">Withdrawal Method</label>
+                    <select id="wd-method" class="form-input">
+                        <option value="USDT_BEP20">USDT (BEP20)</option>
+                        <option value="BINANCE_PAY">Binance Pay / ID</option>
+                    </select>
+
+                    <label style="color:#94a3b8; font-size:0.8rem; margin:15px 0 0 5px; display:block;">Wallet Address or Binance ID</label>
+                    <input type="text" id="wd-address" class="form-input" placeholder="Enter your details...">
+
+                    <label style="color:#94a3b8; font-size:0.8rem; margin:15px 0 0 5px; display:block;">Amount (Min: $${Wallet.getMinimumWithdrawal().toFixed(2)})</label>
+                    <input type="number" id="wd-amount" class="form-input" placeholder="0.00">
+
+                    <button id="submit-wd" 
+                            style="width:100%; background:#10b981; color:white; padding:18px; border-radius:16px; font-weight:bold; border:none; font-size:1.1rem; margin-top:25px; box-shadow: 0 4px 15px rgba(16, 185, 129, 0.2);">
+                        Submit Withdrawal
+                    </button>
+                    
+                    <p style="text-align:center; color:#64748b; font-size:0.7rem; margin-top:15px;">* Payments are processed within 24 hours.</p>
+                </div>`;
+            
+            document.getElementById("submit-wd").onclick = () => this.handleWithdrawal();
         }
     },
 
     renderTasks: function() {
         const container = document.getElementById("tasks-container");
-        if (container) container.innerHTML = `<div style="margin-top:50px; text-align:center;"><h2>No Tasks Available</h2><button onclick="location.reload()" style="background:#3b82f6;color:white;padding:12px 25px;border-radius:10px;border:none;">Refresh</button></div>`;
+        if (!container) return;
+
+        // Professional Empty State with requested wording
+        container.innerHTML = `
+            <div style="margin-top:60px; text-align:center; padding:20px;">
+                <div style="font-size: 64px; margin-bottom:20px; opacity:0.8;">📋</div>
+                <h2 style="color:white; margin:0; font-size:1.5rem;">No Tasks Available</h2>
+                <p style="color:#94a3b8; margin:15px 0 30px 0; line-height:1.5;">
+                    Please wait, we are currently loading new tasks.<br>
+                    Check back in a few hours!
+                </p>
+                <button onclick="location.reload()" 
+                        style="background:var(--primary); color:white; border:none; padding:16px 40px; border-radius:14px; font-weight:bold; font-size:1rem; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);">
+                    Refresh Tasks
+                </button>
+            </div>`;
     },
 
     renderRewards: function() {

@@ -139,42 +139,49 @@ renderTasks: function() {
             </div>`;
     },
 
-renderDailyBonus: function() {
-        const container = document.getElementById("daily-bonus-container");
-        if (!container) return;
+renderRewards: function() {
+        // Activate the 4 sub-cards in the Rewards Grid
+        const cards = [
+            { id: "daily-bonus-card", target: "daily-bonus-screen", render: () => this.renderDailyBonus() },
+            { id: "spin-wheel-card", target: "spin-wheel-screen", render: () => this.renderSpinWheel() },
+            { id: "mystery-box-card", target: "mystery-box-screen", render: () => this.renderMysteryBox() },
+            { id: "watch-ads-card", target: "watch-ads-screen", render: () => this.renderWatchAds() }
+        ];
 
-        const streak = Rewards.getDailyStreak();
-        const nextTime = Rewards.getNextDailyBonusTime();
-        
-        container.innerHTML = `
-            <div style="text-align:center; padding:20px;">
-                <div style="font-size: 80px; margin-bottom:20px; filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.3));">🎁</div>
-                <h2 style="color:white; margin:0; font-size:1.8rem;">Daily Bonus</h2>
-                <p style="color:#94a3b8; margin:10px 0 25px 0;">Claim your loyalty reward of <b style="color:#10b981;">$0.0001</b></p>
-                
-                <div style="background:#1e293b; padding:20px; border-radius:20px; margin-bottom:30px; border:1px solid #334155;">
-                    <p style="margin:0; color:#94a3b8; font-size:0.8rem; text-transform:uppercase; letter-spacing:1px;">Current Streak</p>
-                    <h2 style="margin:5px 0 0 0; color:var(--primary); font-size:2rem;">${streak} Days</h2>
-                </div>
-
-                <button id="claim-daily-btn" style="background:#3b82f6; color:white; border:none; padding:18px 0; border-radius:15px; font-weight:bold; font-size:1.1rem; width:100%; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.4);">
-                    Claim Bonus
-                </button>
-            </div>
-        `;
-
-        document.getElementById("claim-daily-btn").onclick = async () => {
-            this.showLoading("Verifying...");
-            const res = await Rewards.claimDailyBonus();
-            this.hideLoading();
-
-            if (res.success) {
-                this.toast(`$${res.reward} added to balance!`, "success");
-                this.renderDailyBonus(); // Refresh screen
-            } else {
-                alert(res.message || "Come back later!");
+        cards.forEach(card => {
+            const el = document.getElementById(card.id);
+            if (el) {
+                el.style.cursor = "pointer";
+                el.onclick = () => {
+                    if (this.showScreen(card.target)) {
+                        card.render();
+                    }
+                };
             }
-        };
+        });
+    },
+
+    renderSpinWheel: function() {
+        const container = document.getElementById("spin-wheel-container");
+        if (container) container.innerHTML = `<div style="text-align:center; padding:50px;"><div style="font-size:60px;">🎡</div><h3 style="color:white;">Spin Wheel Coming Soon</h3><p style="color:#94a3b8;">Finalizing the lucky odds...</p></div>`;
+    },
+
+    renderMysteryBox: function() {
+        const container = document.getElementById("mystery-box-container");
+        if (container) container.innerHTML = `<div style="text-align:center; padding:50px;"><div style="font-size:60px;">🎁</div><h3 style="color:white;">Mystery Box Coming Soon</h3><p style="color:#94a3b8;">Hiding the treasures...</p></div>`;
+    },
+
+    renderWatchAds: function() {
+        const container = document.getElementById("ad-status-container");
+        if (!container) return;
+        // Professional "No Ads" response with Refresh button
+        container.innerHTML = `
+            <div style="margin-top:60px; text-align:center; padding:20px;">
+                <div style="font-size: 60px; margin-bottom:20px;">📺</div>
+                <h2 style="color:white; margin:0;">No Ads Available</h2>
+                <p style="color:#94a3b8; margin:10px 0 25px 0;">We are preparing new video offers for you. Please wait a moment and try again.</p>
+                <button onclick="location.reload()" style="background:#3b82f6; color:white; border:none; padding:15px 40px; border-radius:12px; font-weight:bold; width:100%;">Refresh Ads</button>
+            </div>`;
     },
 
     initNavigation: function(callback) {

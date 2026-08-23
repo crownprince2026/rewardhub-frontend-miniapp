@@ -88,7 +88,7 @@ const App = {
             if (name === "wallet") UI.renderWallet();
             if (name === "tasks") UI.renderTasks();
             if (name === "profile") UI.renderProfile();
-            if (name === "daily-bonus") UI.renderDailyBonus(); // Added correctly here
+            if (name === "rewards") UI.renderRewards(); // ADD THIS LINE
 
             // Admin Panel Switch
             if (name === "admin-dashboard") {

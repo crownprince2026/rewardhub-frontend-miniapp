@@ -245,17 +245,27 @@ renderDailyBonus: function() {
                 res = await Rewards.openMysteryBox();
             } 
             else if (type === "spin") {
-                // For the Spin Wheel, we show the animation BEFORE the result
-                const wheel = document.getElementById("main-wheel");
-                const randomDeg = Math.floor(5000 + Math.random() * 5000); 
-                if(wheel) wheel.style.transform = `rotate(${randomDeg}deg)`;
-                
-                // Wait 4 seconds for the wheel to finish spinning
-                await new Promise(resolve => setTimeout(resolve, 4000));
-                res = await Rewards.spin();
-            }
-
+        const res = await Rewards.spin(); // Get result first
+        if (!res.success) {
             this.hideLoading();
+            return alert(res.message);
+        }
+
+        const wheel = document.getElementById("main-wheel");
+        // Math: 3600 degrees (10 full turns) + (360 - (index * 36)) 
+        // We subtract to make the wheel land on the arrow at the top.
+        const stopAngle = 3600 + (360 - (res.stopIndex * 36)) - 18;
+        
+        if(wheel) {
+            wheel.style.transform = `rotate(${stopAngle}deg)`;
+            await new Promise(r => setTimeout(r, 4000)); // Wait for spin
+        }
+
+        this.hideLoading();
+        this.toast(`Result: ${rewardsList[res.stopIndex]}`, "success");
+        this.renderSpinWheel();
+        this.renderDashboard();
+    }
 
             // 4. Show Feedback (Kept and improved from your original)
             if (res && res.success) {
@@ -284,9 +294,9 @@ renderDailyBonus: function() {
 
         // The 10 rewards you requested
         const rewardsList = [
-            "$0.0001", "5 XP", "$0.0002", "Try Again", "$0.005",
-            "50 XP", "$0.01", "$1.00", "$0.05", "$0.10"
-        ];
+    "$0.01", "5 XP", "$0.02", "Try Again", "$0.04", 
+    "50 XP", "$0.03", "$1.00", "$0.05", "$0.10"
+];
 
         // Generate the HTML for the labels inside the wheel
         const labelsHTML = rewardsList.map((text, i) => {

@@ -265,20 +265,19 @@ body {
     position: absolute;
     top: 0;
     left: 50%;
-    /* We make this wide so text has room to breathe */
-    width: 120px; 
+    width: 100px; 
     height: 50%;
-    margin-left: -60px; /* Always exactly half of width */
+    margin-left: -50px;
     transform-origin: bottom center;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    /* This moves text significantly inward to the center of the color slice */
-    padding-top: 45px; 
-    font-size: 0.65rem;
+    /* Moved inward to the widest part of the slice */
+    padding-top: 55px; 
+    font-size: 0.6rem;
     font-weight: 900;
     color: white;
-    text-shadow: 0 2px 4px rgba(0,0,0,1);
+    text-shadow: 0 2px 4px #000;
     white-space: nowrap;
     z-index: 5;
 }

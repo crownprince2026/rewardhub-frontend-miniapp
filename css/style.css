@@ -30,6 +30,29 @@ body {
 
 .screen.active { display: flex !important; }
 
+/* --- AUTH & SPLASH LOGO FIX --- */
+#auth-screen, #splash-screen {
+    justify-content: center !important;
+    align-items: center !important;
+    text-align: center;
+}
+
+.auth-logo, .splash-logo {
+    width: 130px !important; /* Fixed professional width */
+    max-width: 40% !important; 
+    height: auto;
+    margin-bottom: 25px;
+    border-radius: 20px; /* Gives it a modern look */
+    filter: drop-shadow(0 10px 15px rgba(0,0,0,0.3));
+}
+
+.centered-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+}
+
 /* --- SPIN WHEEL PRECISION --- */
 .wheel-container {
     position: relative;

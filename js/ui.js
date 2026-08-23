@@ -1,10 +1,9 @@
 "use strict";
 import Wallet from "./wallet.js";
 import Tasks from "./tasks.js";
-import Rewards from "./rewards.js"; // ADD THIS LINE
-import Profile from "./profile.js";
+import Rewards from "./rewards.js";
 import State from "./state.js";
-import Utils from "./utils.js";
+import Api from "./api.js";
 
 const UI = {
     activeScreen: "auth-screen",
@@ -12,27 +11,31 @@ const UI = {
     showScreen: function(name) {
         const screens = document.querySelectorAll('.screen');
         screens.forEach(s => { s.style.display = 'none'; s.classList.remove('active'); });
-
-        const target = document.getElementById(name) || document.getElementById(name + "-screen");
+        const targetId = name.endsWith('-screen') ? name : `${name}-screen`;
+        const target = document.getElementById(targetId);
         if (target) {
             target.style.display = 'flex'; 
             target.classList.add('active');
-            this.activeScreen = name;
-
-            const nav = document.querySelector('.bottom-nav');
-            if (name.includes('auth') || name.includes('splash')) {
-                nav?.classList.remove('visible');
-            } else {
-                nav?.classList.add('visible');
-            }
+            this.activeScreen = targetId;
             return true;
         }
         return false;
     },
 
     renderDashboard: function(data = {}) {
-        const bal = document.getElementById("balance");
-        if (bal) bal.innerText = "$" + (data.balance || 0).toFixed(2);
+        document.getElementById("balance").innerText = "$" + Wallet.getAvailableBalance().toFixed(2);
+        document.getElementById("earned").innerText = "$" + Wallet.getEarnedBalance().toFixed(2);
+        this.updateLiveFeed();
+    },
+
+    updateLiveFeed: async function() {
+        const marquee = document.getElementById("feed-text");
+        try {
+            const res = await Api.getActivityFeed(1);
+            if (res.success && res.data.length > 0) {
+                marquee.innerText = res.data[0].message;
+            }
+        } catch (e) {}
     },
 
     // --- NEW: PROFESSIONAL PROFILE RENDERER ---
@@ -288,52 +291,41 @@ renderDailyBonus: function() {
     renderSpinWheel: function() {
         const container = document.getElementById("spin-wheel-container");
         if (!container) return;
+        const nextSpin = Rewards.getCooldown("spin");
+        const canSpin = Date.now() >= nextSpin;
 
-        const nextSpinTime = Rewards.getCooldown("spin");
-        const canSpin = Date.now() >= nextSpinTime;
-
-        // The 10 rewards you requested
-        const rewardsList = [
-    "$0.01", "5 XP", "$0.02", "Try Again", "$0.04", 
-    "50 XP", "$0.03", "$1.00", "$0.05", "$0.10"
-];
-
-        // Generate the HTML for the labels inside the wheel
+        const rewardsList = ["$0.01", "5 XP", "$0.02", "TRY", "$0.04", "50 XP", "$0.03", "$1.00", "$0.05", "$0.10"];
         const labelsHTML = rewardsList.map((text, i) => {
-            // i * 36 is the start of the segment. 
-            // We add 18 to land exactly in the middle of the color.
             const rotation = (i * 36) + 18; 
             return `<div class="wheel-label" style="transform: rotate(${rotation}deg);">${text}</div>`;
         }).join('');
 
         container.innerHTML = `
             <div style="text-align:center; padding:20px;">
-                <h2 style="color:white; margin:0;">Lucky Wheel</h2>
-                <p style="color:#94a3b8; font-size:0.85rem; margin:10px 0;">Spin to win Cash or XP rewards!</p>
-
+                <h2 style="margin:0;">Lucky Wheel</h2>
                 <div class="wheel-container">
-                    <div class="wheel-pointer"></div>
-                    <div class="wheel-center"></div>
-                    <div id="main-wheel" class="wheel-main">
-                        ${labelsHTML}
-                    </div>
+                    <div class="wheel-pointer"></div><div class="wheel-center"></div>
+                    <div id="main-wheel" class="wheel-main">${labelsHTML}</div>
                 </div>
-
-                <button id="spin-btn"
-                    ${!canSpin ? 'disabled style="background:#334155; opacity:0.6;"' : 'style="background:#3b82f6;"'}
-                    class="reward-submit-btn" style="margin-top:30px; width:100%; padding:18px; border-radius:15px; border:none; color:white; font-weight:bold; font-size:1.1rem;">
-                    ${canSpin ? 'Spin Now' : 'Next Spin in: <span id="spin-timer">--:--</span>'}
+                <button id="spin-btn" class="reward-submit-btn" style="width:100%; padding:18px; border-radius:15px; border:none; color:white; font-weight:bold; background:${canSpin ? '#3b82f6' : '#334155'}">
+                    ${canSpin ? 'Spin Now' : 'Wait Cooldown'}
                 </button>
-                <p style="margin-top:15px; font-size:0.75rem; color:#64748b;">* Watches 1 ad before spinning</p>
-            </div>
-        `;
-
-        if (!canSpin) {
-            this.startSpinCountdown(nextSpinTime);
-        } else {
-            document.getElementById("spin-btn").onclick = () => this.handleRewardWithAd("spin");
-        }
+            </div>`;
+        
+        if (canSpin) document.getElementById("spin-btn").onclick = () => this.handleRewardWithAd("spin");
     },
+
+    // ... (rest of renderWallet, renderTasks, etc kept same as before)
+    initNavigation: function(callback) {
+        document.querySelectorAll('[data-nav]').forEach(btn => {
+            btn.onclick = () => {
+                const target = btn.getAttribute('data-nav');
+                if (this.showScreen(target) && callback) callback(target);
+            };
+        });
+    },
+    hideLoading: function() { document.getElementById('loading-overlay').style.display = 'none'; }
+};
 
     renderMysteryBox: function() {
         const container = document.getElementById("mystery-box-container");

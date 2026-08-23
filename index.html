@@ -44,17 +44,34 @@
 
     <!-- 4. DASHBOARD SCREEN -->
     <section id="dashboard-screen" class="screen">
-        <header class="dashboard-header">
+        <header class="dashboard-header" style="position:relative; width:100%;">
             <img src="assets/images/branding/miniapp-icon.png" class="header-logo" alt="Icon">
-            <h2>Reward Hub</h2>
+            <h2 style="margin:0;">Reward Hub</h2>
+            <div class="notification-bell" data-nav="notifications">🔔</div>
         </header>
-        <main>
-            <div class="balance-card"><h3>Balance</h3><h1 id="balance">$0.00</h1></div>
-            <div class="stats">
-                <div class="stat-card"><h4>Total Earned</h4><span id="earned">$0.00</span></div>
-                <div class="stat-card"><h4>Referrals</h4><span id="referrals">0</span></div>
+
+        <main style="width:100%; display:flex; flex-direction:column; align-items:center;">
+            <!-- Live Activity Feed (Between Logo and Balance) -->
+            <div id="live-activity-feed" class="live-feed-card">
+                <span>📡</span>
+                <marquee id="feed-text" scrollamount="3">Waiting for live activity...</marquee>
             </div>
-            <div id="activity-feed"></div>
+
+            <div class="balance-card">
+                <h3>Balance</h3>
+                <h1 id="balance">$0.00</h1>
+            </div>
+            
+            <div class="stats" style="display:flex; width:90%; gap:10px; margin-top:20px;">
+                <div class="stat-card" style="background:var(--surface); flex:1; padding:15px; border-radius:15px; text-align:center;">
+                    <h4 style="margin:0; font-size:0.7rem; color:var(--text-dim);">Earned</h4>
+                    <span id="earned">$0.00</span>
+                </div>
+                <div class="stat-card" style="background:var(--surface); flex:1; padding:15px; border-radius:15px; text-align:center;">
+                    <h4 style="margin:0; font-size:0.7rem; color:var(--text-dim);">Referrals</h4>
+                    <span id="referrals">0</span>
+                </div>
+            </div>
         </main>
     </section>
 

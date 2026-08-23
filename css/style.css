@@ -1,240 +1,35 @@
+
 :root {
-    /* Brand Colors */
     --bg: #0f172a;
     --surface: #1e293b;
-    --surface-light: #334155;
     --primary: #3b82f6;
-    --primary-dark: #2563eb;
     --accent: #10b981;
-    --danger: #ef4444;
-    --warning: #f59e0b;
-    --text: #ffffff;
     --text-dim: #94a3b8;
-    
-    /* Layout */
-    --nav-height: 75px;
-    --radius-lg: 24px;
-    --radius-md: 16px;
-    --transition: 0.3s ease;
 }
 
-/* Base Reset */
 body {
     margin: 0;
-    padding: 0;
     background-color: var(--bg);
-    color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-    overflow: hidden; /* Prevent body scroll, use screen scroll */
-    -webkit-tap-highlight-color: transparent;
+    color: white;
+    font-family: -apple-system, system-ui, sans-serif;
+    overflow: hidden;
 }
 
-/* Screen Logic */
 .screen {
     display: none;
     position: fixed;
     inset: 0;
-    width: 100%;
-    height: 100vh;
-    background-color: var(--bg);
+    background: var(--bg);
     padding: 20px;
-    padding-bottom: calc(var(--nav-height) + 20px);
-    box-sizing: border-box;
+    padding-bottom: 100px;
     flex-direction: column;
+    align-items: center;
     overflow-y: auto;
-    z-index: 10;
 }
 
-/* Flex Centering for Auth/Splash */
-.screen.active {
-    display: flex !important;
-}
+.screen.active { display: flex !important; }
 
-#auth-screen, #splash-screen {
-    justify-content: center;
-    align-items: center;
-    text-align: center;
-}
-
-/* Centered Container for Logos */
-.centered-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 20px;
-    width: 100%;
-}
-
-.auth-logo, .splash-logo {
-    width: 150px !important;
-    height: auto;
-    filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.5));
-}
-
-/* Dashboard Header */
-.dashboard-header {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    margin-bottom: 25px;
-    padding: 10px 0;
-}
-
-.header-logo {
-    width: 45px;
-    height: 45px;
-    border-radius: 12px;
-}
-
-/* Professional Cards (Momo/Airtel Style) */
-.balance-card {
-    background: linear-gradient(135deg, var(--primary), var(--primary-dark));
-    padding: 30px 20px;
-    border-radius: var(--radius-lg);
-    text-align: center;
-    width: 100%;
-    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
-    margin-bottom: 20px;
-}
-
-.balance-card h3 { font-size: 0.9rem; opacity: 0.8; margin: 0; }
-.balance-card h1 { font-size: 2.8rem; margin: 10px 0; letter-spacing: -1px; }
-
-.stats { display: flex; gap: 12px; margin-bottom: 20px; }
-.stat-card {
-    background: var(--surface);
-    flex: 1;
-    padding: 18px 10px;
-    border-radius: var(--radius-md);
-    text-align: center;
-    border: 1px solid var(--surface-light);
-}
-.stat-card h4 { font-size: 0.75rem; color: var(--text-dim); margin: 0 0 5px 0; }
-.stat-card span { font-size: 1.1rem; font-weight: bold; color: var(--text); }
-
-/* Reward Grid */
-.reward-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 15px;
-}
-
-.reward-card {
-    background: var(--surface);
-    padding: 20px;
-    border-radius: var(--radius-md);
-    text-align: center;
-    border: 1px solid var(--surface-light);
-    transition: var(--transition);
-}
-
-.reward-card:active { transform: scale(0.95); background: var(--surface-light); }
-
-/* Global Bottom Navigation */
-.bottom-nav {
-    position: fixed;
-    bottom: -100px; /* Start hidden */
-    left: 0;
-    width: 100%;
-    height: var(--nav-height);
-    background: #111827;
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    border-top: 1px solid #1f2937;
-    z-index: 1000;
-    transition: bottom 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-    padding-bottom: env(safe-area-inset-bottom);
-}
-
-.bottom-nav.visible { bottom: 0; }
-
-.bottom-nav button {
-    background: none;
-    border: none;
-    color: var(--text-dim);
-    font-size: 0.7rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 6px;
-    flex: 1;
-}
-
-.bottom-nav button.active { color: var(--primary); }
-
-/* Loading Components */
-.loading-bar {
-    width: 200px;
-    height: 6px;
-    background: var(--surface-light);
-    border-radius: 10px;
-    overflow: hidden;
-    margin-top: 15px;
-}
-.loading-fill {
-    width: 40%;
-    height: 100%;
-    background: var(--primary);
-    border-radius: 10px;
-    animation: loading-slide 1.5s infinite ease-in-out;
-}
-
-@keyframes loading-slide {
-    0% { transform: translateX(-100%); width: 30%; }
-    50% { width: 60%; }
-    100% { transform: translateX(250%); width: 30%; }
-}
-
-.hidden { display: none !important; }
-
-/* =====================================================
-   PHASE 2: PROFILE & DASHBOARD POLISH
-===================================================== */
-#profile-screen {
-    align-items: center;
-    text-align: center;
-}
-
-.profile-avatar {
-    width: 150px !important;
-    height: 150px !important;
-    border-radius: 50%;
-    object-fit: cover;
-    border: 4px solid var(--primary);
-    margin: 20px auto;
-    box-shadow: 0 0 20px rgba(59, 130, 246, 0.5);
-    cursor: pointer; /* Indicates it can be clicked */
-}
-
-.referral-box {
-    background: var(--surface);
-    padding: 15px;
-    border-radius: 16px;
-    width: 100%;
-    margin-top: 20px;
-    border: 1px dashed var(--primary);
-}
-
-.referral-link {
-    background: #0f172a;
-    padding: 10px;
-    border-radius: 8px;
-    color: var(--primary);
-    font-family: monospace;
-    font-size: 0.8rem;
-    margin: 10px 0;
-    word-break: break-all;
-}
-
-#dashboard-screen main {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-/* --- SPIN WHEEL DESIGN --- */
+/* --- SPIN WHEEL PRECISION --- */
 .wheel-container {
     position: relative;
     width: 280px;
@@ -248,7 +43,6 @@ body {
     border-radius: 50%;
     border: 8px solid #1e293b;
     position: relative;
-    /* Updated for 10 segments (36 degrees each) */
     background: conic-gradient(
         #3b82f6 0deg 36deg, #1e293b 36deg 72deg,
         #10b981 72deg 108deg, #1e293b 108deg 144deg,
@@ -256,7 +50,7 @@ body {
         #ef4444 216deg 252deg, #1e293b 252deg 288deg,
         #8b5cf6 288deg 324deg, #1e293b 324deg 360deg
     );
-    box-shadow: 0 0 30px rgba(59, 130, 246, 0.4);
+    box-shadow: 0 0 30px rgba(0,0,0,0.5);
     transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1);
     overflow: hidden;
 }
@@ -265,44 +59,74 @@ body {
     position: absolute;
     top: 0;
     left: 50%;
-    width: 100px; 
-    height: 50%;
-    margin-left: -50px;
+    width: 40px; 
+    height: 50%; /* Reaches the center */
+    margin-left: -20px;
     transform-origin: bottom center;
     display: flex;
     justify-content: center;
-    align-items: flex-start;
-    /* Moved inward to the widest part of the slice */
-    padding-top: 55px; 
-    font-size: 0.6rem;
+    align-items: center;
+    text-align: center;
+    /* Pushes text into the middle of the colored slice */
+    padding-bottom: 50px; 
+    font-size: 0.55rem;
     font-weight: 900;
     color: white;
-    text-shadow: 0 2px 4px #000;
-    white-space: nowrap;
+    text-shadow: 0 1px 3px #000;
     z-index: 5;
 }
 
 .wheel-pointer {
     position: absolute;
-    top: -15px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 30px;
-    height: 40px;
-    background: #ffffff;
-    clip-path: polygon(50% 100%, 0 0, 100% 0);
-    z-index: 10;
+    top: -10px; left: 50%; transform: translateX(-50%);
+    width: 30px; height: 40px; background: white;
+    clip-path: polygon(50% 100%, 0 0, 100% 0); z-index: 10;
 }
 
 .wheel-center {
     position: absolute;
-    top: 50%;
-    left: 50%;
-    transform: translate(-50%, -50%);
-    width: 40px;
-    height: 40px;
-    background: white;
-    border-radius: 50%;
-    border: 4px solid #1e293b;
-    z-index: 5;
+    top: 50%; left: 50%; transform: translate(-50%, -50%);
+    width: 40px; height: 40px; background: white;
+    border-radius: 50%; z-index: 10;
 }
+
+/* --- DASHBOARD COMPONENTS --- */
+.notification-bell {
+    position: absolute;
+    top: 25px;
+    right: 20px;
+    font-size: 1.4rem;
+    cursor: pointer;
+}
+
+.live-feed-card {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    width: 90%;
+    padding: 10px 15px;
+    border-radius: 12px;
+    margin-bottom: 20px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 0.8rem;
+    color: #3b82f6;
+}
+
+.balance-card {
+    background: linear-gradient(135deg, #2563eb, #1e40af);
+    padding: 30px; border-radius: 24px; width: 90%;
+    box-shadow: 0 10px 25px rgba(37, 99, 235, 0.3);
+}
+
+.bottom-nav {
+    position: fixed; bottom: 0; left: 0; width: 100%; height: 75px;
+    background: #111827; display: flex; justify-content: space-around;
+    align-items: center; border-top: 1px solid #1f2937; z-index: 1000;
+}
+
+.bottom-nav button {
+    background: none; border: none; color: #9ca3af; font-size: 0.7rem;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+}
+

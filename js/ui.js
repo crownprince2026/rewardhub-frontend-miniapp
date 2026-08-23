@@ -161,6 +161,97 @@ renderRewards: function() {
         });
     },
 
+renderDailyBonus: function() {
+        const container = document.getElementById("daily-bonus-container");
+        if (!container) return;
+
+        const streak = Rewards.getDailyStreak();
+        const nextClaimTime = Rewards.getNextDailyBonusTime(); // This should be a timestamp from your backend
+        const now = Date.now();
+        const canClaim = now >= nextClaimTime;
+
+        container.innerHTML = `
+            <div style="text-align:center; padding:20px;">
+                <div style="font-size: 80px; margin-bottom:20px; filter: drop-shadow(0 0 15px rgba(59, 130, 246, 0.3));">🎁</div>
+                <h2 style="color:white; margin:0; font-size:1.8rem;">Daily Bonus</h2>
+                <p style="color:#94a3b8; margin:10px 0 25px 0;">Daily Reward: <b style="color:#10b981;">$0.001</b></p>
+                
+                <div style="background:#1e293b; padding:20px; border-radius:20px; margin-bottom:30px; border:1px solid #334155;">
+                    <p style="margin:0; color:#94a3b8; font-size:0.8rem; text-transform:uppercase; letter-spacing:1px;">Current Streak</p>
+                    <h2 style="margin:5px 0 0 0; color:var(--primary); font-size:2rem;">${streak} Days</h2>
+                </div>
+
+                <button id="claim-daily-btn" 
+                    ${!canClaim ? 'disabled style="background:#334155; color:#64748b; opacity:0.6;"' : 'style="background:#3b82f6; color:white;"'}
+                    class="reward-submit-btn">
+                    ${canClaim ? 'Claim Bonus' : 'Next Claim in: <span id="daily-timer">--:--:--</span>'}
+                </button>
+                
+                <p style="margin-top:15px; font-size:0.75rem; color:#64748b;">* You must watch 1 ad to unlock the reward</p>
+            </div>
+        `;
+
+        if (!canClaim) {
+            this.startDailyCountdown(nextClaimTime);
+        }
+
+        const btn = document.getElementById("claim-daily-btn");
+        if (canClaim && btn) {
+            btn.onclick = () => this.handleRewardWithAd("daily");
+        }
+    },
+
+    // --- NEW: COUNTDOWN TIMER ENGINE ---
+    startDailyCountdown: function(endTime) {
+        const timerEl = document.getElementById("daily-timer");
+        if (!timerEl) return;
+
+        const update = () => {
+            const now = Date.now();
+            const diff = endTime - now;
+
+            if (diff <= 0) {
+                this.renderDailyBonus(); // Refresh to enable button
+                return;
+            }
+
+            const h = Math.floor(diff / 3600000).toString().padStart(2, '0');
+            const m = Math.floor((diff % 3600000) / 60000).toString().padStart(2, '0');
+            const s = Math.floor((diff % 60000) / 1000).toString().padStart(2, '0');
+            timerEl.innerText = `${h}:${m}:${s}`;
+        };
+
+        update();
+        if (this.dailyInterval) clearInterval(this.dailyInterval);
+        this.dailyInterval = setInterval(update, 1000);
+    },
+
+    // --- NEW: AD-REWARD BRIDGE ---
+    handleRewardWithAd: async function(type) {
+        // 1. Show Ad Loading
+        this.showLoading("Loading Advertisement...");
+        
+        // 2. Simulate Ad Play (We will connect real ads in Phase 3)
+        setTimeout(async () => {
+            this.showLoading("Verifying Ad Watch...");
+            
+            // 3. Process Reward after Ad
+            let res;
+            if (type === "daily") res = await Rewards.claimDailyBonus();
+            
+            this.hideLoading();
+
+            if (res.success) {
+                this.toast(`$${res.reward} and +5 XP Earned!`, "success");
+                this.renderDailyBonus();
+                // Refresh dashboard balance in background
+                if(this.activeScreen === "dashboard-screen") this.renderDashboard();
+            } else {
+                alert(res.message);
+            }
+        }, 3000); // Simulated 3 second ad
+    },
+
     renderSpinWheel: function() {
         const container = document.getElementById("spin-wheel-container");
         if (container) container.innerHTML = `<div style="text-align:center; padding:50px;"><div style="font-size:60px;">🎡</div><h3 style="color:white;">Spin Wheel Coming Soon</h3><p style="color:#94a3b8;">Finalizing the lucky odds...</p></div>`;

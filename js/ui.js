@@ -31,19 +31,17 @@ const UI = {
     },
 
     renderDashboard: function() {
-        const balEl = document.getElementById("balance");
-        const earnEl = document.getElementById("earned");
-        if (balEl) balEl.innerText = "$" + Wallet.getAvailableBalance().toFixed(2);
-        if (earnEl) earnEl.innerText = "$" + Wallet.getEarnedBalance().toFixed(2);
-        this.updateLiveFeed();
-    },
+        // 1. Update Balance and Stats
+        const bal = document.getElementById("balance");
+        const earn = document.getElementById("earned");
+        const refs = document.getElementById("referrals");
 
-    updateLiveFeed: async function() {
-        const marquee = document.getElementById("feed-text");
-        try {
-            const res = await Api.getActivityFeed(1);
-            if (res.success && res.data.length > 0) marquee.innerText = res.data[0].message;
-        } catch (e) {}
+        if (bal) bal.innerText = "$" + Wallet.getAvailableBalance().toFixed(2);
+        if (earn) earn.innerText = "$" + Wallet.getEarnedBalance().toFixed(2);
+        if (refs) refs.innerText = "0"; // Will connect to Profile module later
+
+        // 2. Refresh Live Feed
+        this.updateLiveFeed();
     },
 
     renderProfile: function() {

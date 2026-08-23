@@ -282,6 +282,18 @@ renderDailyBonus: function() {
         const nextSpinTime = Rewards.getCooldown("spin");
         const canSpin = Date.now() >= nextSpinTime;
 
+        // The 10 rewards you requested
+        const rewardsList = [
+            "$0.0001", "5 XP", "$0.0002", "Try Again", "$0.005", 
+            "50 XP", "$0.01", "$1.00", "$0.05", "$0.10"
+        ];
+
+        // Generate the HTML for the labels inside the wheel
+        const labelsHTML = rewardsList.map((text, i) => {
+            const rotation = i * 36; // 360 / 10 items
+            return `<div class="wheel-label" style="transform: rotate(${rotation}deg);">${text}</div>`;
+        }).join('');
+
         container.innerHTML = `
             <div style="text-align:center; padding:20px;">
                 <h2 style="color:white; margin:0;">Lucky Wheel</h2>
@@ -290,7 +302,9 @@ renderDailyBonus: function() {
                 <div class="wheel-container">
                     <div class="wheel-pointer"></div>
                     <div class="wheel-center"></div>
-                    <div id="main-wheel" class="wheel-main"></div>
+                    <div id="main-wheel" class="wheel-main">
+                        ${labelsHTML}
+                    </div>
                 </div>
 
                 <button id="spin-btn" 
@@ -307,20 +321,6 @@ renderDailyBonus: function() {
         } else {
             document.getElementById("spin-btn").onclick = () => this.handleRewardWithAd("spin");
         }
-    },
-
-    startSpinCountdown: function(endTime) {
-        const timerEl = document.getElementById("spin-timer");
-        if (!timerEl) return;
-        const update = () => {
-            const diff = endTime - Date.now();
-            if (diff <= 0) { this.renderSpinWheel(); return; }
-            const m = Math.floor(diff / 60000).toString().padStart(2, '0');
-            const s = Math.floor((diff % 60000) / 1000).toString().padStart(2, '0');
-            timerEl.innerText = `${m}:${s}`;
-        };
-        update();
-        setInterval(update, 1000);
     },
 
     renderMysteryBox: function() {

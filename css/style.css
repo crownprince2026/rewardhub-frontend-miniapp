@@ -265,20 +265,21 @@ body {
     position: absolute;
     top: 0;
     left: 50%;
-    width: 60px; /* Width of the text area */
-    height: 50%; /* Only reach to the center */
-    margin-left: -30px; /* Center the strip */
-    transform-origin: bottom center; /* Rotate from the very center of the wheel */
+    width: 80px; /* Widened from 60px to prevent text wrapping */
+    height: 50%;
+    margin-left: -40px; /* (width / 2) to stay centered */
+    transform-origin: bottom center;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding-top: 15px;
-    font-size: 0.65rem;
-    font-weight: 800;
+    padding-top: 28px; /* Increased from 15px to move text away from the edge */
+    font-size: 0.6rem; /* Slightly smaller for better fit */
+    font-weight: 900;
     color: white;
-    text-shadow: 0 1px 3px rgba(0,0,0,0.8);
-    pointer-events: none; /* Ignore touches on text */
+    text-shadow: 0 1px 4px rgba(0,0,0,1); /* Stronger shadow for readability */
+    pointer-events: none;
     z-index: 2;
+    white-space: nowrap; /* Forces text to stay on one line */
 }
 
 .wheel-pointer {

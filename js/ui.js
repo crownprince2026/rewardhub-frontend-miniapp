@@ -259,7 +259,59 @@ renderDailyBonus: function() {
 
     renderMysteryBox: function() {
         const container = document.getElementById("mystery-box-container");
-        if (container) container.innerHTML = `<div style="text-align:center; padding:50px;"><div style="font-size:60px;">🎁</div><h3 style="color:white;">Mystery Box Coming Soon</h3><p style="color:#94a3b8;">Hiding the treasures...</p></div>`;
+        if (!container) return;
+
+        const nextOpenTime = Rewards.getCooldown("mystery_box");
+        const now = Date.now();
+        const canOpen = now >= nextOpenTime;
+
+        container.innerHTML = `
+            <div style="text-align:center; padding:20px;">
+                <div id="box-visual" style="font-size: 100px; margin: 30px 0; cursor:pointer; transition: transform 0.3s;">
+                    ${canOpen ? '🎁' : '🔒'}
+                </div>
+                <h2 style="color:white; margin:0;">Mystery Box</h2>
+                <p style="color:#94a3b8; margin:10px 0 30px 0;">Win up to <b style="color:#10b981;">$1.00</b> or <b style="color:#f59e0b;">50 XP</b></p>
+                
+                <button id="open-box-btn" 
+                    ${!canOpen ? 'disabled style="background:#334155; color:#64748b; opacity:0.6;"' : 'style="background:#10b981; color:white;"'}
+                    style="padding:18px 0; border-radius:15px; font-weight:bold; font-size:1.1rem; width:100%; border:none;">
+                    ${canOpen ? 'Open Box' : 'Opens in: <span id="box-timer">--:--:--</span>'}
+                </button>
+                
+                <p style="margin-top:15px; font-size:0.75rem; color:#64748b;">* Watch 1 ad to unlock the treasures inside</p>
+            </div>
+        `;
+
+        if (!canOpen) {
+            this.startBoxCountdown(nextOpenTime);
+        }
+
+        const btn = document.getElementById("open-box-btn");
+        const box = document.getElementById("box-visual");
+        
+        if (canOpen && btn) {
+            const openAction = () => this.handleRewardWithAd("mystery_box");
+            btn.onclick = openAction;
+            box.onclick = openAction;
+            // Add a little wiggle animation to the available box
+            box.style.animation = "bounce 2s infinite";
+        }
+    },
+
+    startBoxCountdown: function(endTime) {
+        const timerEl = document.getElementById("box-timer");
+        if (!timerEl) return;
+        const update = () => {
+            const diff = endTime - Date.now();
+            if (diff <= 0) { this.renderMysteryBox(); return; }
+            const h = Math.floor(diff / 3600000).toString().padStart(2, '0');
+            const m = Math.floor((diff % 3600000) / 60000).toString().padStart(2, '0');
+            const s = Math.floor((diff % 60000) / 1000).toString().padStart(2, '0');
+            timerEl.innerText = `${h}:${m}:${s}`;
+        };
+        update();
+        setInterval(update, 1000);
     },
 
     renderWatchAds: function() {

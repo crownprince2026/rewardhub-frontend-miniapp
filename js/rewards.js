@@ -47,6 +47,10 @@ const Rewards = {
     }
 };
 
+Rewards.getDailyStreak = function () { return this.dailyBonus?.streak || 0; };
+Rewards.getNextDailyBonusTime = function () { return this.getCooldown("daily"); };
+Rewards.getDailyBonusStatus = function () { return this.dailyBonus; };
+
 /* --- GETTERS --- */
 Rewards.getStatistics = function () { return this.statistics; };
 Rewards.getDailyBonus = function () { return this.dailyBonus; };

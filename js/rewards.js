@@ -60,7 +60,7 @@ Rewards.getDailyBonusStatus = function () { return this.dailyBonus; };
 Rewards.getStatistics = function () { return this.statistics; };
 Rewards.getDailyBonus = function () { return this.dailyBonus; };
 Rewards.getCooldown = function (type) { return this.cooldowns[type] || 0; };
-getStreakTier: function() {
+Rewards.getStreakTier = function() {
         const streak = this.getDailyStreak();
         if (streak >= 30) return { name: "Senior", class: "tier-senior", ring: "ring-gold" };
         if (streak >= 7) return { name: "Junior", class: "tier-junior", ring: "ring-silver" };
@@ -209,14 +209,15 @@ Rewards.openMysteryBox = async function () {
             this.setCooldown("mystery_box", 3600); // 1 Hour
             this.saveCache();
             
-       return { success: true, reward: label, type: type };
+           return { success: true, reward: label, type: type };
         }
-    } catch (error) { 
+    } catch (error) {
         return { success: false, message: error.message };
     } finally {
         this.claiming = false;
     }
 };
+
 
 /* --- SYNCHRONIZATION --- */
 Rewards.sync = async function () {

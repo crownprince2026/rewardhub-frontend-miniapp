@@ -278,20 +278,6 @@ const UI = {
         else document.getElementById("open-box-btn").onclick = () => this.handleAdThenReward("box", 12);
     },
 
-    handleAdThenReward: async function(type, seconds) {
-        let count = seconds;
-        this.showLoading(`Watching Ad... (${count}s)`);
-        
-        const adInterval = setInterval(() => {
-            count--;
-            this.showLoading(`Watching Ad... (${count}s)`);
-            if (count <= 0) {
-                clearInterval(adInterval);
-                this.processFinalReward(type);
-            }
-        }, 1000);
-    },
-
     processFinalReward: async function(type) {
         this.showLoading("Verifying reward...");
         let res = (type === "daily") ? await Rewards.claimDailyBonus() : await Rewards.openMysteryBox();

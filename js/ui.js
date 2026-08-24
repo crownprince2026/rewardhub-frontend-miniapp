@@ -249,9 +249,36 @@ const UI = {
     renderSpinWheel: function() {
         const container = document.getElementById("spin-wheel-container");
         if (!container) return;
-        const labelsHTML = this.rewardsList.map((text, i) => `<div class="wheel-label" style="transform: rotate(${(i * 36) + 18}deg);">${text}</div>`).join('');
-        container.innerHTML = `<div style="text-align:center; padding:20px;"><h2>Lucky Wheel</h2><div class="wheel-container"><div class="wheel-pointer"></div><div class="wheel-center"></div><div id="main-wheel" class="wheel-main">${labelsHTML}</div></div><button id="spin-btn" style="width:100%;padding:18px;background:#3b82f6;color:white;border-radius:15px;border:none;">Spin Now</button></div>`;
-        document.getElementById("spin-btn").onclick = () => this.handleRewardWithAd("spin");
+
+        const nextSpin = Rewards.getCooldown("spin");
+        const canSpin = Date.now() >= nextSpin;
+
+        // Your specific 10 portions
+        const rewardsList = ["$0.01", "5 XP", "$0.02", "Try Again", "$0.04", "50 XP", "$0.03", "$1.00", "$0.05", "$0.10"];
+
+        const labelsHTML = rewardsList.map((text, i) => {
+            // i * 36 is the start. +18 is the center of the slice.
+            const rotation = (i * 36) + 18; 
+            return `<div class="wheel-label" style="transform: rotate(${rotation}deg);">${text}</div>`;
+        }).join('');
+
+        container.innerHTML = `
+            <div style="text-align:center; padding:20px;">
+                <h2 style="margin:0 0 20px 0; color:white;">Lucky Wheel</h2>
+                <div class="wheel-container">
+                    <div class="wheel-pointer"></div>
+                    <div class="wheel-center"></div>
+                    <div id="main-wheel" class="wheel-main">
+                        ${labelsHTML}
+                    </div>
+                </div>
+                <button id="spin-btn" class="reward-submit-btn" 
+                        style="width:100%; padding:18px; border-radius:15px; border:none; color:white; font-weight:bold; font-size:1.1rem; margin-top:30px; background:${canSpin ? '#3b82f6' : '#334155'}">
+                    ${canSpin ? 'Spin Now' : 'Wait Cooldown'}
+                </button>
+            </div>`;
+        
+        if (canSpin) document.getElementById("spin-btn").onclick = () => this.handleRewardWithAd("spin");
     },
 
     renderWatchAds: function() {

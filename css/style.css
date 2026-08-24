@@ -83,21 +83,21 @@ body {
     position: absolute;
     top: 0;
     left: 50%;
-    width: 40px; 
-    height: 50%; /* Reaches the center */
-    margin-left: -20px;
+    width: 32px; /* Narrow width prevents crossing into other segments */
+    height: 50%; /* Reaches from rim to center hub */
+    margin-left: -16px; /* Perfectly centered on the rotation axis */
     transform-origin: bottom center;
     display: flex;
     justify-content: center;
-    align-items: center;
-    text-align: center;
-    /* Pushes text into the middle of the colored slice */
-    padding-bottom: 50px; 
-    font-size: 0.55rem;
+    align-items: flex-start;
+    padding-top: 35px; /* Moves text away from the edge to avoid clipping */
+    font-size: 0.5rem; /* Small, sharp font for professional look */
     font-weight: 900;
     color: white;
-    text-shadow: 0 1px 3px #000;
+    text-shadow: 0 1px 3px rgba(0,0,0,1);
+    white-space: nowrap;
     z-index: 5;
+    pointer-events: none;
 }
 
 .wheel-pointer {

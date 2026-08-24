@@ -53,20 +53,23 @@ body {
     width: 100%;
 }
 
-/* --- SPIN WHEEL PRECISION --- */
+/* --- PRECISION SPIN WHEEL ALIGNMENT --- */
 .wheel-container {
     position: relative;
     width: 280px;
     height: 280px;
-    margin: 20px auto;
+    margin: 30px auto;
+    /* This ensures everything inside is centered perfectly */
+    display: grid;
+    place-items: center;
 }
 
 .wheel-main {
+    position: absolute;
     width: 100%;
     height: 100%;
     border-radius: 50%;
-    border: 8px solid #1e293b;
-    position: relative;
+    border: 6px solid #1e293b;
     background: conic-gradient(
         #3b82f6 0deg 36deg, #1e293b 36deg 72deg,
         #10b981 72deg 108deg, #1e293b 108deg 144deg,
@@ -74,46 +77,54 @@ body {
         #ef4444 216deg 252deg, #1e293b 252deg 288deg,
         #8b5cf6 288deg 324deg, #1e293b 324deg 360deg
     );
-    box-shadow: 0 0 30px rgba(0,0,0,0.5);
+    box-shadow: 0 0 25px rgba(0,0,0,0.5);
     transition: transform 4s cubic-bezier(0.15, 0, 0.15, 1);
-    overflow: hidden;
+    z-index: 1;
 }
 
 .wheel-label {
     position: absolute;
+    /* Key Fix: Ensure text rotates around the parent container's center */
     top: 0;
-    left: 50%;
-    /* Narrow width prevents the text from touching the slice borders */
-    width: 30px; 
-    height: 50%; /* Reaches the center white circle */
-    margin-left: -15px; /* Half of width to keep it centered on the rotation line */
+    height: 50%; 
+    width: 40px;
     transform-origin: bottom center;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    /* Pushes text away from the edge to avoid clipping at the bottom */
-    padding-top: 42px; 
+    padding-top: 45px; /* Keeps text inside the color but away from rim */
     font-size: 0.55rem;
     font-weight: 900;
     color: white;
-    text-shadow: 0 1px 4px #000;
-    white-space: nowrap;
+    text-shadow: 0 1px 3px #000;
     z-index: 5;
-    pointer-events: none;
+    white-space: nowrap;
 }
 
 .wheel-pointer {
     position: absolute;
-    top: -10px; left: 50%; transform: translateX(-50%);
-    width: 30px; height: 40px; background: white;
-    clip-path: polygon(50% 100%, 0 0, 100% 0); z-index: 10;
+    top: -15px; 
+    left: 50%;
+    transform: translateX(-50%);
+    width: 34px;
+    height: 45px;
+    background: #ffffff;
+    /* Arrow points exactly at the center axis */
+    clip-path: polygon(50% 100%, 0 0, 100% 0);
+    z-index: 20;
+    filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));
 }
 
 .wheel-center {
     position: absolute;
-    top: 50%; left: 50%; transform: translate(-50%, -50%);
-    width: 40px; height: 40px; background: white;
-    border-radius: 50%; z-index: 10;
+    /* Perfect absolute center */
+    width: 44px;
+    height: 44px;
+    background: white;
+    border-radius: 50%;
+    z-index: 10;
+    box-shadow: 0 0 10px rgba(0,0,0,0.5);
+    border: 4px solid #1e293b;
 }
 
 /* --- DASHBOARD PROFESSIONAL LAYOUT --- */

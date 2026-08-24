@@ -257,8 +257,7 @@ const UI = {
         const rewardsList = ["$0.01", "5 XP", "$0.02", "TRY", "$0.04", "50 XP", "$0.03", "$1.00", "$0.05", "$0.10"];
 
         const labelsHTML = rewardsList.map((text, i) => {
-            // Logic: (index * 36 degrees) + 18 degrees offset
-            // This puts every text exactly in the middle of the color portion
+            // (i * 36) is the line. +18 is the center of the color.
             const rotation = (i * 36) + 18; 
             return `<div class="wheel-label" style="transform: rotate(${rotation}deg);">${text}</div>`;
         }).join('');

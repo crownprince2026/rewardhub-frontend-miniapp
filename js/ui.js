@@ -158,9 +158,92 @@ const UI = {
 
     renderDailyBonus: function() {
         const container = document.getElementById("daily-bonus-container");
-        if (container) container.innerHTML = `<div style="text-align:center; padding:20px;"><h1>🎁</h1><h2>Daily Bonus</h2><p>Reward: <b style="color:#10b981;">$0.001</b></p><button id="claim-daily-btn" style="background:#3b82f6;color:white;width:100%;padding:15px;border-radius:15px;border:none;">Claim Bonus</button></div>`;
-        const btn = document.getElementById("claim-daily-btn");
-        if (btn) btn.onclick = () => this.handleRewardWithAd("daily");
+        const nextClaim = Rewards.getCooldown("daily");
+        const canClaim = Date.now() >= nextClaim;
+
+        container.innerHTML = `
+            <div style="text-align:center; padding:20px;">
+                <img src="assets/images/branding/splash-logo.png" style="width:100px; margin-bottom:20px;">
+                <h2 style="color:white;">Daily Bonus</h2>
+                <p style="color:#10b981; font-weight:bold; font-size:1.5rem;">$0.001</p>
+                <button id="claim-daily-btn" class="reward-submit-btn ${!canClaim ? 'btn-faint' : ''}" 
+                        style="width:100%; padding:18px; border-radius:15px; margin-top:20px; font-weight:bold;">
+                    ${canClaim ? 'Claim Daily Bonus' : 'Next Claim: <span id="db-timer"></span>'}
+                </button>
+            </div>`;
+
+        if (!canClaim) this.startTimer("db-timer", nextClaim, () => this.renderDailyBonus());
+        else document.getElementById("claim-daily-btn").onclick = () => this.handleAdThenReward("daily", 12);
+    },
+
+    renderMysteryBox: function() {
+        const container = document.getElementById("mystery-box-container");
+        const nextClaim = Rewards.getCooldown("mystery_box");
+        const canClaim = Date.now() >= nextClaim;
+
+        container.innerHTML = `
+            <div style="text-align:center; padding:20px; position:relative;">
+                <div id="fireworks" class="fireworks-overlay"></div>
+                <div id="box-visual" class="${canClaim ? 'box-wiggle' : ''}" style="font-size:100px; margin-bottom:20px;">
+                    ${canClaim ? '🎁' : '📦'}
+                </div>
+                <h3 style="color:white;">Mystery Box</h3>
+                <p style="color:#94a3b8;">Win up to $1.00 or 50XP</p>
+                <button id="open-box-btn" class="reward-submit-btn ${!canClaim ? 'btn-faint' : ''}" 
+                        style="width:100%; padding:18px; border-radius:15px; margin-top:20px; font-weight:bold; background:#10b981;">
+                    ${canClaim ? 'Open Box' : 'Next Box: <span id="box-timer"></span>'}
+                </button>
+            </div>`;
+
+        if (!canClaim) this.startTimer("box-timer", nextClaim, () => this.renderMysteryBox());
+        else document.getElementById("open-box-btn").onclick = () => this.handleAdThenReward("box", 12);
+    },
+
+    handleAdThenReward: async function(type, seconds) {
+        let count = seconds;
+        this.showLoading(`Watching Ad... (${count}s)`);
+        
+        const adInterval = setInterval(() => {
+            count--;
+            this.showLoading(`Watching Ad... (${count}s)`);
+            if (count <= 0) {
+                clearInterval(adInterval);
+                this.processFinalReward(type);
+            }
+        }, 1000);
+    },
+
+    processFinalReward: async function(type) {
+        this.showLoading("Verifying reward...");
+        let res = (type === "daily") ? await Rewards.claimDailyBonus() : await Rewards.openMysteryBox();
+        this.hideLoading();
+
+        if (res.success) {
+            if (type === "box") {
+                document.getElementById("box-visual").innerHTML = "🎊";
+                document.getElementById("fireworks").style.opacity = "1";
+            }
+            this.toast(`CONGRATULATIONS! You won ${res.reward}`, "success");
+            setTimeout(() => {
+                if (type === "daily") this.renderDailyBonus();
+                else this.renderMysteryBox();
+                this.renderDashboard();
+            }, 3000);
+        }
+    },
+
+    startTimer: function(id, expiry, callback) {
+        const el = document.getElementById(id);
+        const update = () => {
+            const diff = expiry - Date.now();
+            if (diff <= 0) { clearInterval(it); callback(); return; }
+            const h = Math.floor(diff / 3600000).toString().padStart(2, '0');
+            const m = Math.floor((diff % 3600000) / 60000).toString().padStart(2, '0');
+            const s = Math.floor((diff % 60000) / 1000).toString().padStart(2, '0');
+            if (el) el.innerText = `${h}:${m}:${s}`;
+        };
+        const it = setInterval(update, 1000);
+        update();
     },
 
     renderSpinWheel: function() {
@@ -171,15 +254,23 @@ const UI = {
         document.getElementById("spin-btn").onclick = () => this.handleRewardWithAd("spin");
     },
 
-    renderMysteryBox: function() {
-        const container = document.getElementById("mystery-box-container");
-        if (container) container.innerHTML = `<div style="text-align:center; padding:20px;"><div id="box-visual" style="font-size:80px;cursor:pointer;">🎁</div><h2>Mystery Box</h2><button id="open-box-btn" style="width:100%;padding:18px;background:#10b981;color:white;border-radius:15px;border:none;">Open Box</button></div>`;
-        document.getElementById("open-box-btn").onclick = () => this.handleRewardWithAd("mystery_box");
-    },
-
     renderWatchAds: function() {
         const container = document.getElementById("ad-status-container");
-        if (container) container.innerHTML = `<div style="text-align:center;padding:40px;"><h2>📺 No Ads</h2><button onclick="location.reload()" style="background:#3b82f6;color:white;padding:12px 30px;border-radius:10px;border:none;">Refresh</button></div>`;
+        const adLimitReached = false; // Add logic for 24h limit if needed
+        const adsExistInDB = false; // Check admin setting
+
+        container.innerHTML = `
+            <div style="text-align:center; padding:50px 20px;">
+                <div style="font-size:60px; margin-bottom:20px;">📺</div>
+                <h2 style="color:white;">${adLimitReached ? 'Daily Limit Reached' : 'No Ads Available'}</h2>
+                <p style="color:#94a3b8; line-height:1.6;">
+                    ${adLimitReached ? 'Ads completed! Come back tomorrow.' : 'We are preparing new ads for you. Please come back in a few hours.'}
+                </p>
+                <button onclick="UI.showLoading('Checking...'); setTimeout(()=>UI.hideLoading(), 2000);" 
+                        style="background:#3b82f6; color:white; border:none; padding:15px 40px; border-radius:12px; margin-top:20px; font-weight:bold;">
+                    Refresh Ads
+                </button>
+            </div>`;
     },
 
     handleRewardWithAd: async function(type) {

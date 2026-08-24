@@ -175,26 +175,32 @@ Rewards.openMysteryBox = async function () {
             username: user?.username
         });
 
-        if (response.success) {
-            const reward = Number(response.reward || 0);
+       if (response.success) {
+            // Weighted Rewards Logic
+            const random = Math.random() * 100;
+            let reward = 0;
+            let type = "xp";
+            let label = "50 XP";
 
-            // 3. Update Global User Balance
-            if (State.user) {
-                State.user.balance += reward;
-            }
+            if (random < 70) { type = "xp"; label = "50 XP"; reward = 50; } // 70% Chance
+            else if (random < 85) { type = "cash"; reward = 0.001; label = "$0.001"; } // Rare
+            else if (random < 93) { type = "cash"; reward = 0.005; label = "$0.005"; } // Rare
+            else if (random < 97) { type = "cash"; reward = 0.05; label = "$0.05"; } // Very Rare
+            else if (random < 99.5) { type = "cash"; reward = 0.9; label = "$0.90"; } // Very Very Rare
+            else { type = "cash"; reward = 1.0; label = "$1.00"; } // Jackpot
 
-            // 4. Update Module Statistics
-            this.statistics.totalEarned += reward;
-            this.statistics.mysteryBoxesOpened++;
+            // Add "No Luck" chance (Optional overlay)
+            if (random > 50 && random < 55) { label = "Oops, No Luck!"; reward = 0; }
 
-            // 5. Set 1 Hour Cooldown (3600 Seconds)
-            this.setCooldown("mystery_box", 3600);
+            if (type === "cash" && State.user) State.user.balance += reward;
+            if (type === "xp" && State.user) State.user.xp = (State.user.xp || 0) + reward;
 
-            // 6. Save state to LocalStorage so the timer survives app restart
+            this.statistics.totalEarned += (type === "cash" ? reward : 0);
+            this.setCooldown("mystery_box", 3600); // 1 Hour
             this.saveCache();
-        }
-        return response;
-    } catch (error) {
+            
+            return { success: true, reward: label, type: type };
+        } catch (error) {
         return { success: false, message: error.message };
     } finally {
         this.claiming = false;

@@ -268,6 +268,7 @@ const UI = {
                 <div class="wheel-container">
                     <div class="wheel-pointer"></div>
                     <div class="wheel-center"></div>
+                    <!-- Labels are now INSIDE the main wheel div -->
                     <div id="main-wheel" class="wheel-main">
                         ${labelsHTML}
                     </div>
@@ -276,6 +277,7 @@ const UI = {
                         style="width:100%; padding:18px; border-radius:15px; border:none; color:white; font-weight:bold; font-size:1.1rem; margin-top:30px; background:${canSpin ? '#3b82f6' : '#334155'}">
                     ${canSpin ? 'Spin Now' : 'Wait Cooldown'}
                 </button>
+            </div>`;
                 <p style="margin-top:15px; font-size:0.7rem; color:var(--text-dim);">* Watch 1 ad before every spin</p>
             </div>`;
         

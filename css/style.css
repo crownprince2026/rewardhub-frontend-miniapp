@@ -84,19 +84,23 @@ body {
 
 .wheel-label {
     position: absolute;
-    /* Key Fix: Ensure text rotates around the parent container's center */
     top: 0;
-    height: 50%; 
-    width: 40px;
-    transform-origin: bottom center;
+    left: 0;
+    width: 100%; /* Match the wheel size exactly */
+    height: 100%; /* Match the wheel size exactly */
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding-top: 45px; /* Keeps text inside the color but away from rim */
-    font-size: 0.55rem;
+    /* This padding moves text toward the center. 
+       Decrease to move toward rim, Increase to move toward white hub. */
+    padding-top: 35px; 
+    font-size: 0.6rem;
     font-weight: 900;
     color: white;
-    text-shadow: 0 1px 3px #000;
+    text-shadow: 0 1px 4px #000;
+    /* Critical: Rotate from the dead center of the wheel */
+    transform-origin: center center; 
+    pointer-events: none;
     z-index: 5;
     white-space: nowrap;
 }

@@ -83,18 +83,20 @@ body {
     position: absolute;
     top: 0;
     left: 50%;
-    width: 32px; /* Narrow width prevents crossing into other segments */
-    height: 50%; /* Reaches from rim to center hub */
-    margin-left: -16px; /* Perfectly centered on the rotation axis */
+    /* Narrow width prevents the text from touching the slice borders */
+    width: 30px; 
+    height: 50%; /* Reaches the center white circle */
+    margin-left: -15px; /* Half of width to keep it centered on the rotation line */
     transform-origin: bottom center;
     display: flex;
     justify-content: center;
     align-items: flex-start;
-    padding-top: 35px; /* Moves text away from the edge to avoid clipping */
-    font-size: 0.5rem; /* Small, sharp font for professional look */
+    /* Pushes text away from the edge to avoid clipping at the bottom */
+    padding-top: 42px; 
+    font-size: 0.55rem;
     font-weight: 900;
     color: white;
-    text-shadow: 0 1px 3px rgba(0,0,0,1);
+    text-shadow: 0 1px 4px #000;
     white-space: nowrap;
     z-index: 5;
     pointer-events: none;

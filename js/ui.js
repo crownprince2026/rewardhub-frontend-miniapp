@@ -253,18 +253,19 @@ const UI = {
         const nextSpin = Rewards.getCooldown("spin");
         const canSpin = Date.now() >= nextSpin;
 
-        // Your specific 10 portions
-        const rewardsList = ["$0.01", "5 XP", "$0.02", "Try Again", "$0.04", "50 XP", "$0.03", "$1.00", "$0.05", "$0.10"];
+        // Your specific 10 reward portions
+        const rewardsList = ["$0.01", "5 XP", "$0.02", "TRY", "$0.04", "50 XP", "$0.03", "$1.00", "$0.05", "$0.10"];
 
         const labelsHTML = rewardsList.map((text, i) => {
-            // i * 36 is the start. +18 is the center of the slice.
+            // Logic: (index * 36 degrees) + 18 degrees offset
+            // This puts every text exactly in the middle of the color portion
             const rotation = (i * 36) + 18; 
             return `<div class="wheel-label" style="transform: rotate(${rotation}deg);">${text}</div>`;
         }).join('');
 
         container.innerHTML = `
             <div style="text-align:center; padding:20px;">
-                <h2 style="margin:0 0 20px 0; color:white;">Lucky Wheel</h2>
+                <h2 style="margin:0 0 15px 0; color:white;">Lucky Wheel</h2>
                 <div class="wheel-container">
                     <div class="wheel-pointer"></div>
                     <div class="wheel-center"></div>
@@ -276,6 +277,7 @@ const UI = {
                         style="width:100%; padding:18px; border-radius:15px; border:none; color:white; font-weight:bold; font-size:1.1rem; margin-top:30px; background:${canSpin ? '#3b82f6' : '#334155'}">
                     ${canSpin ? 'Spin Now' : 'Wait Cooldown'}
                 </button>
+                <p style="margin-top:15px; font-size:0.7rem; color:var(--text-dim);">* Watch 1 ad before every spin</p>
             </div>`;
         
         if (canSpin) document.getElementById("spin-btn").onclick = () => this.handleRewardWithAd("spin");

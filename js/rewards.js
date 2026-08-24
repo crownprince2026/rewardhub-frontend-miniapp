@@ -60,6 +60,12 @@ Rewards.getDailyBonusStatus = function () { return this.dailyBonus; };
 Rewards.getStatistics = function () { return this.statistics; };
 Rewards.getDailyBonus = function () { return this.dailyBonus; };
 Rewards.getCooldown = function (type) { return this.cooldowns[type] || 0; };
+getStreakTier: function() {
+        const streak = this.getDailyStreak();
+        if (streak >= 30) return { name: "Senior", class: "tier-senior", ring: "ring-gold" };
+        if (streak >= 7) return { name: "Junior", class: "tier-junior", ring: "ring-silver" };
+        return { name: "Amateur", class: "tier-amateur", ring: "ring-none" };
+    },
 
 Rewards.isAvailable = function (type) {
     return Date.now() >= this.getCooldown(type); // FIXED
@@ -97,18 +103,22 @@ Rewards.claimDailyBonus = async function () {
 
         if (response.success) {
             const reward = Number(response.reward || 0);
-            if (State.user) State.user.balance += reward;
+            
+            // 1. Update Global Balance
+            if (State.user) {
+                State.user.balance += reward;
+            }
+
+            // 2. Update Statistics
             this.statistics.totalEarned += reward;
             this.statistics.dailyBonusesClaimed++;
-            this.setCooldown(REWARD_TYPES.DAILY, response.cooldown || DEFAULT_COOLDOWN);
+            
+            // 3. SET EXACT 24 HOUR RESET (86400 Seconds)
+            this.setCooldown("daily", 86400);
+            
+            // 4. Save to Local Cache (Prevents cheating by closing app)
+            this.saveCache();
         }
-        return response;
-    } catch (error) {
-        return { success: false, message: error.message };
-    } finally {
-        this.claiming = false;
-    }
-};
 
 /* --- SPIN WHEEL --- */
 Rewards.spin = async function () {

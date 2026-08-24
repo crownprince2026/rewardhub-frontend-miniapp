@@ -158,22 +158,101 @@ const UI = {
 
     renderDailyBonus: function() {
         const container = document.getElementById("daily-bonus-container");
-        const nextClaim = Rewards.getCooldown("daily");
-        const canClaim = Date.now() >= nextClaim;
+        if (!container) return;
+
+        const streak = Rewards.getDailyStreak();
+        const tier = Rewards.getStreakTier();
+        const nextClaim = Rewards.getNextDailyBonusTime();
+        const now = Date.now();
+        const canClaim = now >= nextClaim;
 
         container.innerHTML = `
             <div style="text-align:center; padding:20px;">
-                <img src="assets/images/branding/splash-logo.png" style="width:100px; margin-bottom:20px;">
-                <h2 style="color:white;">Daily Bonus</h2>
-                <p style="color:#10b981; font-weight:bold; font-size:1.5rem;">$0.001</p>
-                <button id="claim-daily-btn" class="reward-submit-btn ${!canClaim ? 'btn-faint' : ''}" 
-                        style="width:100%; padding:18px; border-radius:15px; margin-top:20px; font-weight:bold;">
-                    ${canClaim ? 'Claim Daily Bonus' : 'Next Claim: <span id="db-timer"></span>'}
-                </button>
-            </div>`;
+                <!-- Professional Tier Ring -->
+                <div class="avatar-wrapper" style="margin-bottom:20px;">
+                    <img src="assets/images/branding/official-logo.png" 
+                         class="profile-avatar ${tier.ring}" 
+                         style="width:110px; height:110px; border-radius:50%; padding:5px; background:#0f172a;">
+                    <br>
+                    <span class="tier-label ${tier.class}" style="margin-top:10px;">${tier.name}</span>
+                </div>
 
-        if (!canClaim) this.startTimer("db-timer", nextClaim, () => this.renderDailyBonus());
-        else document.getElementById("claim-daily-btn").onclick = () => this.handleAdThenReward("daily", 12);
+                <h2 style="color:white; margin:0;">Daily Bonus</h2>
+                <p style="color:#94a3b8; margin:10px 0;">Reward: <b style="color:#10b981; font-size:1.4rem;">$0.001</b></p>
+
+                <!-- Streak Card -->
+                <div style="background:var(--surface); padding:20px; border-radius:20px; margin-bottom:25px; border:1px solid #334155;">
+                    <p style="margin:0; color:#94a3b8; font-size:0.75rem; text-transform:uppercase;">Daily Streak</p>
+                    <h2 style="margin:5px 0 0 0; color:var(--primary); font-size:2rem;">${streak} Days</h2>
+                </div>
+
+                <!-- Interactive Button -->
+                <button id="claim-daily-btn" 
+                    ${!canClaim ? 'disabled class="reward-submit-btn btn-faint"' : 'class="reward-submit-btn" style="background:var(--primary); color:white;"'}
+                    style="width:100%; padding:18px; border-radius:15px; font-weight:bold; font-size:1.1rem; border:none; box-shadow: 0 4px 15px rgba(0,0,0,0.2);">
+                    ${canClaim ? 'Claim $0.001 Bonus' : 'Next Claim: <span id="db-timer">--:--:--</span>'}
+                </button>
+                
+                <p style="margin-top:15px; font-size:0.7rem; color:#64748b;">* A 12-second advertisement will play</p>
+            </div>
+        `;
+
+        if (!canClaim) {
+            this.startDailyCountdown(nextClaim);
+        } else {
+            document.getElementById("claim-daily-btn").onclick = () => this.handleDailyRewardFlow();
+        }
+    },
+
+    // --- NEW: 12-SECOND AD FLOW ---
+    handleDailyRewardFlow: function() {
+        let secondsLeft = 12;
+        this.showLoading(`Watching Ad... ${secondsLeft}s`);
+
+        const adTimer = setInterval(async () => {
+            secondsLeft--;
+            if (secondsLeft > 0) {
+                this.showLoading(`Watching Ad... ${secondsLeft}s`);
+            } else {
+                clearInterval(adTimer);
+                this.showLoading("Processing Reward...");
+                
+                // Finalize Reward
+                const res = await Rewards.claimDailyBonus();
+                this.hideLoading();
+
+                if (res.success) {
+                    this.toast("Success! $0.001 Added", "success");
+                    // Update Dashboard immediately
+                    this.renderDashboard(); 
+                    // Reset Daily screen to show countdown and faint button
+                    this.renderDailyBonus(); 
+                } else {
+                    alert(res.message || "Failed to claim.");
+                }
+            }
+        }, 1000);
+    },
+
+    // --- 23:59:59 TIMER ENGINE ---
+    startDailyCountdown: function(endTime) {
+        const timerEl = document.getElementById("db-timer");
+        if (!timerEl) return;
+
+        const update = () => {
+            const diff = endTime - Date.now();
+            if (diff <= 0) {
+                clearInterval(it);
+                this.renderDailyBonus(); // Re-enable button
+                return;
+            }
+            const h = Math.floor(diff / 3600000).toString().padStart(2, '0');
+            const m = Math.floor((diff % 3600000) / 60000).toString().padStart(2, '0');
+            const s = Math.floor((diff % 60000) / 1000).toString().padStart(2, '0');
+            timerEl.innerText = `${h}:${m}:${s}`;
+        };
+        const it = setInterval(update, 1000);
+        update();
     },
 
     renderMysteryBox: function() {

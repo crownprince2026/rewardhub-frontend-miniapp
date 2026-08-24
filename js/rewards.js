@@ -52,20 +52,33 @@ const Rewards = {
     }
 };
 
-Rewards.getDailyStreak = function () { return this.dailyBonus?.streak || 0; };
-Rewards.getNextDailyBonusTime = function () { return this.getCooldown("daily"); };
-Rewards.getDailyBonusStatus = function () { return this.dailyBonus; };
+/* --- GETTERS & STATUS --- */
+Rewards.getDailyStreak = function () { 
+    return this.dailyBonus?.streak || 0; 
+};
 
-/* --- GETTERS --- */
-Rewards.getStatistics = function () { return this.statistics; };
-Rewards.getDailyBonus = function () { return this.dailyBonus; };
-Rewards.getCooldown = function (type) { return this.cooldowns[type] || 0; };
+Rewards.getNextDailyBonusTime = function () { 
+    return this.getCooldown("daily"); 
+};
+
+Rewards.getStatistics = function () { 
+    return this.statistics; 
+};
+
+Rewards.getDailyBonus = function () { 
+    return this.dailyBonus; 
+};
+
+Rewards.getCooldown = function (type) { 
+    return this.cooldowns[type] || 0; 
+};
+
 Rewards.getStreakTier = function() {
-        const streak = this.getDailyStreak();
-        if (streak >= 30) return { name: "Senior", class: "tier-senior", ring: "ring-gold" };
-        if (streak >= 7) return { name: "Junior", class: "tier-junior", ring: "ring-silver" };
-        return { name: "Amateur", class: "tier-amateur", ring: "ring-none" };
-    },
+    const streak = this.getDailyStreak();
+    if (streak >= 30) return { name: "Senior", class: "tier-senior", ring: "ring-gold" };
+    if (streak >= 7) return { name: "Junior", class: "tier-junior", ring: "ring-silver" };
+    return { name: "Amateur", class: "tier-amateur", ring: "ring-none" };
+};
 
 Rewards.isAvailable = function (type) {
     return Date.now() >= this.getCooldown(type); // FIXED

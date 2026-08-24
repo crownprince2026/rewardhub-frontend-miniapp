@@ -199,8 +199,9 @@ Rewards.openMysteryBox = async function () {
             this.setCooldown("mystery_box", 3600); // 1 Hour
             this.saveCache();
             
-            return { success: true, reward: label, type: type };
-        } catch (error) {
+       return { success: true, reward: label, type: type };
+        }
+    } catch (error) { 
         return { success: false, message: error.message };
     } finally {
         this.claiming = false;

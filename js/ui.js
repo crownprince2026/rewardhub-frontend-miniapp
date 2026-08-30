@@ -23,26 +23,25 @@ const UI = {
             target.classList.add('active');
             this.activeScreen = targetId;
 
-            // --- SMART NAVIGATION SWITCH ---
+            // --- PRECISION NAVIGATION SWITCH ---
             const userNav = document.getElementById('user-nav');
             const adminNav = document.getElementById('admin-nav');
             
-            // 1. Hide everything during Boot
-            if (targetId.includes('auth') || targetId.includes('splash')) {
-                if(userNav) userNav.style.display = 'none';
-                if(adminNav) adminNav.style.display = 'none';
-            } 
-            // 2. Show Admin Nav for Admin screens
-            else if (targetId.includes('admin-')) {
+            // 1. If it's an Admin screen (e.g., admin-dashboard-screen)
+            if (targetId.startsWith('admin-')) {
                 if(userNav) userNav.style.display = 'none';
                 if(adminNav) adminNav.style.display = 'flex';
             } 
-            // 3. Show User Nav for standard screens
+            // 2. If it's the Boot screens (Auth/Splash)
+            else if (targetId === "auth-screen" || targetId === "splash-screen") {
+                if(userNav) userNav.style.display = 'none';
+                if(adminNav) adminNav.style.display = 'none';
+            }
+            // 3. Otherwise, it is a USER screen
             else {
                 if(userNav) userNav.style.display = 'flex';
                 if(adminNav) adminNav.style.display = 'none';
             }
-            // ----------------------------------
 
             return true;
         }

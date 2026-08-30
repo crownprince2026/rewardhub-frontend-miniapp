@@ -24,27 +24,28 @@ const App = {
     // --- STARTUP SEQUENCE ---
     start: async function() {
         console.log("App Brain: Starting Startup Sequence...");
-        
-        // 1. Immediate Action: Show Auth Screen
+
+        // 1. Immediate Action: Hide loader and show Auth
         UI.hideLoading();
         UI.showScreen("auth-screen");
 
-        // 2. Background Task: Initialize all Modules
+        // 2. Background Task: Initialize all Modules (Syncing Data)
         this.initializeModules().catch(e => console.error("Init Warning:", e));
 
         // 3. Timing Sequence (Auth -> Splash -> Dashboard)
         setTimeout(() => {
+            // After 3 seconds, show Splash
             UI.showScreen("splash-screen");
 
             setTimeout(async () => {
-                // Determine starting screen (Admin or Dashboard)
-                const startScreen = Auth.isAdmin() ? "dashboard-screen" : "dashboard-screen";
-                UI.showScreen(startScreen);
+                // After 6 seconds total, land on the USER Dashboard
+                console.log("App Brain: Landing on User Dashboard.");
+                UI.showScreen("dashboard-screen");
 
-                // 4. Activate Interactivity
+                // 4. Activate Interactivity & Refresh UI data
                 this.setupNavigation();
                 this.refreshUI();
-                
+
                 console.log("App Brain: Startup Complete. System Live.");
             }, 3000);
         }, 3000);

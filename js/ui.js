@@ -23,12 +23,24 @@ const UI = {
             target.classList.add('active');
             this.activeScreen = targetId;
 
-            // --- AUTO-HIDE NAVIGATION LOGIC ---
-            const nav = document.querySelector('.bottom-nav');
-            if (targetId === "auth-screen" || targetId === "splash-screen") {
-                if (nav) nav.classList.add('nav-hidden');
-            } else {
-                if (nav) nav.classList.remove('nav-hidden');
+            // --- SMART NAVIGATION SWITCH ---
+            const userNav = document.getElementById('user-nav');
+            const adminNav = document.getElementById('admin-nav');
+            
+            // 1. Hide everything during Boot
+            if (targetId.includes('auth') || targetId.includes('splash')) {
+                if(userNav) userNav.style.display = 'none';
+                if(adminNav) adminNav.style.display = 'none';
+            } 
+            // 2. Show Admin Nav for Admin screens
+            else if (targetId.includes('admin-')) {
+                if(userNav) userNav.style.display = 'none';
+                if(adminNav) adminNav.style.display = 'flex';
+            } 
+            // 3. Show User Nav for standard screens
+            else {
+                if(userNav) userNav.style.display = 'flex';
+                if(adminNav) adminNav.style.display = 'none';
             }
             // ----------------------------------
 

@@ -225,15 +225,23 @@
         </div>
     </div>
 
-    <!-- GLOBAL BOTTOM NAVIGATION -->
-    <nav class="bottom-nav">
+    <!-- USER BOTTOM NAVIGATION -->
+    <nav id="user-nav" class="bottom-nav">
         <button data-nav="dashboard">🏠 Home</button>
         <button data-nav="tasks">📋 Tasks</button>
         <button data-nav="rewards">🎁 Rewards</button>
         <button data-nav="wallet">💰 Wallet</button>
         <button data-nav="profile">👤 Profile</button>
     </nav>
-</div>
+
+    <!-- ADMIN BOTTOM NAVIGATION -->
+    <nav id="admin-nav" class="bottom-nav" style="background: #1e293b; border-top: 1px solid var(--primary);">
+        <button data-nav="admin-dashboard">📊 Stats</button>
+        <button data-nav="admin-withdrawals">💸 Payouts</button>
+        <button data-nav="admin-tasks">📝 Tasks</button>
+        <button data-nav="admin-users">👥 Users</button>
+        <button data-nav="admin-settings">⚙️ Setup</button>
+    </nav>
 
 <!-- MODULE ENTRY POINT -->
 <script type="module" src="js/app.js?v=1788082308"></script>

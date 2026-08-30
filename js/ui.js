@@ -53,22 +53,69 @@ const UI = {
     renderProfile: function() {
         const avatarContainer = document.getElementById("profile-avatar");
         const infoContainer = document.getElementById("profile-information");
-        const user = window.Telegram?.WebApp?.initDataUnsafe?.user || { id: "8072346076", first_name: "Admin" };
+        const statsContainer = document.getElementById("profile-statistics");
+        
+        const tg = window.Telegram?.WebApp;
+        const user = tg?.initDataUnsafe?.user || { id: "8072346076", first_name: "Admin", username: "Crown" };
+        const stats = Profile.getStatistics();
+        const tier = Rewards.getStreakTier();
         const refLink = `https://t.me/crownprincerewardhubbot?start=${user.id}`;
 
         if (avatarContainer) {
             avatarContainer.innerHTML = `
-                <img src="assets/images/branding/telegram-profile.png" class="profile-avatar" id="admin-trigger" style="-webkit-touch-callout:none;">
-                <h2 style="margin:10px 0 5px 0;">${user.first_name}</h2>
-                <p style="color:#94a3b8; font-size:0.85rem;">ID: ${user.id}</p>`;
-            
-            let timer;
+                <div class="avatar-ring ${tier.ring}" id="admin-trigger" style="cursor:pointer; -webkit-touch-callout:none; user-select:none;">
+                    <img src="assets/images/branding/telegram-profile.png" 
+                         style="width:120px; height:120px; border-radius:50%; object-fit:cover; display:block;">
+                </div>
+                <h2 style="margin:15px 0 5px 0; font-size:1.6rem;">${user.first_name}</h2>
+                <p style="color:var(--text-dim); margin:0;">@${user.username || 'user'} | ID: ${user.id}</p>
+                <span class="tier-label ${tier.class}" style="margin-top:10px;">${tier.name}</span>
+            `;
+
+            // --- SECRET ADMIN SWITCH LOGIC ---
+            let pressTimer;
             const trigger = document.getElementById("admin-trigger");
-            const start = () => { timer = setTimeout(() => { if (user.id == 8072346076 && confirm("Open Admin?")) this.showScreen("support-screen"); }, 2000); };
-            trigger.ontouchstart = start; trigger.ontouchend = () => clearTimeout(timer);
+            
+            const startPress = (e) => {
+                e.preventDefault();
+                pressTimer = setTimeout(() => {
+                    if (user.id == 8072346076) {
+                        const pin = prompt("Admin Identified. Set 6-Digit Access PIN:");
+                        if (pin && pin.length === 6) {
+                            alert("PIN Set Successfully. Switching to Admin Panel...");
+                            this.showScreen("support-screen"); // Placeholder for Admin Dashboard
+                        } else {
+                            alert("Invalid PIN. Access Denied.");
+                        }
+                    }
+                }, 2000);
+            };
+            
+            trigger.addEventListener('touchstart', startPress);
+            trigger.addEventListener('touchend', () => clearTimeout(pressTimer));
+            trigger.addEventListener('mousedown', startPress);
+            trigger.addEventListener('mouseup', () => clearTimeout(pressTimer));
         }
+
         if (infoContainer) {
-            infoContainer.innerHTML = `<div class="referral-box"><h4>Invite & Earn</h4><p style="color:#10b981;">$0.01 per friend</p><div class="referral-link">${refLink}</div><button onclick="navigator.clipboard.writeText('${refLink}');alert('Copied!')" style="background:#3b82f6;color:white;width:100%;padding:10px;border-radius:10px;border:none;">Copy Link</button></div>`;
+            infoContainer.innerHTML = `
+                <div class="profile-card" style="margin-top:20px;">
+                    <div class="info-row"><span class="info-label">Current Level</span><span class="info-value">Level ${stats.level || 1}</span></div>
+                    <div class="xp-container"><div class="xp-fill" style="width: ${stats.xp % 100}%"></div></div>
+                    <div class="info-row"><span class="info-label">Total XP</span><span class="info-value">${stats.xp || 0} Points</span></div>
+                </div>
+                
+                <div class="profile-card">
+                    <h4 style="margin:0 0 10px 0; font-size:0.9rem;">Referral Link</h4>
+                    <div style="background:#0f172a; padding:12px; border-radius:10px; font-family:monospace; font-size:0.8rem; color:var(--primary); word-break:break-all; border:1px solid #1e293b;">
+                        ${refLink}
+                    </div>
+                    <button onclick="navigator.clipboard.writeText('${refLink}'); alert('Link Copied!')" 
+                            style="width:100%; background:var(--primary); color:white; border:none; padding:12px; border-radius:10px; margin-top:15px; font-weight:bold;">
+                        Copy My Link
+                    </button>
+                </div>
+            `;
         }
     },
 

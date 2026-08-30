@@ -92,16 +92,17 @@ const App = {
             if (name === "rewards") UI.renderRewards();
             if (name === "daily-bonus") UI.renderDailyBonus();
 
-            // Admin Panel Switch
+            // Admin Panel Switch Logic
             if (name === "admin-dashboard") {
                 if (Auth.isAdmin()) {
-                    UI.renderAdminDashboard(); // Draw the stats and buttons
-                    Admin.loadDashboard();      // Sync real numbers from server
+                    Admin.loadDashboard();
                 } else {
-                    UI.toast("Access Denied", "error");
+                    UI.toast("Access Denied: Admin Only", "error");
                     UI.showScreen("dashboard-screen");
                 }
             }
+        });
+    },
 
     // --- GLOBAL UI REFRESH ---
     refreshUI: function() {

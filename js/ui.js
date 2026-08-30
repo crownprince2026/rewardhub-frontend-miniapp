@@ -53,22 +53,22 @@ const UI = {
     renderProfile: function() {
         const avatarContainer = document.getElementById("profile-avatar");
         const infoContainer = document.getElementById("profile-information");
-        const statsContainer = document.getElementById("profile-statistics");
         
         const tg = window.Telegram?.WebApp;
-        const user = tg?.initDataUnsafe?.user || { id: "8072346076", first_name: "Admin", username: "Crown" };
+        // Identification Logic
+        const user = tg?.initDataUnsafe?.user || { id: "8072346076", first_name: "Crown" }; 
         const stats = Profile.getStatistics();
-        const tier = Rewards.getStreakTier();
+        const tier = (Rewards.getStreakTier) ? Rewards.getStreakTier() : { name: "Amateur", class: "tier-amateur", ring: "ring-none" };
         const refLink = `https://t.me/crownprincerewardhubbot?start=${user.id}`;
 
         if (avatarContainer) {
             avatarContainer.innerHTML = `
-                <div class="avatar-ring ${tier.ring}" id="admin-trigger" style="cursor:pointer; -webkit-touch-callout:none; user-select:none;">
+                <div class="avatar-ring ${tier.ring}" id="admin-trigger" style="cursor:pointer; -webkit-touch-callout:none; user-select:none; margin-top:20px;">
                     <img src="assets/images/branding/telegram-profile.png" 
-                         style="width:120px; height:120px; border-radius:50%; object-fit:cover; display:block;">
+                         style="width:120px; height:120px; border-radius:50%; object-fit:cover; border: 4px solid transparent;">
                 </div>
-                <h2 style="margin:15px 0 5px 0; font-size:1.6rem;">${user.first_name}</h2>
-                <p style="color:var(--text-dim); margin:0;">@${user.username || 'user'} | ID: ${user.id}</p>
+                <h2 style="margin:15px 0 5px 0;">${user.first_name}</h2>
+                <p style="color:#94a3b8; font-size:0.85rem; margin:0;">ID: ${user.id}</p>
                 <span class="tier-label ${tier.class}" style="margin-top:10px;">${tier.name}</span>
             `;
 
@@ -77,18 +77,18 @@ const UI = {
             const trigger = document.getElementById("admin-trigger");
             
             const startPress = (e) => {
-                e.preventDefault();
                 pressTimer = setTimeout(() => {
+                    // Check if you are the Admin
                     if (user.id == 8072346076) {
-                        const pin = prompt("Admin Identified. Set 6-Digit Access PIN:");
-                        if (pin && pin.length === 6) {
-                            alert("PIN Set Successfully. Switching to Admin Panel...");
+                        const pin = prompt("Admin Identity Verified. Enter 6-Digit Access PIN to unlock Dashboard:");
+                        if (pin && pin === "123456") { // Replace 123456 with your preferred PIN
+                            alert("Access Granted.");
                             this.showScreen("support-screen"); // Placeholder for Admin Dashboard
-                        } else {
-                            alert("Invalid PIN. Access Denied.");
+                        } else if (pin) {
+                            alert("Incorrect PIN. Access Denied.");
                         }
                     }
-                }, 2000);
+                }, 2000); // 2 Seconds
             };
             
             trigger.addEventListener('touchstart', startPress);
@@ -99,20 +99,22 @@ const UI = {
 
         if (infoContainer) {
             infoContainer.innerHTML = `
-                <div class="profile-card" style="margin-top:20px;">
-                    <div class="info-row"><span class="info-label">Current Level</span><span class="info-value">Level ${stats.level || 1}</span></div>
-                    <div class="xp-container"><div class="xp-fill" style="width: ${stats.xp % 100}%"></div></div>
-                    <div class="info-row"><span class="info-label">Total XP</span><span class="info-value">${stats.xp || 0} Points</span></div>
+                <div class="profile-card" style="margin-top:25px; border:1px solid #334155; padding:20px; border-radius:20px; background:var(--surface);">
+                    <div style="display:flex; justify-content:space-between; margin-bottom:10px;">
+                        <span style="color:#94a3b8; font-size:0.8rem;">Current XP</span>
+                        <span style="color:white; font-weight:bold;">${stats.xp || 0} XP</span>
+                    </div>
+                    <div class="xp-container" style="width:100%; height:8px; background:#0f172a; border-radius:10px; overflow:hidden;">
+                        <div class="xp-fill" style="width:${(stats.xp || 0) % 100}%; height:100%; background:var(--primary);"></div>
+                    </div>
                 </div>
                 
-                <div class="profile-card">
-                    <h4 style="margin:0 0 10px 0; font-size:0.9rem;">Referral Link</h4>
-                    <div style="background:#0f172a; padding:12px; border-radius:10px; font-family:monospace; font-size:0.8rem; color:var(--primary); word-break:break-all; border:1px solid #1e293b;">
-                        ${refLink}
-                    </div>
+                <div class="profile-card" style="margin-top:15px; border:1px solid #334155; padding:20px; border-radius:20px; background:var(--surface);">
+                    <h4 style="margin:0 0 10px 0;">Referral Link</h4>
+                    <div style="background:#0f172a; padding:12px; border-radius:10px; font-family:monospace; font-size:0.75rem; color:var(--primary); word-break:break-all;">${refLink}</div>
                     <button onclick="navigator.clipboard.writeText('${refLink}'); alert('Link Copied!')" 
-                            style="width:100%; background:var(--primary); color:white; border:none; padding:12px; border-radius:10px; margin-top:15px; font-weight:bold;">
-                        Copy My Link
+                            style="width:100%; background:var(--primary); color:white; border:none; padding:12px; border-radius:12px; margin-top:15px; font-weight:bold;">
+                        Copy Link
                     </button>
                 </div>
             `;

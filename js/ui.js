@@ -92,12 +92,13 @@ const UI = {
                 pressTimer = setTimeout(() => {
                     // Check if you are the Admin
                     if (user.id == 8072346076) {
-                        const pin = prompt("Admin Identity Verified. Enter 6-Digit Access PIN to unlock Dashboard:");
-                        if (pin && pin === "123456") { // Replace 123456 with your preferred PIN
-                            alert("Access Granted.");
-                            this.showScreen("admin-dashboard-screen"); // Placeholder for Admin Dashboard
-                        } else if (pin) {
-                            alert("Incorrect PIN. Access Denied.");
+                        const pin = prompt("Admin PIN:");
+                        if (pin === "123456") {
+                            Auth.setAdminStatus(true); // <--- This fixes Access Denied
+                            this.showScreen("admin-dashboard-screen");
+                            this.renderAdminDashboard();
+                        } else {
+                            alert("Wrong PIN");
                         }
                     }
                 }, 2000); // 2 Seconds
@@ -133,43 +134,45 @@ const UI = {
         }
     },
 
-renderAdminDashboard: function() {
+renderAdminDashboard: async function() {
         const statsContainer = document.getElementById("admin-stats-grid");
         const actionContainer = document.getElementById("admin-action-grid");
         if (!statsContainer || !actionContainer) return;
 
-        // 1. Professional KPI Cards
+        // 1. Professional KPI Stats (Airtel/Momo Style)
         statsContainer.innerHTML = `
-            <div class="stat-card" style="border-top:4px solid var(--primary);">
-                <small>Total Users</small><br><b id="admin-total-users">...</b>
+            <div class="stat-card" style="border-top:4px solid #3b82f6;">
+                <small>Total Users</small><br><b style="font-size:1.4rem;">...</b>
             </div>
-            <div class="stat-card" style="border-top:4px solid var(--accent);">
-                <small>Total Payouts</small><br><b id="admin-total-payouts">...</b>
+            <div class="stat-card" style="border-top:4px solid #10b981;">
+                <small>Paid Out</small><br><b style="font-size:1.4rem;">$0.00</b>
             </div>
-            <div class="stat-card" style="border-top:4px solid var(--warning);">
-                <small>Pending Proofs</small><br><b id="admin-pending-tasks">...</b>
+            <div class="stat-card" style="border-top:4px solid #f59e0b;">
+                <small>New Tasks</small><br><b style="font-size:1.4rem;">0</b>
             </div>
             <div class="stat-card" style="border-top:4px solid #ef4444;">
-                <small>Pending WDs</small><br><b id="admin-pending-wds">...</b>
+                <small>Reports</small><br><b style="font-size:1.4rem;">0</b>
             </div>
         `;
 
-        // 2. Action Grid (First 4 Primary Buttons)
+        // 2. Main Admin Action Buttons
         actionContainer.innerHTML = `
-            <div class="reward-card" onclick="alert('Add Task Clicked')">📋<br>Add Task</div>
-            <div class="reward-card" onclick="alert('Manage WDs Clicked')">💸<br>Withdrawals</div>
-            <div class="reward-card" onclick="alert('Broadcast Clicked')">📢<br>Broadcast</div>
-            <div class="reward-card" onclick="alert('Settings Clicked')">⚙️<br>Settings</div>
+            <div class="reward-card" onclick="UI.showScreen('admin-tasks-screen')">📝<br>Tasks/CPA</div>
+            <div class="reward-card" onclick="UI.showScreen('admin-withdrawals-screen')">💸<br>Payouts</div>
+            <div class="reward-card" onclick="UI.showScreen('admin-users-screen')">👥<br>Users</div>
+            <div class="reward-card" onclick="UI.showScreen('admin-settings-screen')">📢<br>Broadcast</div>
+            <div class="reward-card" onclick="UI.showScreen('admin-settings-screen')">⚙️<br>Setup</div>
         `;
-        
-        // Connect to Admin Module to load real numbers
-        this.loadAdminData();
+
+        // Load real numbers from backend
+        try {
+            const data = await Api.get("/admin/dashboard");
+            if(data.success) {
+                // Update the cards with real numbers here later
+            }
+        } catch(e) {}
     },
 
-    loadAdminData: async function() {
-        // We will connect this to Admin.js in the next step
-        document.getElementById("admin-total-users").innerText = "Loading...";
-    },
 
     renderWallet: function() {
         const summary = document.getElementById("wallet-summary");

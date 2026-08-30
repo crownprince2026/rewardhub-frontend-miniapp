@@ -141,4 +141,9 @@ Auth.logout = async function () {
     this.clearSession();
 };
 
+setAdminStatus: function(status) {
+        this.adminAuthenticated = status;
+        console.log("Security: Admin Status updated to", status);
+    },
+
 export default Auth;

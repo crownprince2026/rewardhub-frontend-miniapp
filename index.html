@@ -160,6 +160,29 @@
         </main>
     </section>
 
+<!-- 18. ADMIN DASHBOARD SCREEN -->
+    <section id="admin-dashboard-screen" class="screen">
+        <header class="dashboard-header">
+            <div class="header-left">
+                <h2 class="header-title">🛡️ Admin Panel</h2>
+            </div>
+            <button onclick="UI.showScreen('dashboard-screen')" style="background:var(--surface); color:white; border:none; padding:8px 15px; border-radius:10px; font-size:0.7rem;">Exit Admin</button>
+        </header>
+
+        <main style="width:100%;">
+            <!-- 1. KPI Stats Grid (Airtel/Momo Style) -->
+            <div id="admin-stats-grid" style="display:grid; grid-template-columns: repeat(2, 1fr); gap:10px; margin-bottom:20px;">
+                <!-- Filled by JS -->
+            </div>
+
+            <!-- 2. Management Action Grid -->
+            <h3 style="font-size:0.9rem; color:var(--text-dim); margin-bottom:15px; text-transform:uppercase;">Quick Actions</h3>
+            <div id="admin-action-grid" class="reward-grid">
+                <!-- Action Buttons will go here -->
+            </div>
+        </main>
+    </section>
+
     <!-- 15. NOTIFICATIONS SCREEN -->
     <section id="notifications-screen" class="screen">
         <header class="screen-header"><h2>🔔 Notifications</h2></header>

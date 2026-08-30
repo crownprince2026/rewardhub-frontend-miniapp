@@ -132,6 +132,12 @@ Rewards.claimDailyBonus = async function () {
             // 4. Save to Local Cache (Prevents cheating by closing app)
             this.saveCache();
         }
+    } catch (error) {
+        return { success: false, message: error.message };
+    } finally {
+        this.claiming = false;
+    }
+};
 
 /* --- SPIN WHEEL --- */
 Rewards.spin = async function () {

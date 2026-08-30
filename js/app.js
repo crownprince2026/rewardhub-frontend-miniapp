@@ -81,15 +81,17 @@ const App = {
     setupNavigation: function() {
         UI.initNavigation((screenId) => {
             const name = screenId.replace("-screen", "");
+            console.log("Navigating to module:", name);
+
+            // Trigger specific module renderers
             if (name === "dashboard") this.refreshUI();
             if (name === "wallet") UI.renderWallet();
             if (name === "tasks") UI.renderTasks();
             if (name === "profile") UI.renderProfile();
             if (name === "rewards") UI.renderRewards();
-            if (name === "daily-bonus") UI.renderDailyBonus(); // Fixed position
-        });
-    },
-            // Admin Panel Switch
+            if (name === "daily-bonus") UI.renderDailyBonus();
+
+            // Admin Panel Switch Logic
             if (name === "admin-dashboard") {
                 if (Auth.isAdmin()) {
                     Admin.loadDashboard();

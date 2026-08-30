@@ -4,6 +4,7 @@ import Tasks from "./tasks.js";
 import Rewards from "./rewards.js";
 import State from "./state.js";
 import Api from "./api.js";
+import Profile from "./profile.js";
 
 const UI = {
     activeScreen: "auth-screen",

@@ -146,4 +146,6 @@ setAdminStatus: function(status) {
         console.log("Security: Admin Status updated to", status);
     },
 
+};
+
 export default Auth;

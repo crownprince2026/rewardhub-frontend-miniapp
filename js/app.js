@@ -95,6 +95,7 @@ const App = {
             // Admin Panel Switch Logic
             if (name === "admin-dashboard") {
                 if (Auth.isAdmin()) {
+                    UI.renderAdminDashboard();
                     Admin.loadDashboard();
                 } else {
                     UI.toast("Access Denied: Admin Only", "error");

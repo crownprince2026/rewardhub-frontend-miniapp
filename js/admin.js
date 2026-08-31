@@ -174,6 +174,6 @@ createTask: async function(taskData) {
         } finally {
             this.loading = false;
         }
-    },
+    }; // NO COMMA HERE
 
 export default Admin;

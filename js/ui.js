@@ -191,6 +191,27 @@ renderAdminTasks: async function() {
         this.renderAdminProofs(); 
     },
 
+renderAdminProofs: async function() {
+        const container = document.getElementById("admin-proofs-list");
+        if (!container) return;
+        
+        const res = await Admin.loadPendingProofs();
+        if (Admin.pendingTasks && Admin.pendingTasks.length > 0) {
+             container.innerHTML = Admin.pendingTasks.map(proof => `
+                <div style="background:#0f172a; padding:15px; border-radius:12px; margin-top:10px;">
+                    <p style="margin:0;">User: ${proof.user_id}</p>
+                    <img src="${proof.screenshot_url}" style="width:100%; border-radius:8px; margin:10px 0;">
+                    <div style="display:flex; gap:10px;">
+                        <button onclick="UI.handleProofAction('${proof.id}', 'approve')" style="flex:1; background:var(--accent); color:white; border:none; padding:10px; border-radius:8px;">Approve</button>
+                        <button onclick="UI.handleProofAction('${proof.id}', 'reject')" style="flex:1; background:red; color:white; border:none; padding:10px; border-radius:8px;">Reject</button>
+                    </div>
+                </div>
+             `).join('');
+        } else {
+            container.innerHTML = '<p style="text-align:center; color:var(--text-dim); padding:20px;">No pending proofs.</p>';
+        }
+    },
+
     renderCreateTaskForm: function() {
         const container = document.getElementById("admin-tasks-content");
         if (!container) return;

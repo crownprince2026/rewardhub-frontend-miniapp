@@ -2,7 +2,7 @@
 
 /* =====================================================
    CROWN PRINCE REWARD HUB - MASTER APP MODULE
-   COMPLETE RECONSTRUCTION - PHASE 5 (FINAL)
+   COMPLETE RECONSTRUCTION - FINAL SYNC
 ===================================================== */
 
 import UI from "./ui.js";
@@ -29,16 +29,25 @@ const App = {
         UI.hideLoading();
         UI.showScreen("auth-screen");
 
-        // 2. Background Task: Initialize all Modules (Syncing Data)
-        this.initializeModules().catch(e => console.error("Init Warning:", e));
+        // 2. CRITICAL FIX: Identify User from Telegram
+        const tg = window.Telegram?.WebApp;
+        const user = tg?.initDataUnsafe?.user;
+
+        if (user) {
+            console.log("Logged in as:", user.username || user.first_name);
+            State.setUser(user);
+            // Initialize modules with the real user ID
+            this.initializeModules(user.id).catch(e => console.error("Init Warning:", e));
+        } else {
+            console.warn("No Telegram User detected. Using guest mode.");
+            this.initializeModules(null).catch(e => console.error("Init Warning:", e));
+        }
 
         // 3. Timing Sequence (Auth -> Splash -> Dashboard)
         setTimeout(() => {
-            // After 3 seconds, show Splash
             UI.showScreen("splash-screen");
 
             setTimeout(async () => {
-                // After 6 seconds total, land on the USER Dashboard
                 console.log("App Brain: Landing on User Dashboard.");
                 UI.showScreen("dashboard-screen");
 
@@ -52,17 +61,17 @@ const App = {
     },
 
     // --- MODULE INITIALIZATION ---
-    initializeModules: async function() {
+    initializeModules: async function(userId) {
         try {
             await Api.initialize();
             await State.initialize();
             
-            // Parallel load for maximum speed
+            // Sync all data from Northflank using the identified user ID
             await Promise.all([
                 Auth.restoreSession(),
                 Profile.initialize(),
-                Wallet.initialize(),
-                Tasks.loadTasks(),
+                Wallet.loadBalance(userId),
+                Tasks.loadTasks(userId),
                 Rewards.initialize(),
                 Ads.initialize(),
                 Notifications.initialize()
@@ -74,11 +83,11 @@ const App = {
 
             this.initialized = true;
         } catch (error) {
-            console.warn("Module Sync encounterd an issue, using offline cache.");
+            console.warn("Background load skipped, using cache.");
         }
     },
 
-// --- NAVIGATION LOGIC ---
+    // --- NAVIGATION LOGIC ---
     setupNavigation: function() {
         UI.initNavigation((screenId) => {
             const name = screenId.replace("-screen", "");
@@ -91,9 +100,8 @@ const App = {
             if (name === "profile") UI.renderProfile();
             if (name === "rewards") UI.renderRewards();
             if (name === "daily-bonus") UI.renderDailyBonus();
-            if (name === "admin-tasks") UI.renderAdminTasks();
 
-            // Admin Panel Switch Logic
+            // Admin Panel Screen Logic
             if (name === "admin-dashboard") {
                 if (Auth.isAdmin()) {
                     UI.renderAdminDashboard();
@@ -103,8 +111,9 @@ const App = {
                     UI.showScreen("dashboard-screen");
                 }
             }
-        }); // This closes the initNavigation callback
-    }, // This closes setupNavigation
+            if (name === "admin-tasks") UI.renderAdminTasks();
+        });
+    },
 
     // --- GLOBAL UI REFRESH ---
     refreshUI: function() {

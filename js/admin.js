@@ -148,20 +148,19 @@ window.addEventListener("beforeunload", () => {
 });
 
 Admin.loadPendingProofs = async function() {
-        try {
-            this.loading = true;
-            // Endpoint matches your Backend reconstruction
-            const response = await Api.get("/admin/tasks/pending");
-            if (response.success) {
-                this.pendingTasks = response.data || [];
-            }
-            return response;
-        } catch (e) {
-            return { success: false, message: e.message };
-        } finally {
-            this.loading = false;
+    try {
+        this.loading = true;
+        const response = await Api.get("/admin/tasks/pending");
+        if (response.success) {
+            this.pendingTasks = response.data || [];
         }
-}; // NO COMMA HERE
+        return response;
+    } catch (e) {
+        return { success: false, message: e.message };
+    } finally {
+        this.loading = false;
+    }
+};
 
 createTask: async function(taskData) {
         try {

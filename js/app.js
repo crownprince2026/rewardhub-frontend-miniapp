@@ -91,6 +91,8 @@ const App = {
             if (name === "profile") UI.renderProfile();
             if (name === "rewards") UI.renderRewards();
             if (name === "daily-bonus") UI.renderDailyBonus();
+            // Admin Specific Screen Logic
+            if (name === "admin-tasks") UI.renderAdminTasks(); // ADD THIS LINE
 
             // Admin Panel Switch Logic
             if (name === "admin-dashboard") {

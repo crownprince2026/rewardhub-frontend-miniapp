@@ -593,4 +593,6 @@ renderAdminTasks: async function() {
     initNavigation: function(callback) { document.querySelectorAll('[data-nav]').forEach(btn => { btn.onclick = () => { const t = btn.getAttribute('data-nav'); if (this.showScreen(t) && callback) callback(t); }; }); }
 };
 
+window.UI = UI;
+
 export default UI;

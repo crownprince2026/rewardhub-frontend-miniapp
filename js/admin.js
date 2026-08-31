@@ -161,6 +161,6 @@ Admin.loadPendingProofs = async function() {
         } finally {
             this.loading = false;
         }
-    },
+}; // NO COMMA HERE
 
 export default Admin;

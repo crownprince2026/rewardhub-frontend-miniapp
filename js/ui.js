@@ -175,6 +175,77 @@ renderAdminDashboard: async function() {
         } catch(e) {}
     },
 
+renderAdminTasks: async function() {
+        const container = document.getElementById("admin-tasks-content");
+        if (!container) return;
+
+        // Add a "Create New Task" button at the top
+        container.innerHTML = `
+            <div style="padding:15px;">
+                <button onclick="UI.renderCreateTaskForm()" style="width:100%; background:var(--accent); color:white; border:none; padding:15px; border-radius:12px; font-weight:bold; margin-bottom:20px;">+ Create New Task</button>
+            </div>
+            <div id="admin-proofs-list"></div>
+        `;
+        
+        // ... (rest of the logic to load pending proofs will go into the 'admin-proofs-list' div)
+        this.renderAdminProofs(); 
+    },
+
+    renderCreateTaskForm: function() {
+        const container = document.getElementById("admin-tasks-content");
+        container.innerHTML = `
+            <div style="padding:20px;">
+                <h3 style="color:white; margin-bottom:20px;">New Task Details</h3>
+                
+                <label style="color:var(--text-dim); font-size:0.8rem;">Task Type</label>
+                <select id="task-type" class="form-input">
+                    <option value="telegram">Telegram Channel</option>
+                    <option value="twitter">X (Twitter) Follow</option>
+                    <option value="app">App Installation</option>
+                </select>
+
+                <label style="color:var(--text-dim); font-size:0.8rem; margin-top:15px; display:block;">Task Title</label>
+                <input type="text" id="task-title" class="form-input" placeholder="e.g. Join our Channel">
+
+                <label style="color:var(--text-dim); font-size:0.8rem; margin-top:15px; display:block;">Reward Amount ($)</label>
+                <input type="number" id="task-reward" class="form-input" placeholder="0.01">
+
+                <label style="color:var(--text-dim); font-size:0.8rem; margin-top:15px; display:block;">Task Link</label>
+                <input type="text" id="task-link" class="form-input" placeholder="https://t.me/...">
+
+                <label style="color:var(--text-dim); font-size:0.8rem; margin-top:15px; display:block;">Total Slots</label>
+                <input type="number" id="task-slots" class="form-input" placeholder="100">
+
+                <div style="display:flex; gap:10px; margin-top:30px;">
+                    <button onclick="UI.renderAdminTasks()" style="flex:1; background:#334155; color:white; border:none; padding:15px; border-radius:12px;">Cancel</button>
+                    <button onclick="UI.handleCreateTask()" style="flex:2; background:var(--primary); color:white; border:none; padding:15px; border-radius:12px; font-weight:bold;">Save Task</button>
+                </div>
+            </div>
+        `;
+    },
+
+    handleCreateTask: async function() {
+        const data = {
+            type: document.getElementById("task-type").value,
+            title: document.getElementById("task-title").value,
+            reward: document.getElementById("task-reward").value,
+            link: document.getElementById("task-link").value,
+            slots: document.getElementById("task-slots").value
+        };
+
+        if(!data.title || !data.link) return alert("Fill all fields");
+
+        this.showLoading("Saving Task...");
+        const res = await Admin.createTask(data); // Calls Admin.js logic
+        this.hideLoading();
+
+        if(res.success) {
+            alert("Task Added Successfully!");
+            this.renderAdminTasks();
+        } else {
+            alert(res.message);
+        }
+    },
 
 renderAdminTasks: async function() {
         const container = document.getElementById("admin-tasks-content");
@@ -286,24 +357,75 @@ renderAdminTasks: async function() {
         }
     },
 
-    renderTasks: function() {
+    renderTasks: async function() {
         const container = document.getElementById("tasks-container");
         if (!container) return;
 
-        // Professional Empty State with requested wording
-        container.innerHTML = `
-            <div style="margin-top:60px; text-align:center; padding:20px;">
-                <div style="font-size: 64px; margin-bottom:20px; opacity:0.8;">📋</div>
-                <h2 style="color:white; margin:0; font-size:1.5rem;">No Tasks Available</h2>
-                <p style="color:#94a3b8; margin:15px 0 30px 0; line-height:1.5;">
-                    Please wait, we are currently loading new tasks.<br>
-                    Check back in a few hours!
-                </p>
-                <button onclick="location.reload()" 
-                        style="background:var(--primary); color:white; border:none; padding:16px 40px; border-radius:14px; font-weight:bold; font-size:1rem; box-shadow: 0 4px 15px rgba(59, 130, 246, 0.3);">
-                    Refresh Tasks
-                </button>
+        container.innerHTML = `<p style="text-align:center; padding:20px;">Loading tasks...</p>`;
+        await Tasks.loadTasks(); // Fetch real tasks from Northflank
+        const allTasks = Tasks.getTasks();
+
+        if (allTasks.length === 0) {
+            container.innerHTML = `<div style="text-align:center; padding:50px 20px;">
+                <div style="font-size:60px;">📋</div>
+                <h2>No Tasks Available</h2>
+                <p style="color:var(--text-dim);">Check back later!</p>
             </div>`;
+            return;
+        }
+
+        container.innerHTML = allTasks.map(task => `
+            <div style="background:var(--surface); padding:15px; border-radius:16px; margin-bottom:12px; border:1px solid #334155;">
+                <div style="display:flex; justify-content:space-between; align-items:center;">
+                    <div>
+                        <h4 style="margin:0;">${task.title}</h4>
+                        <small style="color:var(--accent); font-weight:bold;">+$${task.reward}</small>
+                    </div>
+                    <button onclick="UI.showTaskDetails('${task.id}')" style="background:var(--primary); color:white; border:none; padding:8px 15px; border-radius:8px;">Start</button>
+                </div>
+            </div>
+        `).join('');
+    },
+
+    showTaskDetails: function(taskId) {
+        const task = Tasks.getTaskById(taskId); 
+        this.showScreen("tasks-screen"); // Stay on same screen but change content
+        const container = document.getElementById("tasks-container");
+
+        container.innerHTML = `
+            <div style="padding:10px;">
+                <button onclick="UI.renderTasks()" style="background:none; color:var(--primary); border:none; margin-bottom:20px;">← Back to List</button>
+                <h2 style="color:white;">${task.title}</h2>
+                <p style="color:var(--text-dim); margin-bottom:25px;">Complete the steps below to earn <b>$${task.reward}</b></p>
+                
+                <div style="background:#1e293b; padding:20px; border-radius:15px; margin-bottom:20px;">
+                    <p style="margin:0; color:white;"><b>Step 1:</b> Click the link below and join/follow.</p>
+                    <button onclick="window.open('${task.link}')" style="background:var(--primary); color:white; border:none; padding:10px 20px; border-radius:10px; margin-top:10px; font-weight:bold;">Open Link 🔗</button>
+                </div>
+
+                <div style="background:#1e293b; padding:20px; border-radius:15px;">
+                    <p style="margin:0; color:white;"><b>Step 2:</b> Upload a screenshot as proof.</p>
+                    <input type="file" id="task-proof-file" accept="image/*" style="margin-top:15px;">
+                    <button id="submit-proof-btn" onclick="UI.handleTaskSubmit('${task.id}')" style="width:100%; background:var(--accent); color:white; border:none; padding:15px; border-radius:12px; margin-top:20px; font-weight:bold;">Submit Proof</button>
+                </div>
+            </div>
+        `;
+    },
+
+    handleTaskSubmit: async function(taskId) {
+        const fileInput = document.getElementById("task-proof-file");
+        if (!fileInput.files[0]) return alert("Please select a screenshot first.");
+
+        this.showLoading("Uploading Proof...");
+        const res = await Tasks.submitProof(taskId, fileInput.files[0]);
+        this.hideLoading();
+
+        if (res.success) {
+            alert("Proof submitted! Admin will review it shortly.");
+            this.renderTasks();
+        } else {
+            alert(res.message);
+        }
     },
 
     renderRewards: function() {

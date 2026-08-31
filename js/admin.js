@@ -147,7 +147,7 @@ window.addEventListener("beforeunload", () => {
     if (Admin.authenticated) Admin.saveCache();
 });
 
-loadPendingProofs: async function() {
+Admin.loadPendingProofs = async function() {
         try {
             this.loading = true;
             // Endpoint matches your Backend reconstruction

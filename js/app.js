@@ -91,8 +91,7 @@ const App = {
             if (name === "profile") UI.renderProfile();
             if (name === "rewards") UI.renderRewards();
             if (name === "daily-bonus") UI.renderDailyBonus();
-            // Admin Specific Screen Logic
-            if (name === "admin-tasks") UI.renderAdminTasks(); // ADD THIS LINE
+            if (name === "admin-tasks") UI.renderAdminTasks();
 
             // Admin Panel Switch Logic
             if (name === "admin-dashboard") {
@@ -104,8 +103,8 @@ const App = {
                     UI.showScreen("dashboard-screen");
                 }
             }
-        });
-    },
+        }); // This closes the initNavigation callback
+    }, // This closes setupNavigation
 
     // --- GLOBAL UI REFRESH ---
     refreshUI: function() {

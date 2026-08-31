@@ -193,9 +193,11 @@ renderAdminTasks: async function() {
 
     renderCreateTaskForm: function() {
         const container = document.getElementById("admin-tasks-content");
+        if (!container) return;
+
         container.innerHTML = `
-            <div style="padding:20px;">
-                <h3 style="color:white; margin-bottom:20px;">New Task Details</h3>
+            <div style="padding:20px; background:var(--surface); border-radius:24px; border:1px solid #334155; margin:15px;">
+                <h3 style="color:white; margin:0 0 20px 0;">New Task Details</h3>
                 
                 <label style="color:var(--text-dim); font-size:0.8rem;">Task Type</label>
                 <select id="task-type" class="form-input">
@@ -208,7 +210,7 @@ renderAdminTasks: async function() {
                 <input type="text" id="task-title" class="form-input" placeholder="e.g. Join our Channel">
 
                 <label style="color:var(--text-dim); font-size:0.8rem; margin-top:15px; display:block;">Reward Amount ($)</label>
-                <input type="number" id="task-reward" class="form-input" placeholder="0.01">
+                <input type="number" id="task-reward" class="form-input" placeholder="0.01" step="0.001">
 
                 <label style="color:var(--text-dim); font-size:0.8rem; margin-top:15px; display:block;">Task Link</label>
                 <input type="text" id="task-link" class="form-input" placeholder="https://t.me/...">
@@ -218,32 +220,35 @@ renderAdminTasks: async function() {
 
                 <div style="display:flex; gap:10px; margin-top:30px;">
                     <button onclick="UI.renderAdminTasks()" style="flex:1; background:#334155; color:white; border:none; padding:15px; border-radius:12px;">Cancel</button>
-                    <button onclick="UI.handleCreateTask()" style="flex:2; background:var(--primary); color:white; border:none; padding:15px; border-radius:12px; font-weight:bold;">Save Task</button>
+                    <button id="save-task-btn" style="flex:2; background:var(--primary); color:white; border:none; padding:15px; border-radius:12px; font-weight:bold;">Save Task</button>
                 </div>
             </div>
         `;
+
+        // Attach the save handler
+        document.getElementById("save-task-btn").onclick = () => this.handleCreateTask();
     },
 
     handleCreateTask: async function() {
         const data = {
             type: document.getElementById("task-type").value,
             title: document.getElementById("task-title").value,
-            reward: document.getElementById("task-reward").value,
+            reward: parseFloat(document.getElementById("task-reward").value),
             link: document.getElementById("task-link").value,
-            slots: document.getElementById("task-slots").value
+            slots: parseInt(document.getElementById("task-slots").value)
         };
 
-        if(!data.title || !data.link) return alert("Fill all fields");
+        if(!data.title || !data.link || isNaN(data.reward)) return alert("Please fill all required fields correctly.");
 
         this.showLoading("Saving Task...");
-        const res = await Admin.createTask(data); // Calls Admin.js logic
+        const res = await Admin.createTask(data);
         this.hideLoading();
 
         if(res.success) {
             alert("Task Added Successfully!");
-            this.renderAdminTasks();
+            this.renderAdminTasks(); // Refresh list
         } else {
-            alert(res.message);
+            alert(res.message || "Failed to save task.");
         }
     },
 

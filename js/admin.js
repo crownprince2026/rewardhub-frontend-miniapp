@@ -163,4 +163,17 @@ Admin.loadPendingProofs = async function() {
         }
 }; // NO COMMA HERE
 
+createTask: async function(taskData) {
+        try {
+            this.loading = true;
+            // Aligned with reconstructed Backend route
+            const response = await Api.post("/admin/tasks/create", taskData);
+            return response;
+        } catch (e) {
+            return { success: false, message: e.message };
+        } finally {
+            this.loading = false;
+        }
+    },
+
 export default Admin;

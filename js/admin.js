@@ -162,7 +162,7 @@ Admin.loadPendingProofs = async function() {
     }
 };
 
-createTask: async function(taskData) {
+Admin.createTask = async function(taskData) {
         try {
             this.loading = true;
             // Aligned with reconstructed Backend route

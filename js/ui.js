@@ -6,6 +6,7 @@ import State from "./state.js";
 import Api from "./api.js";
 import Profile from "./profile.js";
 import Auth from "./auth.js";
+import Admin from "./admin.js";
 
 const UI = {
     activeScreen: "auth-screen",

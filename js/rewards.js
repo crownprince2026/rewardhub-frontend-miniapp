@@ -132,6 +132,7 @@ Rewards.claimDailyBonus = async function () {
             // 4. Save to Local Cache (Prevents cheating by closing app)
             this.saveCache();
         }
+        return response;
     } catch (error) {
         return { success: false, message: error.message };
     } finally {

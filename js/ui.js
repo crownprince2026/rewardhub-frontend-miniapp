@@ -413,7 +413,7 @@ renderAdminProofs: async function() {
         if (!canClaim) {
             this.startDailyCountdown(nextClaim);
         } else {
-            document.getElementById("claim-daily-btn").onclick = () => this.handleDailyRewardFlow();
+            document.getElementById("claim-daily-btn").onclick = () => this.handleRewardWithAd("daily");
         }
     },
 
@@ -488,7 +488,7 @@ renderAdminProofs: async function() {
             </div>`;
 
         if (!canClaim) this.startTimer("box-timer", nextClaim, () => this.renderMysteryBox());
-        else document.getElementById("open-box-btn").onclick = () => this.handleAdThenReward("box", 12);
+        else document.getElementById("open-box-btn").onclick = () => this.handleRewardWithAd("mystery_box");
     },
 
     processFinalReward: async function(type) {

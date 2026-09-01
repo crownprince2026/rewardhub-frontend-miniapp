@@ -584,28 +584,38 @@ renderAdminProofs: async function() {
     },
 
     handleRewardWithAd: async function(type) {
+        const user = State.getUser();
+        if (!user || !user.user_id) return alert("Error: Please restart the app to identify your account.");
+
         this.showLoading("Loading Advertisement...");
         setTimeout(async () => {
             this.showLoading("Verifying Watch...");
             let res;
-            if (type === "daily") res = await Rewards.claimDailyBonus();
-            else if (type === "mystery_box") res = await Rewards.openMysteryBox();
+            // Explicitly passing user_id in the request body
+            const payload = { user_id: user.user_id, username: user.username };
+
+            if (type === "daily") res = await Rewards.claimDailyBonus(payload);
+            else if (type === "mystery_box") res = await Rewards.openMysteryBox(payload);
             else if (type === "spin") {
-                res = await Rewards.spin();
-                if (res.success) {
+                res = await Rewards.spin(payload);
+                if (res && res.success) {
                     const wheel = document.getElementById("main-wheel");
                     const stopAngle = 3600 + (360 - (res.stopIndex * 36)) - 18;
                     if(wheel) wheel.style.transform = `rotate(${stopAngle}deg)`;
                     await new Promise(resolve => setTimeout(resolve, 4000));
                 }
             }
+
             this.hideLoading();
             if (res && res.success) {
-                this.toast("Success!", "success");
+                this.toast("Success! Reward Credited", "success");
                 if (type === "daily") this.renderDailyBonus();
                 if (type === "spin") this.renderSpinWheel();
                 if (type === "mystery_box") this.renderMysteryBox();
-            } else { alert("Server Error: " + (res?.message || "Check Backend Connection")); }
+                this.renderDashboard();
+            } else { 
+                alert("Server Error: " + (res?.message || "Connection failed")); 
+            }
         }, 2000);
     },
 

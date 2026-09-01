@@ -106,10 +106,10 @@ Rewards.loadDailyBonus = async function () {
     }
 };
 
-Rewards.claimDailyBonus = async function () {
+Rewards.claimDailyBonus = async function (payload) {
     try {
         this.claiming = true;
-        const response = await Api.claimDailyBonus({
+        const response = await Api.claimDailyBonus(payload); ({
             user_id: State.getUser()?.user_id,
             username: State.getUser()?.username
         });
@@ -141,7 +141,7 @@ Rewards.claimDailyBonus = async function () {
 };
 
 /* --- SPIN WHEEL --- */
-Rewards.spin = async function () {
+Rewards.spin = async function (payload) {
     try {
         if (!this.isAvailable("spin")) return { success: false, message: "Wait for cooldown." };
 
@@ -176,7 +176,7 @@ Rewards.spin = async function () {
         // 3. Call Backend to verify and save (Passing the result we want)
         // Note: Real apps do this calculation on backend to prevent cheating, 
         // but for now we follow your frontend plan.
-        const response = await Api.claimSpin({ index: selected.index });
+        const response = await Api.claimSpin(payload); { index: selected.index });
 
         if (response.success) {
             this.setCooldown("spin", 3600);
@@ -189,7 +189,7 @@ Rewards.spin = async function () {
 };
 
 /* --- MYSTERY BOX (Professional Rebuild) --- */
-Rewards.openMysteryBox = async function () {
+Rewards.openMysteryBox = async function (payload) {
     try {
         // 1. Check if 1 hour has passed
         if (!this.isAvailable("mystery_box")) {
@@ -200,7 +200,7 @@ Rewards.openMysteryBox = async function () {
         const user = State.getUser();
 
         // 2. Call the Backend API
-        const response = await Api.claimMysteryBox({
+        const response = await Api.claimMysteryBox(payload); {
             user_id: user?.user_id,
             username: user?.username
         });

@@ -604,7 +604,7 @@ renderAdminProofs: async function() {
                 if (type === "daily") this.renderDailyBonus();
                 if (type === "spin") this.renderSpinWheel();
                 if (type === "mystery_box") this.renderMysteryBox();
-            } else { alert(res?.message || "Failed"); }
+            } else { alert("Server Error: " + (res?.message || "Check Backend Connection")); }
         }, 2000);
     },
 

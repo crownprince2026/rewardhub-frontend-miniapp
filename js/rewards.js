@@ -106,30 +106,19 @@ Rewards.loadDailyBonus = async function () {
     }
 };
 
+/* --- DAILY BONUS --- */
 Rewards.claimDailyBonus = async function (payload) {
     try {
         this.claiming = true;
-        const response = await Api.claimDailyBonus(payload); ({
-            user_id: State.getUser()?.user_id,
-            username: State.getUser()?.username
-        });
+        // Corrected: Removed the stray semicolon and merged payload
+        const response = await Api.claimDailyBonus(payload);
 
         if (response.success) {
             const reward = Number(response.reward || 0);
-            
-            // 1. Update Global Balance
-            if (State.user) {
-                State.user.balance += reward;
-            }
-
-            // 2. Update Statistics
+            if (State.user) State.user.balance += reward;
             this.statistics.totalEarned += reward;
             this.statistics.dailyBonusesClaimed++;
-            
-            // 3. SET EXACT 24 HOUR RESET (86400 Seconds)
             this.setCooldown("daily", 86400);
-            
-            // 4. Save to Local Cache (Prevents cheating by closing app)
             this.saveCache();
         }
         return response;
@@ -145,91 +134,67 @@ Rewards.spin = async function (payload) {
     try {
         if (!this.isAvailable("spin")) return { success: false, message: "Wait for cooldown." };
 
-        // 1. Probability Weights (Out of 1000 for precision)
-        // Indices: 0:$0.01, 1:5XP, 2:$0.02, 3:TryAgain, 4:$0.04, 5:50XP, 6:$0.03, 7:$1.00, 8:$0.05, 9:$0.10
         const weights = [
-            { index: 0, weight: 100 }, // $0.01 (10%)
-            { index: 1, weight: 150 }, // 5 XP (15%)
-            { index: 2, weight: 100 }, // $0.02 (10%)
-            { index: 3, weight: 200 }, // Try Again (20%)
-            { index: 4, weight: 100 }, // $0.04 (10%)
-            { index: 5, weight: 200 }, // 50 XP (20%)
-            { index: 6, weight: 100 }, // $0.03 (10%)
-            { index: 7, weight: 5   }, // $1.00 (0.5% - Very Rare)
-            { index: 8, weight: 40  }, // $0.05 (4%)
-            { index: 9, weight: 5   }  // $0.10 (0.5%)
+            { index: 0, weight: 100 }, { index: 1, weight: 150 },
+            { index: 2, weight: 100 }, { index: 3, weight: 200 },
+            { index: 4, weight: 100 }, { index: 5, weight: 200 },
+            { index: 6, weight: 100 }, { index: 7, weight: 5   },
+            { index: 8, weight: 40  }, { index: 9, weight: 5   }
         ];
 
-        // 2. Pick a random index based on weights
         let totalWeight = weights.reduce((acc, w) => acc + w.weight, 0);
         let random = Math.floor(Math.random() * totalWeight);
         let selected = weights[0];
 
         for (let w of weights) {
-            if (random < w.weight) {
-                selected = w;
-                break;
-            }
+            if (random < w.weight) { selected = w; break; }
             random -= w.weight;
         }
 
-        // 3. Call Backend to verify and save (Passing the result we want)
-        // Note: Real apps do this calculation on backend to prevent cheating, 
-        // but for now we follow your frontend plan.
-        const response = await Api.claimSpin(payload); { index: selected.index });
+        // Corrected: Merged the selected index into the payload
+        payload.index = selected.index;
+        const response = await Api.claimSpin(payload);
 
         if (response.success) {
             this.setCooldown("spin", 3600);
             this.saveCache();
         }
-        
-        // We return the index so the UI knows where to stop the wheel
         return { ...response, stopIndex: selected.index };
     } catch (e) { return { success: false, message: e.message }; }
 };
 
-/* --- MYSTERY BOX (Professional Rebuild) --- */
+/* --- MYSTERY BOX --- */
 Rewards.openMysteryBox = async function (payload) {
     try {
-        // 1. Check if 1 hour has passed
         if (!this.isAvailable("mystery_box")) {
             return { success: false, message: "Mystery Box cooldown active." };
         }
 
         this.claiming = true;
-        const user = State.getUser();
+        const response = await Api.claimMysteryBox(payload);
 
-        // 2. Call the Backend API
-        const response = await Api.claimMysteryBox(payload); {
-            user_id: user?.user_id,
-            username: user?.username
-        });
-
-       if (response.success) {
-            // Weighted Rewards Logic
+        if (response.success) {
             const random = Math.random() * 100;
             let reward = 0;
             let type = "xp";
             let label = "50 XP";
 
-            if (random < 70) { type = "xp"; label = "50 XP"; reward = 50; } // 70% Chance
-            else if (random < 85) { type = "cash"; reward = 0.001; label = "$0.001"; } // Rare
-            else if (random < 93) { type = "cash"; reward = 0.005; label = "$0.005"; } // Rare
-            else if (random < 97) { type = "cash"; reward = 0.05; label = "$0.05"; } // Very Rare
-            else if (random < 99.5) { type = "cash"; reward = 0.9; label = "$0.90"; } // Very Very Rare
-            else { type = "cash"; reward = 1.0; label = "$1.00"; } // Jackpot
+            if (random < 70) { type = "xp"; label = "50 XP"; reward = 50; }
+            else if (random < 85) { type = "cash"; reward = 0.001; label = "$0.001"; }
+            else if (random < 93) { type = "cash"; reward = 0.005; label = "$0.005"; }
+            else if (random < 97) { type = "cash"; reward = 0.05; label = "$0.05"; }
+            else if (random < 99.5) { type = "cash"; reward = 0.9; label = "$0.90"; }
+            else { type = "cash"; reward = 1.0; label = "$1.00"; }
 
-            // Add "No Luck" chance (Optional overlay)
             if (random > 50 && random < 55) { label = "Oops, No Luck!"; reward = 0; }
 
             if (type === "cash" && State.user) State.user.balance += reward;
             if (type === "xp" && State.user) State.user.xp = (State.user.xp || 0) + reward;
 
             this.statistics.totalEarned += (type === "cash" ? reward : 0);
-            this.setCooldown("mystery_box", 3600); // 1 Hour
+            this.setCooldown("mystery_box", 3600);
             this.saveCache();
-            
-           return { success: true, reward: label, type: type };
+            return { success: true, reward: label, type: type };
         }
     } catch (error) {
         return { success: false, message: error.message };

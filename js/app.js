@@ -34,13 +34,15 @@ const App = {
         const user = tg?.initDataUnsafe?.user;
 
         if (user) {
-            console.log("Logged in as:", user.username || user.first_name);
-            State.setUser(user);
-            // Initialize modules with the real user ID
-            this.initializeModules(user.id).catch(e => console.error("Init Warning:", e));
-        } else {
-            console.warn("No Telegram User detected. Using guest mode.");
-            this.initializeModules(null).catch(e => console.error("Init Warning:", e));
+            // Mapping Telegram .id to the .user_id our Backend expects
+            const normalizedUser = {
+                ...user,
+                user_id: user.id,
+                username: user.username || user.first_name
+            };
+            console.log("App Brain: User Identified ->", normalizedUser.user_id);
+            State.setUser(normalizedUser);
+            this.initializeModules(normalizedUser.user_id).catch(e => console.error(e));
         }
 
         // 3. Timing Sequence (Auth -> Splash -> Dashboard)

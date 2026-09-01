@@ -252,11 +252,12 @@ renderAdminProofs: async function() {
 
     handleCreateTask: async function() {
         const data = {
+            user_id: State.getUser()?.user_id,
             type: document.getElementById("task-type").value,
             title: document.getElementById("task-title").value,
-            reward: parseFloat(document.getElementById("task-reward").value),
+            reward: parseFloat(document.getElementById("task-reward").value) || 0,
             link: document.getElementById("task-link").value,
-            slots: parseInt(document.getElementById("task-slots").value)
+            slots: parseInt(document.getElementById("task-slots").value) || 0
         };
 
         if(!data.title || !data.link || isNaN(data.reward)) return alert("Please fill all required fields correctly.");

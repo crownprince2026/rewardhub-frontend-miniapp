@@ -107,9 +107,9 @@ Api.verifyTelegramTask = (taskId) => Api.post("/tasks/verify/telegram", { taskId
 Api.verifyTwitterTask = (taskId) => Api.post("/tasks/verify/twitter", { taskId });
 
 // Rewards & Games
-Api.claimDailyBonus = (data) => Api.post("/daily", data);
-Api.claimSpin = (data) => Api.post("/spin", data);
-Api.claimMysteryBox = (data) => Api.post("/mystery-box", data);
+Api.claimDailyBonus = (uid) => Api.post("/daily", { user_id: uid });
+Api.claimSpin = (uid, idx) => Api.post("/spin", { user_id: uid, index: idx });
+Api.claimMysteryBox = (uid) => Api.post("/mystery-box", { user_id: uid });
 Api.claimWatchAd = (data) => Api.post("/watch-ad", data);
 
 // System & Admin

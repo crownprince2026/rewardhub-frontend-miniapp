@@ -332,7 +332,8 @@ renderAdminProofs: async function() {
         container.innerHTML = `<p style="text-align:center; padding:20px;">Loading tasks...</p>`;
         
         // Fetch real tasks from your Northflank backend
-        await Tasks.loadTasks(); 
+        const user = State.getUser();
+        await Tasks.loadTasks(user?.user_id); 
         const allTasks = Tasks.getTasks();
 
         if (!allTasks || allTasks.length === 0) {
@@ -606,10 +607,9 @@ renderAdminProofs: async function() {
             // Explicitly passing user_id in the request body
             const payload = { user_id: user.user_id, username: user.username };
 
-            if (type === "daily") res = await Rewards.claimDailyBonus(payload);
-            else if (type === "mystery_box") res = await Rewards.openMysteryBox(payload);
-            else if (type === "spin") {
-                res = await Rewards.spin(payload);
+            if (type === "daily") res = await Rewards.claimDailyBonus(user.user_id);
+            else if (type === "mystery_box") res = await Rewards.openMysteryBox(user.user_id);
+            else if (type === "spin") res = await Rewards.spin(user.user_id);
                 if (res && res.success) {
                     const wheel = document.getElementById("main-wheel");
                     const stopAngle = 3600 + (360 - (res.stopIndex * 36)) - 18;

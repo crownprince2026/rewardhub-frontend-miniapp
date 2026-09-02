@@ -107,11 +107,11 @@ Rewards.loadDailyBonus = async function () {
 };
 
 /* --- DAILY BONUS --- */
-Rewards.claimDailyBonus = async function (payload) {
+Rewards.claimDailyBonus = async function (uid) {
     try {
         this.claiming = true;
         // Corrected: Removed the stray semicolon and merged payload
-        const response = await Api.claimDailyBonus(payload);
+        const response = await Api.claimDailyBonus(uid);
 
         if (response.success) {
             const reward = Number(response.reward || 0);
@@ -130,7 +130,7 @@ Rewards.claimDailyBonus = async function (payload) {
 };
 
 /* --- SPIN WHEEL --- */
-Rewards.spin = async function (payload) {
+Rewards.spin = async function (uid) {
     try {
         if (!this.isAvailable("spin")) return { success: false, message: "Wait for cooldown." };
 
@@ -153,7 +153,7 @@ Rewards.spin = async function (payload) {
 
         // Corrected: Merged the selected index into the payload
         payload.index = selected.index;
-        const response = await Api.claimSpin(payload);
+        const response = await Api.claimDailyBonus(uid);
 
         if (response.success) {
             this.setCooldown("spin", 3600);
@@ -164,14 +164,14 @@ Rewards.spin = async function (payload) {
 };
 
 /* --- MYSTERY BOX --- */
-Rewards.openMysteryBox = async function (payload) {
+Rewards.openMysteryBox = async function (uid) {
     try {
         if (!this.isAvailable("mystery_box")) {
             return { success: false, message: "Mystery Box cooldown active." };
         }
 
         this.claiming = true;
-        const response = await Api.claimMysteryBox(payload);
+        const response = await Api.claimDailyBonus(uid);
 
         if (response.success) {
             const random = Math.random() * 100;

@@ -72,9 +72,12 @@ const App = {
                         } else {
                             UI.toast("Access Denied", "error");
                             UI.showScreen("dashboard-screen");
-                        }
-                    }
-                });
+                        
+                this.refreshUI();
+            }, 3000);
+        }, 3000);
+    },
+
     // --- MODULE INITIALIZATION ---
     initializeModules: async function(userId) {
         try {

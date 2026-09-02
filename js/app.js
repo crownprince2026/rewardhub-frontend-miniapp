@@ -34,7 +34,7 @@ const App = {
             const uid = tgUser.id;
             localStorage.setItem("active_user_id", uid);
             State.setUser({ user_id: uid, username: tgUser.username || tgUser.first_name });
-            
+
             console.log("Identity Locked:", uid);
             await this.initializeModules(uid);
         } else {
@@ -47,6 +47,7 @@ const App = {
             UI.showScreen("splash-screen");
             setTimeout(() => {
                 UI.showScreen("dashboard-screen");
+                
                 UI.initNavigation((screenId) => {
                     const name = screenId.replace("-screen", "");
                     console.log("Navigating to:", name);
@@ -64,7 +65,7 @@ const App = {
 
                     // 2. Admin Module Renderers
                     if (name === "admin-tasks") UI.renderAdminTasks();
-                    
+
                     if (name === "admin-dashboard") {
                         if (Auth.isAdmin()) {
                             UI.renderAdminDashboard();
@@ -72,11 +73,14 @@ const App = {
                         } else {
                             UI.toast("Access Denied", "error");
                             UI.showScreen("dashboard-screen");
-                        
+                        }
+                    }
+                }); // This closes initNavigation
+
                 this.refreshUI();
-            }, 3000);
-        }, 3000);
-    },
+            }, 3000); // This closes inner setTimeout
+        }, 3000); // This closes outer setTimeout
+    }, // This closes the start function
 
     // --- MODULE INITIALIZATION ---
     initializeModules: async function(userId) {

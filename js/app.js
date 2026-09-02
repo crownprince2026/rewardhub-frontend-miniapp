@@ -23,39 +23,38 @@ const App = {
 
     // --- STARTUP SEQUENCE ---
     start: async function() {
-        console.log("App Brain: Starting Startup Sequence...");
-
-        // 1. Immediate Action: Hide loader and show Auth
         UI.hideLoading();
         UI.showScreen("auth-screen");
 
-        // 2. CRITICAL FIX: Identify User from Telegram
         const tg = window.Telegram?.WebApp;
-        const user = tg?.initDataUnsafe?.user;
+        const tgUser = tg?.initDataUnsafe?.user;
 
-        if (user) {
-            // Map Telegram's .id to our system's .user_id
-            user.user_id = user.id; 
-            State.setUser(user);
-            console.log("Identification Success:", user.user_id);
+        if (tgUser) {
+            // Hard Anchor: Save to both State AND LocalStorage
+            const uid = tgUser.id;
+            localStorage.setItem("active_user_id", uid);
+            State.setUser({ user_id: uid, username: tgUser.username || tgUser.first_name });
             
-            // Initialize modules with ID
-            this.initializeModules(user.user_id).catch(e => console.error(e));
+            console.log("Identity Locked:", uid);
+            await this.initializeModules(uid);
+        } else {
+            // For testing in browser
+            const backupId = localStorage.getItem("active_user_id") || 8072346076;
+            await this.initializeModules(backupId);
         }
 
-        // 3. Timing Sequence (Auth -> Splash -> Dashboard)
         setTimeout(() => {
             UI.showScreen("splash-screen");
-
-            setTimeout(async () => {
-                console.log("App Brain: Landing on User Dashboard.");
+            setTimeout(() => {
                 UI.showScreen("dashboard-screen");
-
-                // 4. Activate Interactivity & Refresh UI data
-                this.setupNavigation();
+                UI.initNavigation((screen) => {
+                    const name = screen.replace("-screen", "");
+                    if (name === "wallet") UI.renderWallet();
+                    if (name === "tasks") UI.renderTasks();
+                    if (name === "profile") UI.renderProfile();
+                    if (name === "dashboard") this.refreshUI();
+                });
                 this.refreshUI();
-
-                console.log("App Brain: Startup Complete. System Live.");
             }, 3000);
         }, 3000);
     },

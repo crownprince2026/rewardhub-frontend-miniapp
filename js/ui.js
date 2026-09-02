@@ -597,8 +597,11 @@ renderAdminProofs: async function() {
     },
 
     handleRewardWithAd: async function(type) {
-        const user = State.getUser();
-        if (!user || !user.user_id) return alert("Error: Please restart the app to identify your account.");
+        // Grab ID from the Hard Anchor we set in app.js
+        const storedId = localStorage.getItem("active_user_id");
+        const user = State.getUser() || { user_id: storedId };
+
+        if (!user.user_id) return alert("Error: ID not found. Please reload.");
 
         this.showLoading("Loading Advertisement...");
         setTimeout(async () => {

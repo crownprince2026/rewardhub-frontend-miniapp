@@ -604,12 +604,14 @@ renderAdminProofs: async function() {
         setTimeout(async () => {
             this.showLoading("Verifying Watch...");
             let res;
-            // Explicitly passing user_id in the request body
-            const payload = { user_id: user.user_id, username: user.username };
 
-            if (type === "daily") res = await Rewards.claimDailyBonus(user.user_id);
-            else if (type === "mystery_box") res = await Rewards.openMysteryBox(user.user_id);
-            else if (type === "spin") res = await Rewards.spin(user.user_id);
+            if (type === "daily") {
+                res = await Rewards.claimDailyBonus(user.user_id);
+            } else if (type === "mystery_box") {
+                res = await Rewards.openMysteryBox(user.user_id);
+            } else if (type === "spin") {
+                res = await Rewards.spin(user.user_id);
+                // Handle the spin wheel animation specifically
                 if (res && res.success) {
                     const wheel = document.getElementById("main-wheel");
                     const stopAngle = 3600 + (360 - (res.stopIndex * 36)) - 18;
@@ -619,14 +621,15 @@ renderAdminProofs: async function() {
             }
 
             this.hideLoading();
+
             if (res && res.success) {
                 this.toast("Success! Reward Credited", "success");
                 if (type === "daily") this.renderDailyBonus();
                 if (type === "spin") this.renderSpinWheel();
                 if (type === "mystery_box") this.renderMysteryBox();
                 this.renderDashboard();
-            } else { 
-                alert("Server Error: " + (res?.message || "Connection failed")); 
+            } else {
+                alert("Server Error: " + (res?.message || "Connection failed"));
             }
         }, 2000);
     },

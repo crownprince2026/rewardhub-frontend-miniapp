@@ -110,7 +110,7 @@ Rewards.loadDailyBonus = async function () {
 Rewards.claimDailyBonus = async function (uid) {
     try {
         this.claiming = true;
-        // Corrected: Removed the stray semicolon and merged payload
+        // Corrected: Removed junk code after the API call
         const response = await Api.claimDailyBonus(uid);
 
         if (response.success) {
@@ -151,9 +151,8 @@ Rewards.spin = async function (uid) {
             random -= w.weight;
         }
 
-        // Corrected: Merged the selected index into the payload
-        payload.index = selected.index;
-        const response = await Api.claimDailyBonus(uid);
+        // Corrected: Call claimSpin and pass the index correctly
+        const response = await Api.claimSpin(uid, selected.index);
 
         if (response.success) {
             this.setCooldown("spin", 3600);
@@ -171,7 +170,8 @@ Rewards.openMysteryBox = async function (uid) {
         }
 
         this.claiming = true;
-        const response = await Api.claimDailyBonus(uid);
+        // Corrected: Removed junk code and called correct API
+        const response = await Api.claimMysteryBox(uid);
 
         if (response.success) {
             const random = Math.random() * 100;

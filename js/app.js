@@ -47,18 +47,34 @@ const App = {
             UI.showScreen("splash-screen");
             setTimeout(() => {
                 UI.showScreen("dashboard-screen");
-                UI.initNavigation((screen) => {
-                    const name = screen.replace("-screen", "");
+                UI.initNavigation((screenId) => {
+                    const name = screenId.replace("-screen", "");
+                    console.log("Navigating to:", name);
+
+                    // 1. User Module Renderers
+                    if (name === "dashboard") this.refreshUI();
                     if (name === "wallet") UI.renderWallet();
                     if (name === "tasks") UI.renderTasks();
                     if (name === "profile") UI.renderProfile();
-                    if (name === "dashboard") this.refreshUI();
-                });
-                this.refreshUI();
-            }, 3000);
-        }, 3000);
-    },
+                    if (name === "rewards") UI.renderRewards();
+                    if (name === "daily-bonus") UI.renderDailyBonus();
+                    if (name === "mystery-box") UI.renderMysteryBox();
+                    if (name === "spin-wheel") UI.renderSpinWheel();
+                    if (name === "watch-ads") UI.renderWatchAds();
 
+                    // 2. Admin Module Renderers
+                    if (name === "admin-tasks") UI.renderAdminTasks();
+                    
+                    if (name === "admin-dashboard") {
+                        if (Auth.isAdmin()) {
+                            UI.renderAdminDashboard();
+                            Admin.loadDashboard();
+                        } else {
+                            UI.toast("Access Denied", "error");
+                            UI.showScreen("dashboard-screen");
+                        }
+                    }
+                });
     // --- MODULE INITIALIZATION ---
     initializeModules: async function(userId) {
         try {

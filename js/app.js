@@ -34,15 +34,13 @@ const App = {
         const user = tg?.initDataUnsafe?.user;
 
         if (user) {
-            // Mapping Telegram .id to the .user_id our Backend expects
-            const normalizedUser = {
-                ...user,
-                user_id: user.id,
-                username: user.username || user.first_name
-            };
-            console.log("App Brain: User Identified ->", normalizedUser.user_id);
-            State.setUser(normalizedUser);
-            this.initializeModules(normalizedUser.user_id).catch(e => console.error(e));
+            // Map Telegram's .id to our system's .user_id
+            user.user_id = user.id; 
+            State.setUser(user);
+            console.log("Identification Success:", user.user_id);
+            
+            // Initialize modules with ID
+            this.initializeModules(user.user_id).catch(e => console.error(e));
         }
 
         // 3. Timing Sequence (Auth -> Splash -> Dashboard)

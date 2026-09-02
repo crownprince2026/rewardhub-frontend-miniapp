@@ -577,11 +577,17 @@ renderAdminProofs: async function() {
                     ${adLimitReached ? 'Ads completed! Come back tomorrow.' : 'We are preparing new ads for you. Please come back in a few hours.'}
                 </p>
                 <button onclick="UI.showLoading('Checking...'); setTimeout(()=>UI.hideLoading(), 2000);" 
+                        <button id="refresh-ads-btn" 
                         style="background:#3b82f6; color:white; border:none; padding:15px 40px; border-radius:12px; margin-top:20px; font-weight:bold;">
                     Refresh Ads
                 </button>
             </div>`;
     },
+
+document.getElementById("refresh-ads-btn").onclick = () => {
+            this.showLoading("Checking for Ads...");
+            setTimeout(() => { this.hideLoading(); alert("No new ads available yet."); }, 2000);
+        };
 
     handleRewardWithAd: async function(type) {
         const user = State.getUser();

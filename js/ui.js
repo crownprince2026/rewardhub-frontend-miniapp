@@ -564,30 +564,36 @@ renderAdminProofs: async function() {
         }
     },
 
-    renderWatchAds: function() {
+     renderWatchAds: function() {
         const container = document.getElementById("ad-status-container");
-        const adLimitReached = false; // Add logic for 24h limit if needed
-        const adsExistInDB = false; // Check admin setting
+        if (!container) return;
 
+        // 1. Create the HTML with a SINGLE clean button tag
         container.innerHTML = `
             <div style="text-align:center; padding:50px 20px;">
                 <div style="font-size:60px; margin-bottom:20px;">📺</div>
-                <h2 style="color:white;">${adLimitReached ? 'Daily Limit Reached' : 'No Ads Available'}</h2>
-                <p style="color:#94a3b8; line-height:1.6;">
-                    ${adLimitReached ? 'Ads completed! Come back tomorrow.' : 'We are preparing new ads for you. Please come back in a few hours.'}
+                <h2 style="color:white; margin:0;">No Ads Available</h2>
+                <p style="color:#94a3b8; line-height:1.6; margin-top:10px;">
+                    We are preparing new ads for you.<br>Please come back in a few hours.
                 </p>
-                <button onclick="UI.showLoading('Checking...'); setTimeout(()=>UI.hideLoading(), 2000);" 
-                        <button id="refresh-ads-btn" 
-                        style="background:#3b82f6; color:white; border:none; padding:15px 40px; border-radius:12px; margin-top:20px; font-weight:bold;">
+                <button id="refresh-ads-btn"
+                        style="background:#3b82f6; color:white; border:none; padding:15px 40px; border-radius:12px; margin-top:20px; font-weight:bold; cursor:pointer;">
                     Refresh Ads
                 </button>
             </div>`;
-    },
 
-document.getElementById("refresh-ads-btn").onclick = () => {
-            this.showLoading("Checking for Ads...");
-            setTimeout(() => { this.hideLoading(); alert("No new ads available yet."); }, 2000);
-        };
+        // 2. Attach the logic AFTER the HTML is placed in the DOM
+        const btn = document.getElementById("refresh-ads-btn");
+        if (btn) {
+            btn.onclick = () => {
+                this.showLoading("Checking for Ads...");
+                setTimeout(() => {
+                    this.hideLoading();
+                    alert("No new ads available yet.");
+                }, 2000);
+            };
+        }
+    },
 
     handleRewardWithAd: async function(type) {
         const user = State.getUser();

@@ -91,7 +91,7 @@ const App = {
             // Sync all data from Northflank using the identified user ID
             await Promise.all([
                 Auth.restoreSession(),
-                Profile.initialize(),
+                Profile.load(userId, user.username);
                 Wallet.loadBalance(userId),
                 Tasks.loadTasks(userId),
                 Rewards.initialize(),

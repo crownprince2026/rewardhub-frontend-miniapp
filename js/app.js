@@ -87,11 +87,11 @@ const App = {
         try {
             await Api.initialize();
             await State.initialize();
-            
-            // Sync all data from Northflank using the identified user ID
+
+            // FIX: Removed semicolon and used 'userId' correctly
             await Promise.all([
                 Auth.restoreSession(),
-                Profile.load(userId, user.username);
+                Profile.load(userId), 
                 Wallet.loadBalance(userId),
                 Tasks.loadTasks(userId),
                 Rewards.initialize(),

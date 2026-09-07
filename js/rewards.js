@@ -89,6 +89,26 @@ Rewards.setCooldown = function (type, seconds = DEFAULT_COOLDOWN) {
     this.cooldowns[type] = Date.now() + (seconds * 1000);
 };
 
+/* --- PERSISTENCE --- */
+Rewards.saveCache = function() {
+    try {
+        localStorage.setItem("rewardhub_rewards_cache", JSON.stringify({
+            cooldowns: this.cooldowns,
+            statistics: this.statistics
+        }));
+    } catch(e) { console.error("Rewards Cache Error:", e); }
+};
+
+Rewards.loadCache = function() {
+    try {
+        const data = JSON.parse(localStorage.getItem("rewardhub_rewards_cache"));
+        if (data) {
+            this.cooldowns = data.cooldowns || {};
+            this.statistics = { ...this.statistics, ...(data.statistics || {}) };
+        }
+    } catch(e) { return false; }
+};
+
 /* --- DAILY BONUS SYSTEM --- */
 Rewards.loadDailyBonus = async function () {
     try {

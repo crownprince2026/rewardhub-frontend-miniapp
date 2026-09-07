@@ -122,6 +122,7 @@ const App = {
             if (name === "profile") UI.renderProfile();
             if (name === "rewards") UI.renderRewards();
             if (name === "daily-bonus") UI.renderDailyBonus();
+            if (name === "admin-users") UI.renderAdminUsers(); // This connects the button to the code
 
             // Admin Panel Screen Logic
             if (name === "admin-dashboard") {

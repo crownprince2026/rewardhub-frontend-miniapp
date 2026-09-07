@@ -62,6 +62,7 @@ const App = {
                     if (name === "mystery-box") UI.renderMysteryBox();
                     if (name === "spin-wheel") UI.renderSpinWheel();
                     if (name === "watch-ads") UI.renderWatchAds();
+                    if (name === "admin-users") UI.renderAdminUsers(); // This connects the button to the code
 
                     // 2. Admin Module Renderers
                     if (name === "admin-tasks") UI.renderAdminTasks();

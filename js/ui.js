@@ -179,38 +179,45 @@ renderAdminUsers: async function() {
         const container = document.getElementById("admin-users-content");
         if (!container) return;
 
-        container.innerHTML = `<p style="text-align:center; padding:20px;">Loading users...</p>`;
+        // Visual Log 1
+        container.innerHTML = `<p style="text-align:center; padding:20px; color:var(--primary);">Step 1: Contacting Northflank...</p>`;
 
         try {
             const res = await Api.get("/admin/users");
-            if (res.success && res.users) {
-                if (res.users.length === 0) {
-                    container.innerHTML = `<p style="text-align:center; padding:40px; color:var(--text-dim);">No users registered yet.</p>`;
-                    return;
-                }
-
-                container.innerHTML = `
-                    <div style="padding:10px;">
-                        <h3 style="color:var(--text-dim); font-size:0.8rem; text-transform:uppercase;">Registered Users (${res.users.length})</h3>
-                        ${res.users.map(u => `
-                            <div style="background:var(--surface); padding:15px; border-radius:15px; margin-bottom:10px; border:1px solid #334155; display:flex; justify-content:space-between; align-items:center;">
-                                <div>
-                                    <b style="color:white; display:block;">${u.username || 'No Name'}</b>
-                                    <small style="color:var(--text-dim);">ID: ${u.user_id}</small>
-                                </div>
-                                <div style="text-align:right;">
-                                    <b style="color:var(--accent); display:block;">$${(u.balance || 0).toFixed(2)}</b>
-                                    <small style="color:var(--primary);">${u.referrals || 0} Refs</small>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>
-                `;
-            } else {
-                container.innerHTML = `<p style="color:red; text-align:center;">Failed to load users.</p>`;
+            
+            // Visual Log 2
+            if (!res.success) {
+                container.innerHTML = `<div style="padding:20px; color:red;">Server Error: ${res.message}</div>`;
+                return;
             }
+
+            if (!res.users || res.users.length === 0) {
+                container.innerHTML = `
+                    <div style="text-align:center; padding:40px; color:var(--text-dim);">
+                        <p>Step 2: Database Connected ✅</p>
+                        <p>No users found in rewardhub.db yet.</p>
+                    </div>`;
+                return;
+            }
+
+            // Step 3: Draw the List
+            container.innerHTML = `
+                <div style="padding:10px;">
+                    <h3 style="color:var(--text-dim); font-size:0.8rem;">Registered Users (${res.users.length})</h3>
+                    ${res.users.map(u => `
+                        <div style="background:var(--surface); padding:15px; border-radius:15px; margin-bottom:10px; border:1px solid #334155; display:flex; justify-content:space-between;">
+                            <div>
+                                <b style="color:white; display:block;">${u.username || 'User'}</b>
+                                <small style="color:var(--text-dim);">ID: ${u.user_id}</small>
+                            </div>
+                            <div style="text-align:right;">
+                                <b style="color:var(--accent);">$${(u.balance || 0).toFixed(2)}</b>
+                            </div>
+                        </div>
+                    `).join('')}
+                </div>`;
         } catch (e) {
-            container.innerHTML = `<p style="color:red; text-align:center;">Server Error.</p>`;
+            container.innerHTML = `<div style="padding:20px; color:red;">Connection Failed. Check Northflank Logs.</div>`;
         }
     },
 

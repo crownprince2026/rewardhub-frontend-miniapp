@@ -30,13 +30,17 @@ const App = {
         const tgUser = tg?.initDataUnsafe?.user;
 
         if (tgUser) {
-            // Hard Anchor: Save to both State AND LocalStorage
-            const uid = tgUser.id;
-            localStorage.setItem("active_user_id", uid);
-            State.setUser({ user_id: uid, username: tgUser.username || tgUser.first_name });
-
-            console.log("Identity Locked:", uid);
-            await this.initializeModules(uid);
+            // CRITICAL: Map Telegram .id to our system .user_id
+            tgUser.user_id = tgUser.id; 
+            localStorage.setItem("active_user_id", tgUser.id);
+            
+            State.setUser({ 
+                user_id: tgUser.id, 
+                username: tgUser.username || tgUser.first_name 
+            });
+            
+            console.log("Identity Verified:", tgUser.id);
+            await this.initializeModules(tgUser.id);
         } else {
             // For testing in browser
             const backupId = localStorage.getItem("active_user_id") || 8072346076;

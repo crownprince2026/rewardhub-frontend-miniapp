@@ -101,15 +101,15 @@ Api.getWithdrawals = (userId) => Api.get("/withdrawals", { user_id: userId });
 Api.requestWithdrawal = (data) => Api.post("/withdrawals", data);
 
 // Tasks & Offerwalls
-Api.getTasks = (userId) => Api.get("/tasks", { user_id: userId });
+Api.getTasks = (uid) => Api.get("/tasks", { user_id: Number(uid) });
 Api.getOfferwalls = () => Api.get("/offerwalls");
 Api.verifyTelegramTask = (taskId) => Api.post("/tasks/verify/telegram", { taskId });
 Api.verifyTwitterTask = (taskId) => Api.post("/tasks/verify/twitter", { taskId });
 
 // Rewards & Games
-Api.claimDailyBonus = (uid) => Api.post("/daily", { user_id: parseInt(uid) });
-Api.claimSpin = (uid, idx) => Api.post("/spin", { user_id: parseInt(uid), index: idx });
-Api.claimMysteryBox = (uid) => Api.post("/mystery-box", { user_id: parseInt(uid) });
+Api.claimDailyBonus = (uid) => Api.post("/daily", { user_id: Number(uid) });
+Api.claimSpin = (uid, idx) => Api.post("/spin", { user_id: Number(uid), index: idx });
+Api.claimMysteryBox = (uid) => Api.post("/mystery-box", { user_id: Number(uid) });
 Api.claimWatchAd = (data) => Api.post("/watch-ad", data);
 
 // System & Admin
